@@ -1,8 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
-const admin = require('firebase-admin');
-const multer = require('multer');
+const path = require('path');
 
 // Load environment config
 dotenv.config();
@@ -10,34 +9,66 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware
+// ─── Middleware ──────────────────────────────────────────────────────────────
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Initialize Firebase Admin (Requires serviceAccountKey.json)
+// Serve static frontend files
+app.use(express.static(path.join(__dirname)));
+
+// ─── Firebase Admin ──────────────────────────────────────────────────────────
 try {
-  if (process.env.FIREBASE_SERVICE_ACCOUNT_KEY) {
-      const serviceAccount = require(process.env.FIREBASE_SERVICE_ACCOUNT_KEY);
-      admin.initializeApp({
-        credential: admin.credential.cert(serviceAccount)
-      });
-      console.log('Firebase Admin Initialized Successfully.');
+  const admin = require('firebase-admin');
+  const keyPath = process.env.FIREBASE_SERVICE_ACCOUNT_KEY;
+  if (keyPath && !keyPath.includes('PASTE') && !admin.apps.length) {
+    const fs = require('fs');
+    if (fs.existsSync(keyPath.replace('./', ''))) {
+      const serviceAccount = require(keyPath);
+      admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
+      console.log('✅ Firebase Admin initialized.');
+    } else {
+      console.warn('⚠️  Firebase Admin: serviceAccountKey.json not found — skipping.');
+    }
   } else {
-      console.warn('Firebase Admin skipped: No FIREBASE_SERVICE_ACCOUNT_KEY defined.');
+    console.warn('⚠️  Firebase Admin: No service account key configured.');
   }
-} catch (error) {
-  console.error("Firebase Admin Error:", error.message);
+} catch (err) {
+  console.warn('⚠️  Firebase Admin skipped:', err.message);
 }
 
-// Health Check
+// ─── API Routes ──────────────────────────────────────────────────────────────
+const aiRoutes = require('./routes/ai');
+app.use('/api', aiRoutes);
+
+// ─── Health Check ─────────────────────────────────────────────────────────────
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'healthy', timestamp: new Date().toISOString() });
+  res.json({
+    status: 'healthy',
+    timestamp: new Date().toISOString(),
+    geminiKey: process.env.GEMINI_API_KEY ? '✅ Set' : '❌ Missing — add to .env',
+  });
 });
 
-// We will mount router modules here in Phase 3
-// const aiRoutes = require('./routes/ai');
-// app.use('/api', aiRoutes);
+// ─── Fallback Route (serve landing page) ─────────────────────────────────────
+app.get('/*splat', (req, res) => {
+  res.sendFile(path.join(__dirname, 'interveux_landing_page', 'code.html'));
+});
 
+// ─── Start Server ─────────────────────────────────────────────────────────────
 app.listen(PORT, () => {
-    console.log(`Server running securely on http://localhost:${PORT}`);
+  console.log('');
+  console.log('🚀 InterveuX Backend Server Running');
+  console.log(`   URL:         http://localhost:${PORT}`);
+  console.log(`   Health:      http://localhost:${PORT}/api/health`);
+  console.log(`   Interview:   POST http://localhost:${PORT}/api/process-interview`);
+  console.log(`   Resume:      POST http://localhost:${PORT}/api/analyze-resume`);
+  console.log(`   LinkedIn:    POST http://localhost:${PORT}/api/analyze-linkedin`);
+  console.log('');
+  if (!process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY.includes('PASTE')) {
+    console.warn('⚠️  GEMINI_API_KEY not set! Add your key to .env to enable AI features.');
+  } else {
+    console.log('✅ Gemini AI key loaded.');
+  }
+  console.log('');
 });
