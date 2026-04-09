@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>InterveuX | Detailed Session Audit</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../animations.css"/>
+<script id="tailwind-config">
+    tailwind.config = {
+        darkMode: "class",
+        theme: {
+            extend: {
+                "colors": {
+                    "tertiary-container": "#fdb0d7",
+                    "on-primary": "#32005c",
+                    "surface-container-highest": "#222247",
+                    "on-primary-fixed-variant": "#6500b2",
+                    "on-background": "#e5e3ff",
+                    "surface-dim": "#0c0c1f",
+                    "on-error-container": "#ff97a3",
+                    "on-secondary-fixed": "#47366b",
+                    "secondary-dim": "#c4aeed",
+                    "error-dim": "#c8475d",
+                    "secondary-fixed": "#ebddff",
+                    "on-surface-variant": "#a8a7d5",
+                    "on-primary-fixed": "#3c006d",
+                    "primary-fixed-dim": "#ce9fff",
+                    "surface-container": "#161632",
+                    "tertiary-fixed": "#fdb0d7",
+                    "tertiary": "#ffc4e0",
+                    "outline": "#72719c",
+                    "on-tertiary-fixed": "#4d1838",
+                    "error-container": "#8a1632",
+                    "secondary-container": "#2d1b4f",
+                    "tertiary-fixed-dim": "#eda2c9",
+                    "primary": "#bf81ff",
+                    "surface-variant": "#222247",
+                    "primary-container": "#9c42f4",
+                    "on-surface": "#e5e3ff",
+                    "tertiary-dim": "#eda2c9",
+                    "secondary-fixed-dim": "#dfccff",
+                    "inverse-primary": "#8523dd",
+                    "primary-dim": "#9c42f4",
+                    "on-secondary-container": "#af9ad7",
+                    "surface-bright": "#272752",
+                    "surface": "#0c0c1f",
+                    "on-secondary-fixed-variant": "#645289",
+                    "on-primary-container": "#ffffff",
+                    "surface-container-lowest": "#000000",
+                    "background": "#0c0c1f",
+                    "primary-fixed": "#d8b1ff",
+                    "surface-container-high": "#1c1c3d",
+                    "error": "#fd6f85",
+                    "on-secondary": "#48366c",
+                    "inverse-on-surface": "#53536a",
+                    "secondary": "#d2bcfb",
+                    "outline-variant": "#44446c",
+                    "on-error": "#490013",
+                    "on-tertiary-fixed-variant": "#6f3556",
+                    "on-tertiary-container": "#652d4d",
+                    "surface-tint": "#bf81ff",
+                    "surface-container-low": "#111128",
+                    "inverse-surface": "#fcf8ff",
+                    "on-tertiary": "#6f3556"
+                },
+                "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "full": "9999px"
+                },
+                "fontFamily": {
+                    "headline": ["Plus Jakarta Sans"],
+                    "body": ["Manrope"],
+                    "label": ["Manrope"]
+                }
+            },
+        },
+    }
+</script>
+<style type="text/tailwindcss">
+    body { font-family: 'Manrope', sans-serif; background-color: #0c0c1f; color: #e5e3ff; }
+    .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        display: inline-block; vertical-align: middle;
+    }
+    .glass-panel {
+        background: rgba(34, 34, 71, 0.4);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .sidebar-link {
+        display: flex; align-items: center; gap: 0.75rem;
+        padding: 0.75rem 1rem; border-radius: 0.75rem;
+        color: rgba(168, 167, 213, 0.6);
+        font-size: 0.875rem; font-weight: 500;
+        transition: all 0.2s;
+        text-decoration: none;
+    }
+    .sidebar-link:hover { background: rgba(255,255,255,0.05); color: #e5e3ff; }
+    .sidebar-link.active {
+        background: rgba(156, 66, 244, 0.2);
+        color: #bf81ff;
+        border-right: 3px solid #9c42f4;
+        border-radius: 0.75rem 0 0 0.75rem;
+    }
+    .star-badge { display: flex; align-items: center; justify-content: center; width: 2rem; height: 2rem; border-radius: 0.5rem; font-weight: 800; font-size: 0.875rem; }
+    .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: rgba(255,255,255,0.03); }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(191,129,255,0.25); border-radius: 10px; }
+    .score-ring { position: relative; }
+    .timeline-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+</style>
+</head>
+<body class="bg-background text-on-surface min-h-screen">
+
+<!-- Sidebar -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-[#0a0a1e] flex flex-col py-8 shadow-2xl border-r border-white/5 z-40 overflow-y-auto custom-scrollbar">
+    <div class="px-6 mb-10">
+        <a href="../interveux_landing_page/code.html" class="block">
+            <h2 class="text-lg font-black text-white font-headline uppercase tracking-tighter bg-gradient-to-r from-purple-400 to-indigo-300 bg-clip-text text-transparent">InterveuX</h2>
+        </a>
+        <p class="text-indigo-300/40 text-[10px] font-medium uppercase tracking-widest mt-0.5">Aetheris Lumina</p>
+    </div>
+    <nav class="flex-1 px-4 space-y-1">
+        <a href="../interveux_performance_hub/code.html" class="sidebar-link">
+            <span class="material-symbols-outlined text-xl">dashboard</span>
+            <span>Performance Hub</span>
+        </a>
+        <a href="../interveux_active_mirror/code.html" class="sidebar-link">
+            <span class="material-symbols-outlined text-xl">videocam</span>
+            <span>Active Mirror</span>
+        </a>
+        <a href="../interveux_detailed_session_audit/code.html" class="sidebar-link active">
+            <span class="material-symbols-outlined text-xl" style="font-variation-settings:'FILL' 1">assessment</span>
+            <span>Session Audit</span>
+        </a>
+        <a href="../interveux_resume_checker/code.html" class="sidebar-link">
+            <span class="material-symbols-outlined text-xl">description</span>
+            <span>Resume Checker</span>
+        </a>
+        <a href="../interveux_linkedin_auditor_aetheris/code.html" class="sidebar-link">
+            <span class="material-symbols-outlined text-xl">find_in_page</span>
+            <span>LinkedIn Auditor</span>
+        </a>
+    </nav>
+    <div class="px-4 mt-6 space-y-2 border-t border-white/5 pt-6">
+        <a href="#" class="sidebar-link text-sm">
+            <span class="material-symbols-outlined text-xl">help</span>
+            <span>Support</span>
+        </a>
+        <a href="#" class="sidebar-link text-sm">
+            <span class="material-symbols-outlined text-xl">manage_accounts</span>
+            <span>Account</span>
+        </a>
+    </div>
+</aside>
+
+<!-- Top Bar -->
+<header class="fixed top-0 z-30 h-16 bg-[#0c0c1f]/80 backdrop-blur-xl border-b border-white/8 flex items-center justify-between px-6 shadow-[0_4px_24px_rgba(0,0,0,0.4)]" style="left:16rem; right:0;">
+    <div class="flex items-center gap-3">
+        <a href="../interveux_performance_hub/code.html" class="flex items-center gap-1 text-on-surface-variant hover:text-primary transition-colors text-sm">
+            <span class="material-symbols-outlined text-base">arrow_back</span>
+            Performance Hub
+        </a>
+        <span class="text-outline/40">/</span>
+        <span class="text-primary text-sm font-semibold">Detailed Session Audit</span>
+    </div>
+    <div class="flex items-center gap-4">
+        <button class="flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/30 text-primary text-xs font-bold hover:bg-primary/20 transition-all">
+            <span class="material-symbols-outlined text-sm">download</span> Export PDF
+        </button>
+        <button class="text-outline hover:text-white transition-all relative">
+            <span class="material-symbols-outlined">notifications</span>
+            <span class="absolute top-0 right-0 w-2 h-2 bg-primary rounded-full"></span>
+        </button>
+        <div class="w-8 h-8 rounded-full overflow-hidden border border-primary/30 bg-primary-container flex items-center justify-center text-xs font-bold text-white">AV</div>
+    </div>
+</header>
+
+<!-- Main Content -->
+<main class="pt-24 pb-12 px-8 min-h-screen" style="margin-left: 16rem;">
+    <div class="max-w-7xl mx-auto space-y-8">
+
+        <!-- Page Header -->
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+            <div>
+                <span class="text-tertiary font-label text-xs uppercase tracking-widest font-bold mb-2 block">Session #0047 • Oct 24, 2024</span>
+                <h1 class="text-4xl md:text-5xl font-black text-white font-headline tracking-tight">Detailed Session Audit</h1>
+              <div class="relative w-56 h-56 flex-shrink-0 reveal-on-scroll" data-delay="450" data-score-ring="87">
+<svg class="w-full h-full absolute inset-0 -rotate-90" viewBox="0 0 224 224">
+  <circle cx="112" cy="112" r="96" fill="none" stroke="rgba(68,68,108,0.25)" stroke-width="10"/>
+  <circle class="score-ring-fill" cx="112" cy="112" r="96" fill="none" stroke="#bf81ff" stroke-width="10" stroke-linecap="round"/>
+</svg>
+<div class="relative flex flex-col items-center justify-center w-full h-full">
+  <span class="text-6xl font-black font-headline text-white" data-count data-suffix="">87</span>
+  <span class="text-xl font-bold text-primary mt-1">%</span>
+  <span class="text-xs text-on-surface-variant mt-2 uppercase tracking-widest">Overall Score</span>
+</div>
+</div>
+                <p class="text-on-surface-variant mt-2 max-w-lg">Senior Product Engineer — Technical Round. Full performance breakdown by Aetheris Lumina Engine v2.0.</p>
+            </div>
+            <div class="flex items-center gap-3 shrink-0">
+                <div class="glass-panel px-4 py-2 rounded-full flex items-center gap-2">
+                    <span class="h-2 w-2 rounded-full bg-green-400 shadow-[0_0_8px_rgba(74,222,128,0.8)]"></span>
+                    <span class="text-xs font-bold text-green-300">ANALYSIS COMPLETE</span>
+                </div>
+                <a href="../interveux_active_mirror/code.html" class="flex items-center gap-2 px-5 py-2 bg-primary-container text-white rounded-full text-sm font-bold hover:opacity-90 transition-all shadow-lg shadow-primary/20">
+                    <span class="material-symbols-outlined text-sm">videocam</span> New Session
+                </a>
+            </div>
+        </div>
+
+        <!-- Score Cards Row -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 stagger-children" data-stagger="80">
+            <div class="glass-panel rounded-xl p-5 text-center relative overflow-hidden group hover:border-primary/30 border border-white/5 transition-all">
+                <div class="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <p class="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold mb-3">Overall Score</p>
+                <span class="text-5xl font-black text-white font-headline leading-none">92</span>
+                <span class="text-primary text-lg">%</span>
+                <p class="text-[10px] text-primary font-bold mt-2 uppercase tracking-widest">Elite</p>
+            </div>
+            <div class="glass-panel rounded-xl p-5 text-center border border-white/5 hover:border-secondary/30 transition-all">
+                <p class="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold mb-3">STAR Coverage</p>
+                <span class="text-5xl font-black text-white font-headline leading-none">88</span>
+                <span class="text-secondary text-lg">%</span>
+                <p class="text-[10px] text-secondary font-bold mt-2 uppercase tracking-widest">Strong</p>
+            </div>
+            <div class="glass-panel rounded-xl p-5 text-center border border-white/5 hover:border-tertiary/30 transition-all">
+                <p class="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold mb-3">Verbal Clarity</p>
+                <span class="text-5xl font-black text-white font-headline leading-none">94</span>
+                <span class="text-tertiary text-lg">%</span>
+                <p class="text-[10px] text-tertiary font-bold mt-2 uppercase tracking-widest">Excellent</p>
+            </div>
+            <div class="glass-panel rounded-xl p-5 text-center border border-white/5 hover:border-green-400/30 transition-all">
+                <p class="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold mb-3">Avg. WPM</p>
+                <span class="text-5xl font-black text-white font-headline leading-none">142</span>
+                <span class="text-green-400 text-lg">↑</span>
+                <p class="text-[10px] text-green-400 font-bold mt-2 uppercase tracking-widest">Optimal</p>
+            </div>
+        </div>
+
+        <!-- Two Column Layout -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 stagger-children" data-stagger="80">
+
+            <!-- Left: STAR Analysis -->
+            <div class="lg:col-span-2 space-y-6">
+
+                <!-- STAR Framework Card -->
+                <div class="glass-panel rounded-xl p-6 border border-white/5">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-lg font-bold text-white font-headline flex items-center gap-2">
+                            <span class="material-symbols-outlined text-primary">workspace_premium</span>
+                            STAR Framework Analysis
+                        </h3>
+                        <span class="text-xs font-bold text-primary bg-primary/10 px-3 py-1 rounded-full border border-primary/20">88% Coverage</span>
+                    </div>
+                    <div class="space-y-4">
+                        <!-- Situation -->
+                        <div class="p-4 rounded-xl bg-surface-container-high border border-white/5">
+                            <div class="flex items-center justify-between mb-3">
+                                <div class="flex items-center gap-3">
+                                    <div class="star-badge bg-primary/20 text-primary">S</div>
+                                    <div>
+                                        <p class="text-sm font-bold text-white">Situation</p>
+                                        <p class="text-[10px] text-on-surface-variant uppercase tracking-widest">Contextual Depth</p>
+                                    </div>
+                                </div>
+                                <span class="text-xl font-black text-primary">96%</span>
+                            </div>
+                            <div class="h-1.5 rounded-full bg-surface-container-highest overflow-hidden mt-2">
+<div class="h-full bg-primary progress-bar-animated" data-width="91%" data-delay="780"></div>
+</div>
+                            <p class="text-xs text-on-surface-variant mt-2 leading-relaxed">Excellent scene-setting. Provided rich context about the cross-functional team conflict at 00:12, clearly establishing stakes and stakeholders.</p>
+                        </div>
+                        <!-- Task -->
+                        <div class="p-4 rounded-xl bg-surface-container-high border border-white/5">
+                            <div class="flex items-center justify-between mb-3">
+                                <div class="flex items-center gap-3">
+                                    <div class="star-badge bg-secondary/20 text-secondary">T</div>
+                                    <div>
+                                        <p class="text-sm font-bold text-white">Task</p>
+                                        <p class="text-[10px] text-on-surface-variant uppercase tracking-widest">Role Clarity</p>
+                                    </div>
+                                </div>
+                                <span class="text-xl font-black text-secondary">78%</span>
+                            </div>
+                            <div class="h-1.5 rounded-full bg-surface-container-highest overflow-hidden mt-2">
+<div class="h-full bg-secondary progress-bar-animated" data-width="82%" data-delay="700"></div>
+</div>
+                            <p class="text-xs text-on-surface-variant mt-2 leading-relaxed">Role ownership was stated but lacked explicit ownership boundaries. Opportunity to strengthen personal accountability framing.</p>
+                        </div>
+                        <!-- Action -->
+                        <div class="p-4 rounded-xl bg-surface-container-high border border-white/5">
+                            <div class="flex items-center justify-between mb-3">
+                                <div class="flex items-center gap-3">
+                                    <div class="star-badge bg-tertiary/20 text-tertiary">A</div>
+                                    <div>
+                                        <p class="text-sm font-bold text-white">Action</p>
+                                        <p class="text-[10px] text-on-surface-variant uppercase tracking-widest">Execution Focus</p>
+                                    </div>
+                                </div>
+                                <span class="text-xl font-black text-tertiary">91%</span>
+                            </div>
+                            <div class="h-1.5 rounded-full bg-surface-container-highest overflow-hidden mt-2">
+<div class="h-full bg-tertiary progress-bar-animated" data-width="78%" data-delay="860"></div>
+</div>
+                            <p class="text-xs text-on-surface-variant mt-2 leading-relaxed">Specific, decisive actions described with strong verbs. The technical audit facilitation at 00:45 demonstrated exceptional strategic thinking.</p>
+                        </div>
+                        <!-- Result -->
+                        <div class="p-4 rounded-xl bg-surface-container-high border border-white/5">
+                            <div class="flex items-center justify-between mb-3">
+                                <div class="flex items-center gap-3">
+                                    <div class="star-badge bg-green-400/20 text-green-400">R</div>
+                                    <div>
+                                        <p class="text-sm font-bold text-white">Result</p>
+                                        <p class="text-[10px] text-on-surface-variant uppercase tracking-widest">Quantifiable Impact</p>
+                                    </div>
+                                </div>
+                                <span class="text-xl font-black text-green-400">82%</span>
+                            </div>
+                            <div class="w-full h-1.5 bg-surface-container-lowest rounded-full overflow-hidden">
+                                <div class="h-full bg-green-400 rounded-full" style="width:82%"></div>
+                            </div>
+                            <p class="text-xs text-on-surface-variant mt-2 leading-relaxed">Outcome described effectively but lacked specific metrics. Add quantifiable data (e.g., "reduced resolution time by 40%") to elevate impact.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Transcript Timeline -->
+                <div class="glass-panel rounded-xl border border-white/5 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-white/5 flex items-center justify-between bg-surface-container-low/30">
+                        <h3 class="text-base font-bold text-white font-headline flex items-center gap-2">
+                            <span class="material-symbols-outlined text-primary">history</span>
+                            Session Transcript
+                        </h3>
+                        <div class="flex gap-2">
+                            <button class="px-3 py-1 rounded-lg bg-white/5 text-[10px] font-bold uppercase tracking-widest text-indigo-200 hover:bg-white/10 transition-all">Export</button>
+                        </div>
+                    </div>
+                    <div class="p-6 space-y-4 max-h-72 overflow-y-auto custom-scrollbar">
+                        <div class="flex gap-4 items-start">
+                            <span class="text-[10px] font-mono text-primary/60 bg-primary/10 px-2 py-0.5 rounded shrink-0">00:00</span>
+                            <div>
+                                <p class="text-xs text-indigo-100/80 leading-relaxed">Question posed: <em class="text-primary">"Tell me about a time you had to manage a conflict within a cross-functional team."</em></p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4 items-start opacity-70">
+                            <span class="text-[10px] font-mono text-indigo-400/50 bg-white/5 px-2 py-0.5 rounded shrink-0">00:12</span>
+                            <p class="text-xs text-indigo-100/70 leading-relaxed">Sure, in my previous role at the design agency, I encountered a situation where our engineering team and creative leads were at odds regarding a specific interaction model. The core issue revolved around feasibility versus user impact...</p>
+                        </div>
+                        <div class="flex gap-4 items-start opacity-80">
+                            <span class="text-[10px] font-mono text-indigo-400/50 bg-white/5 px-2 py-0.5 rounded shrink-0">00:45</span>
+                            <p class="text-xs text-indigo-100/70 leading-relaxed">The main point of contention was the feasibility of a complex animation system. I decided to facilitate a technical audit to separate subjective design preferences from actual technical constraints...</p>
+                        </div>
+                        <div class="flex gap-4 items-start bg-primary/5 p-4 rounded-xl border border-primary/20">
+                            <span class="text-[10px] font-mono text-primary font-bold bg-primary/10 px-2 py-0.5 rounded shrink-0">02:38</span>
+                            <div class="space-y-2">
+                                <p class="text-sm text-white font-medium leading-relaxed">Ultimately, we reached a middle ground that preserved the design vision while meeting the performance budget. The product shipped on schedule and user engagement metrics showed a 23% improvement...</p>
+                                <div class="flex gap-2 flex-wrap">
+                                    <span class="text-[8px] font-bold text-primary uppercase tracking-widest bg-primary/10 px-2 py-0.5 rounded-full">Aura Insight ✦ Peak Moment</span>
+                                    <span class="text-[8px] font-bold text-green-400 uppercase tracking-widest bg-green-400/10 px-2 py-0.5 rounded-full">Quantified Result</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex gap-4 items-start opacity-60">
+                            <span class="text-[10px] font-mono text-indigo-400/50 bg-white/5 px-2 py-0.5 rounded shrink-0">03:21</span>
+                            <p class="text-xs text-indigo-100/70 leading-relaxed">Session concluded. Total duration: 3 minutes 21 seconds.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column -->
+            <div class="space-y-6">
+
+                <!-- Vocal Metrics -->
+                <div class="glass-panel rounded-xl p-5 border border-white/5">
+                    <h3 class="text-xs font-headline text-on-surface-variant uppercase tracking-widest font-bold mb-5">Vocal Performance</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <div class="flex justify-between text-xs mb-1.5">
+                                <span class="text-on-surface-variant font-medium">Speaking Pace</span>
+                                <span class="text-green-400 font-bold">142 wpm</span>
+                            </div>
+                            <div class="h-1.5 bg-surface-container-lowest rounded-full overflow-hidden">
+                                <div class="h-full bg-gradient-to-r from-green-400 to-green-300 rounded-full" style="width:65%"></div>
+                            </div>
+                            <p class="text-[10px] text-on-surface-variant mt-1">Optimal range: 120–160 wpm</p>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-xs mb-1.5">
+                                <span class="text-on-surface-variant font-medium">Filler Words</span>
+                                <span class="text-tertiary font-bold">3 detected</span>
+                            </div>
+                            <div class="h-1.5 rounded-full bg-surface-container-highest overflow-hidden mt-2">
+<div class="h-full bg-error progress-bar-animated" data-width="65%" data-delay="940"></div>
+</div>
+                            <p class="text-[10px] text-on-surface-variant mt-1">Excellent — well below average (12)</p>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-xs mb-1.5">
+                                <span class="text-on-surface-variant font-medium">Pause Effectiveness</span>
+                                <span class="text-primary font-bold">High</span>
+                            </div>
+                            <div class="h-1.5 bg-surface-container-lowest rounded-full overflow-hidden">
+                                <div class="h-full bg-primary rounded-full" style="width:80%"></div>
+                            </div>
+                            <p class="text-[10px] text-on-surface-variant mt-1">Strategic pauses used 4× effectively</p>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-xs mb-1.5">
+                                <span class="text-on-surface-variant font-medium">Tone Confidence</span>
+                                <span class="text-secondary font-bold">94%</span>
+                            </div>
+                            <div class="h-1.5 bg-surface-container-lowest rounded-full overflow-hidden">
+                                <div class="h-full bg-secondary rounded-full" style="width:94%"></div>
+                            </div>
+                            <p class="text-[10px] text-on-surface-variant mt-1">Strong authoritative resonance detected</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Body Language -->
+                <div class="glass-panel rounded-xl p-5 border border-white/5">
+                    <h3 class="text-xs font-headline text-on-surface-variant uppercase tracking-widest font-bold mb-5">Body Language Read</h3>
+                    <ul class="space-y-3">
+                        <li class="flex items-center gap-3">
+                            <div class="w-2 h-2 rounded-full bg-green-400 shadow-[0_0_6px_rgba(74,222,128,0.8)]"></div>
+                            <div class="flex-1 flex justify-between">
+                                <span class="text-xs text-on-surface">Eye Contact</span>
+                                <span class="text-xs text-green-400 font-bold">Consistent</span>
+                            </div>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <div class="w-2 h-2 rounded-full bg-green-400 shadow-[0_0_6px_rgba(74,222,128,0.8)]"></div>
+                            <div class="flex-1 flex justify-between">
+                                <span class="text-xs text-on-surface">Hand Gestures</span>
+                                <span class="text-xs text-green-400 font-bold">Natural</span>
+                            </div>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <div class="w-2 h-2 rounded-full bg-primary shadow-[0_0_6px_rgba(191,129,255,0.8)]"></div>
+                            <div class="flex-1 flex justify-between">
+                                <span class="text-xs text-on-surface">Posture</span>
+                                <span class="text-xs text-primary font-bold">Open & Confident</span>
+                            </div>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <div class="w-2 h-2 rounded-full bg-tertiary shadow-[0_0_6px_rgba(255,196,224,0.8)]"></div>
+                            <div class="flex-1 flex justify-between">
+                                <span class="text-xs text-on-surface">Anxiety Signals</span>
+                                <span class="text-xs text-tertiary font-bold">Low (2 detected)</span>
+                            </div>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <div class="w-2 h-2 rounded-full bg-secondary shadow-[0_0_6px_rgba(210,188,251,0.8)]"></div>
+                            <div class="flex-1 flex justify-between">
+                                <span class="text-xs text-on-surface">Facial Expression</span>
+                                <span class="text-xs text-secondary font-bold">Engaged</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- AI Recommendations -->
+                <div class="glass-panel rounded-xl p-5 border border-white/5 bg-gradient-to-br from-primary/5 to-transparent relative overflow-hidden">
+                    <div class="absolute top-3 right-3 opacity-10">
+                        <span class="material-symbols-outlined text-6xl text-primary">psychology</span>
+                    </div>
+                    <h3 class="text-xs font-headline text-secondary uppercase tracking-widest font-bold mb-4 relative z-10">Aetheris Recommendations</h3>
+                    <div class="space-y-3 relative z-10">
+                        <div class="bg-white/5 rounded-lg p-3 border border-white/5">
+                            <p class="text-[11px] text-on-surface-variant leading-relaxed">💡 Quantify your results. Replace "improved performance" with specific metrics like "reduced deployment time by 35%".</p>
+                        </div>
+                        <div class="bg-white/5 rounded-lg p-3 border border-white/5">
+                            <p class="text-[11px] text-on-surface-variant leading-relaxed">💡 Strengthen your Task framing. Use "I was personally responsible for..." to establish unambiguous ownership.</p>
+                        </div>
+                        <div class="bg-white/5 rounded-lg p-3 border border-white/5">
+                            <p class="text-[11px] text-on-surface-variant leading-relaxed">✦ Excellent strategic vocabulary. Terms like "facilitate" and "audit" signal leadership maturity.</p>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-4 border-t border-white/5 flex items-center justify-between relative z-10">
+                        <span class="text-[10px] text-outline">Confidence: 98.2%</span>
+                        <a href="../interveux_active_mirror/code.html" class="text-xs font-bold text-primary hover:text-white flex items-center gap-1 transition-all">
+                            Practice Again <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Bottom Action Bar -->
+        <div class="flex flex-col sm:flex-row gap-4 justify-between items-center glass-panel rounded-xl p-5 border border-white/5">
+            <p class="text-sm text-on-surface-variant">Session saved to your profile. View all sessions in Performance Hub.</p>
+            <div class="flex gap-3">
+                <a href="../interveux_performance_hub/code.html" class="flex items-center gap-2 px-5 py-2.5 rounded-full border border-white/10 text-sm font-bold text-on-surface hover:bg-white/5 transition-all">
+                    <span class="material-symbols-outlined text-sm">dashboard</span> View Hub
+                </a>
+                <a href="../interveux_active_mirror/code.html" class="flex items-center gap-2 px-5 py-2.5 rounded-full bg-primary-container text-white text-sm font-bold hover:opacity-90 transition-all shadow-lg shadow-primary/20">
+                    <span class="material-symbols-outlined text-sm">replay</span> New Practice
+                </a>
+            </div>
+        </div>
+
+    </div>
+</main>
+
+<!-- Decorative Glows -->
+<div class="fixed top-[-10%] right-[10%] w-[400px] h-[400px] bg-primary/5 rounded-full blur-[100px] -z-10 pointer-events-none"></div>
+<div class="fixed bottom-[-10%] left-[20%] w-[300px] h-[300px] bg-secondary/5 rounded-full blur-[100px] -z-10 pointer-events-none"></div>
+<script src="../animations.js"></script>
+</body></html>

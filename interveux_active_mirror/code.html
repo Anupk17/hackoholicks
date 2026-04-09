@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>InterveuX - Control Panel Mode</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../animations.css"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-container": "#fdb0d7",
+                        "on-primary": "#32005c",
+                        "surface-container-highest": "#222247",
+                        "on-primary-fixed-variant": "#6500b2",
+                        "on-background": "#e5e3ff",
+                        "surface-dim": "#0c0c1f",
+                        "on-error-container": "#ff97a3",
+                        "on-secondary-fixed": "#47366b",
+                        "secondary-dim": "#c4aeed",
+                        "error-dim": "#c8475d",
+                        "secondary-fixed": "#ebddff",
+                        "on-surface-variant": "#a8a7d5",
+                        "on-primary-fixed": "#3c006d",
+                        "primary-fixed-dim": "#ce9fff",
+                        "surface-container": "#161632",
+                        "tertiary-fixed": "#fdb0d7",
+                        "tertiary": "#ffc4e0",
+                        "outline": "#72719c",
+                        "on-tertiary-fixed": "#4d1838",
+                        "error-container": "#8a1632",
+                        "secondary-container": "#2d1b4f",
+                        "tertiary-fixed-dim": "#eda2c9",
+                        "primary": "#bf81ff",
+                        "surface-variant": "#222247",
+                        "primary-container": "#9c42f4",
+                        "on-surface": "#e5e3ff",
+                        "tertiary-dim": "#eda2c9",
+                        "secondary-fixed-dim": "#dfccff",
+                        "inverse-primary": "#8523dd",
+                        "primary-dim": "#9c42f4",
+                        "on-secondary-container": "#af9ad7",
+                        "surface-bright": "#272752",
+                        "surface": "#0c0c1f",
+                        "on-secondary-fixed-variant": "#645289",
+                        "on-primary-container": "#ffffff",
+                        "surface-container-lowest": "#000000",
+                        "background": "#0c0c1f",
+                        "primary-fixed": "#d8b1ff",
+                        "surface-container-high": "#1c1c3d",
+                        "error": "#fd6f85",
+                        "on-secondary": "#48366c",
+                        "inverse-on-surface": "#53536a",
+                        "secondary": "#d2bcfb",
+                        "outline-variant": "#44446c",
+                        "on-error": "#490013",
+                        "on-tertiary-fixed-variant": "#6f3556",
+                        "on-tertiary-container": "#652d4d",
+                        "surface-tint": "#bf81ff",
+                        "surface-container-low": "#111128",
+                        "inverse-surface": "#fcf8ff",
+                        "on-tertiary": "#6f3556"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Manrope"],
+                        "label": ["Manrope"]
+                    }
+                },
+            },
+        }
+    </script>
+<style type="text/tailwindcss">
+        .glass-card {
+            background: rgba(156, 66, 244, 0.15);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .vibrant-glass {
+            background: linear-gradient(135deg, rgba(191, 129, 255, 0.2), rgba(156, 66, 244, 0.3));
+            backdrop-filter: blur(24px);
+            border: 1px solid rgba(191, 129, 255, 0.2);
+        }
+        .waveform-bar {
+            border-radius: 9999px;
+            background: #bf81ff;
+            box-shadow: 0 0 10px rgba(191, 129, 255, 0.5);
+        }
+        .transcript-glow {
+            box-shadow: 0 0 25px rgba(191, 129, 255, 0.1);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(191, 129, 255, 0.3);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body selection:bg-primary/30 min-h-screen">
+<!-- Sidebar -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-[#0a0a1e] flex flex-col py-8 shadow-2xl border-r border-white/5 z-50 overflow-y-auto">
+    <div class="px-6 mb-10">
+        <a href="../interveux_landing_page/code.html" class="block">
+            <h2 class="text-lg font-black text-white font-headline uppercase tracking-tighter bg-gradient-to-r from-purple-400 to-indigo-300 bg-clip-text text-transparent">InterveuX</h2>
+        </a>
+        <p class="text-indigo-300/40 text-[10px] font-medium uppercase tracking-widest mt-0.5">Aetheris Lumina</p>
+    </div>
+    <nav class="flex-1 px-4 space-y-1">
+        <a class="flex items-center gap-3 px-4 py-3 text-indigo-300/50 hover:text-white hover:bg-white/5 transition-all rounded-lg group" href="../interveux_performance_hub/code.html">
+            <span class="material-symbols-outlined group-hover:text-primary transition-colors">dashboard</span>
+            <span>Performance Hub</span>
+        </a>
+        <a class="flex items-center gap-3 px-4 py-3 bg-purple-600/20 text-purple-400 border-r-4 border-purple-500 rounded-l-lg font-medium text-sm" href="../interveux_active_mirror/code.html">
+            <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">videocam</span>
+            <span>Active Mirror</span>
+        </a>
+        <a class="flex items-center gap-3 px-4 py-3 text-indigo-300/50 hover:text-white hover:bg-white/5 transition-all rounded-lg group" href="../interveux_detailed_session_audit/code.html">
+            <span class="material-symbols-outlined group-hover:text-primary transition-colors">assessment</span>
+            <span>Session Audit</span>
+        </a>
+        <a class="flex items-center gap-3 px-4 py-3 text-indigo-300/50 hover:text-white hover:bg-white/5 transition-all rounded-lg group" href="../interveux_resume_checker/code.html">
+            <span class="material-symbols-outlined group-hover:text-primary transition-colors">description</span>
+            <span>Resume Checker</span>
+        </a>
+        <a class="flex items-center gap-3 px-4 py-3 text-indigo-300/50 hover:text-white hover:bg-white/5 transition-all rounded-lg group" href="../interveux_linkedin_auditor_aetheris/code.html">
+            <span class="material-symbols-outlined group-hover:text-primary transition-colors">find_in_page</span>
+            <span>LinkedIn Auditor</span>
+        </a>
+    </nav>
+    <div class="px-4 mt-6 space-y-2 border-t border-white/5 pt-6">
+        <a href="#" class="flex items-center gap-3 px-4 py-3 text-indigo-300/50 hover:text-white hover:bg-white/5 transition-all rounded-lg text-sm">
+            <span class="material-symbols-outlined">help</span>
+            <span>Support</span>
+        </a>
+        <a href="#" class="flex items-center gap-3 px-4 py-3 text-indigo-300/50 hover:text-white hover:bg-white/5 transition-all rounded-lg text-sm">
+            <span class="material-symbols-outlined">manage_accounts</span>
+            <span>Account</span>
+        </a>
+    </div>
+</aside>
+<header class="fixed top-0 z-40 h-16 bg-indigo-950/40 backdrop-blur-xl border-b border-white/10 flex justify-between items-center px-6" style="left:16rem; right:0;">
+<div class="flex items-center gap-8">
+<nav class="hidden md:flex gap-6 items-center">
+<a class="text-sm font-plus-jakarta tracking-tight text-purple-400 border-b-2 border-purple-500" href="../interveux_active_mirror/code.html">Active Mirror</a>
+<a class="text-sm font-plus-jakarta tracking-tight text-indigo-200/60 hover:text-purple-300 transition-colors" href="../interveux_performance_hub/code.html">Performance Hub</a>
+<a class="text-sm font-plus-jakarta tracking-tight text-indigo-200/60 hover:text-purple-300 transition-colors" href="../interveux_detailed_session_audit/code.html">Session Audit</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-indigo-200/60 hover:text-purple-300 transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-indigo-200/60 hover:text-purple-300 transition-colors">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-purple-500/30">
+<img alt="User profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBuIHM6IMeS1lY9RZFwQpaj7ONeBnGRAxq-vlzPQmqkSgv303wj1sWZKDRQrVtIp4tftzhsbb7PVCmhvH8dA2gN6EWdYqT52R2pXPcUsTPb2i8pQuxGplvZSqXc1PRUDUq50_icPtdnacJ4PyGjyaZ-WNfjrLDccDOPJ4sRoxozkkXW4k-9KLCS3IY3__in2Ao6GMwqUPuJo3nEPsH-g4kRvoKyAeEnDJq4jeB7HJ1a-8NAQzht1U2oseCT9uT2rriyrWdtfm2yQvY"/>
+</div>
+</div>
+</header>
+<main class="pt-20 pb-12 px-6 max-w-screen-2xl mx-auto flex flex-col gap-6" style="margin-left:16rem;">
+
+<!-- ══════════════════════════════════════════════
+     INTERVIEW PRACTICE PANEL
+══════════════════════════════════════════════ -->
+<section class="glass-panel rounded-2xl border border-white/5 shadow-2xl overflow-hidden reveal-on-scroll" data-delay="100">
+
+  <!-- Header -->
+  <div class="flex items-center justify-between px-6 pt-5 pb-4 border-b border-white/5">
+    <div>
+      <h2 class="text-lg font-headline font-bold text-white tracking-tight">Interview Practice</h2>
+      <p class="text-xs text-on-surface-variant mt-0.5">Select a category and answer the question.</p>
+    </div>
+    <div class="flex items-center gap-2">
+      <span class="text-xs font-bold text-primary bg-primary/10 px-3 py-1 rounded-full border border-primary/20" id="qProgressLabel">Q 1 / 7</span>
+      <button onclick="shuffleQuestion()" class="p-2 rounded-full hover:bg-white/5 text-on-surface-variant hover:text-primary transition-all" title="Shuffle question">
+        <span class="material-symbols-outlined text-base">shuffle</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Category Tabs -->
+  <div class="relative flex gap-1 px-6 pt-4 pb-0 border-b border-white/5" id="questionTabs">
+    <button onclick="switchCategory('HR')" id="tab-HR"
+      class="category-tab active-tab px-5 py-2.5 rounded-t-xl text-sm font-bold tracking-wide transition-all relative">
+      <span class="material-symbols-outlined text-sm align-middle mr-1.5">people</span> HR
+    </button>
+    <button onclick="switchCategory('Technical')" id="tab-Technical"
+      class="category-tab px-5 py-2.5 rounded-t-xl text-sm font-medium tracking-wide transition-all relative text-on-surface-variant hover:text-white">
+      <span class="material-symbols-outlined text-sm align-middle mr-1.5">code</span> Technical
+    </button>
+    <button onclick="switchCategory('Behavioral')" id="tab-Behavioral"
+      class="category-tab px-5 py-2.5 rounded-t-xl text-sm font-medium tracking-wide transition-all relative text-on-surface-variant hover:text-white">
+      <span class="material-symbols-outlined text-sm align-middle mr-1.5">psychology</span> Behavioral
+    </button>
+    <button onclick="switchCategory('MBA')" id="tab-MBA"
+      class="category-tab px-5 py-2.5 rounded-t-xl text-sm font-medium tracking-wide transition-all relative text-on-surface-variant hover:text-white">
+      <span class="material-symbols-outlined text-sm align-middle mr-1.5">business_center</span> MBA
+    </button>
+  </div>
+
+  <!-- Question Card -->
+  <div class="px-6 py-5">
+    <div class="relative rounded-xl bg-surface-container-low/60 border border-white/5 p-6 min-h-[90px] flex items-center gap-4" id="questionCard">
+      <!-- Category badge -->
+      <span class="absolute top-3 right-4 text-[10px] font-bold uppercase tracking-widest text-primary bg-primary/10 px-3 py-1 rounded-full border border-primary/20" id="questionBadge">HR</span>
+      <!-- Number -->
+      <div class="flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center text-primary font-black font-headline text-base" id="questionNumber">1</div>
+      <!-- Text -->
+      <p class="text-on-surface font-medium text-sm leading-relaxed pr-20" id="questionText">
+        Tell me about yourself and walk me through your professional journey so far.
+      </p>
+    </div>
+
+    <!-- Navigation + Tips row -->
+    <div class="flex items-center justify-between mt-4">
+      <div class="flex gap-2">
+        <button onclick="prevQuestion()" class="flex items-center gap-1.5 px-4 py-2 rounded-full bg-surface-container-high border border-white/5 text-xs font-bold text-on-surface-variant hover:text-white hover:bg-white/10 transition-all">
+          <span class="material-symbols-outlined text-sm">arrow_back</span> Prev
+        </button>
+        <button onclick="nextQuestion()" class="flex items-center gap-1.5 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-xs font-bold text-primary hover:bg-primary/20 transition-all">
+          Next <span class="material-symbols-outlined text-sm">arrow_forward</span>
+        </button>
+      </div>
+      <div class="hidden md:flex items-center gap-4">
+        <!-- Dot indicators -->
+        <div class="flex gap-1.5 items-center" id="dotIndicators"></div>
+        <button onclick="toggleTip()" class="flex items-center gap-1.5 text-xs font-bold text-tertiary hover:text-white transition-all">
+          <span class="material-symbols-outlined text-sm">lightbulb</span> <span id="tipToggleText">Show Tip</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Tip panel (hidden by default) -->
+    <div id="tipPanel" class="hidden mt-3 rounded-xl bg-tertiary/5 border border-tertiary/20 px-5 py-3">
+      <p class="text-xs text-tertiary font-medium leading-relaxed" id="tipText">
+        Use the STAR method: Situation → Task → Action → Result. Keep your answer under 2 minutes.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     MAIN CONTENT (Camera + Controls + AI panels)
+══════════════════════════════════════════════ -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6" style="min-height:calc(100vh - 340px);">
+<div class="lg:col-span-9 flex flex-col gap-6 h-full overflow-hidden">
+<div class="grid grid-cols-2 gap-6" style="height:380px;">
+<div class="relative rounded-2xl overflow-hidden bg-surface-container-low shadow-2xl border border-white/5 group">
+<img alt="Camera feed" class="w-full h-full object-cover opacity-80" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDXj5wHumZRCy-uhqaPloyrgZUw73mHGdRq8fXacv5uPI2bS9v4LrcIMZ7P6hldmoyHpBY09L0rcs-1KbbqD4wWSx-SYYF6GM8jo-JAA1uqozFVdyIdDKIURnwNKTpUecW-MXceDuLQEE-FWfnkrkYZk4_h44YIAZFb6kNUKQcw6tJ-rq4LnhPr2_1kXPji-w4mYy8POVNYqQfBI0oFOrAxKY3pntjAqbakBQnmx1-DuE6xASZQZmINh-j-njQ6Vp0YY8iBMOdqbvg"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background/40 to-transparent"></div>
+<div class="absolute top-4 left-4 flex items-center gap-2 px-3 py-1.5 glass-card rounded-full">
+<div class="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
+<span class="text-[10px] font-label uppercase tracking-widest text-primary font-bold">Primary Camera Feed</span>
+</div>
+</div>
+<div class="surface-container-high rounded-2xl p-6 flex flex-col border border-white/5 relative">
+<div class="flex justify-between items-center mb-6">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">mic</span>
+<h3 class="text-xs font-headline text-on-surface-variant uppercase tracking-[0.2em] font-bold">Audio Profile Monitoring</h3>
+</div>
+<span class="text-xs font-label text-primary bg-primary/10 px-3 py-1 rounded-full font-bold">Live Stream</span>
+</div>
+<div class="flex-grow flex items-center justify-center gap-2 bg-surface-container-low/30 rounded-2xl px-8">
+<div class="waveform-bar w-1 bg-primary rounded-full" style="animation-delay: 0.1s"></div>
+<div class="waveform-bar w-1 bg-primary rounded-full" style="animation-delay: 0.2s"></div>
+<div class="waveform-bar w-1 bg-primary rounded-full" style="animation-delay: 0.3s"></div>
+<div class="waveform-bar w-1 bg-primary rounded-full" style="animation-delay: 0.4s"></div>
+<div class="waveform-bar w-1 bg-primary rounded-full" style="animation-delay: 0.5s"></div>
+<div class="waveform-bar w-1 bg-primary/80 rounded-full" style="animation-delay: 0.6s"></div>
+<div class="waveform-bar w-1 bg-primary/80 rounded-full" style="animation-delay: 0.7s"></div>
+<div class="waveform-bar w-1 bg-primary/80 rounded-full" style="animation-delay: 0.8s"></div>
+<div class="waveform-bar w-1 bg-primary/60 rounded-full" style="animation-delay: 0.9s"></div>
+<div class="waveform-bar w-1 bg-primary/60 rounded-full" style="animation-delay: 1.0s"></div>
+<div class="waveform-bar w-1 bg-primary/40 rounded-full" style="animation-delay: 1.1s"></div>
+<div class="waveform-bar w-1 bg-primary/40 rounded-full" style="animation-delay: 1.2s"></div>
+<div class="waveform-bar w-1 bg-primary/20 rounded-full" style="animation-delay: 1.3s"></div>
+<div class="waveform-bar w-1 bg-primary/20 rounded-full" style="animation-delay: 1.4s"></div>
+</div>
+<div class="mt-6 p-4 rounded-xl bg-primary/5 border border-primary/10 flex items-center gap-4">
+<span class="material-symbols-outlined text-primary">graphic_eq</span>
+<p class="text-xs text-indigo-100/70 leading-normal">Voice clarity is optimal. Background noise filtering is active.</p>
+</div>
+</div>
+</div>
+<div class="flex gap-4">
+<button class="flex-1 py-4 rounded-xl bg-primary text-on-primary font-headline font-bold text-sm uppercase tracking-widest flex items-center justify-center gap-3 shadow-xl hover:bg-primary-container transition-all active:scale-95">
+<span class="material-symbols-outlined font-fill-1">fiber_manual_record</span>
+                    Start Recording
+                </button>
+<a href="../interveux_detailed_session_audit/code.html" class="flex-1 py-4 rounded-xl bg-surface-container-high border border-error/50 text-error font-headline font-bold text-sm uppercase tracking-widest flex items-center justify-center gap-3 shadow-xl hover:bg-error/10 transition-all active:scale-95">
+<span class="material-symbols-outlined font-fill-1">stop</span>
+                    Stop &amp; Analyze Session
+                </a>
+</div>
+<div class="surface-container-high rounded-2xl flex-grow overflow-hidden border border-white/5 shadow-2xl flex flex-col">
+<div class="px-6 py-4 border-b border-white/5 flex items-center justify-between bg-surface-container-low/20">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-xl">history</span>
+<h3 class="text-[10px] font-headline text-on-surface-variant uppercase tracking-widest font-bold">Activity Log &amp; Transcript</h3>
+</div>
+<div class="flex gap-2">
+<button class="px-3 py-1.5 rounded-lg bg-white/5 text-[9px] font-bold uppercase tracking-widest text-indigo-200 hover:bg-white/10">Export</button>
+</div>
+</div>
+<div class="p-6 overflow-y-auto custom-scrollbar flex-grow space-y-4">
+<div class="flex gap-4 items-start opacity-40">
+<span class="text-[10px] font-mono text-indigo-400/50 bg-white/5 px-2 py-0.5 rounded shrink-0">00:12</span>
+<p class="text-xs text-indigo-100/70 leading-relaxed">Sure, in my previous role at the design agency, I encountered a situation where our engineering team and creative leads were at odds regarding a specific interaction model...</p>
+</div>
+<div class="flex gap-4 items-start opacity-60">
+<span class="text-[10px] font-mono text-indigo-400/50 bg-white/5 px-2 py-0.5 rounded shrink-0">00:45</span>
+<p class="text-xs text-indigo-100/70 leading-relaxed">The main point of contention was the feasibility of a complex animation system. I decided to facilitate a technical audit to separate the subjective design preferences...</p>
+</div>
+<div class="flex gap-4 items-start bg-primary/5 p-4 rounded-xl border border-primary/20">
+<span class="text-[10px] font-mono text-primary font-bold bg-primary/10 px-2 py-0.5 rounded shrink-0">02:38</span>
+<div class="space-y-2">
+<p class="text-sm text-white font-medium leading-relaxed">Ultimately, we reached a middle ground that preserved the design vision while meeting the performance budget...</p>
+<div class="flex gap-2">
+<span class="text-[8px] font-bold text-primary uppercase tracking-widest bg-primary/10 px-2 py-0.5 rounded-full">Aura Insight</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="lg:col-span-3 flex flex-col gap-6 h-full">
+<div class="vibrant-glass rounded-2xl p-6 relative overflow-hidden border border-white/10 shrink-0">
+<div class="space-y-3 relative z-10">
+<span class="text-[9px] font-label text-secondary font-extrabold uppercase tracking-[0.2em]">Live Challenge</span>
+<h2 class="text-xl font-headline font-bold leading-tight text-white italic">"Tell me about a time you had to manage a conflict within a cross-functional team."</h2>
+</div>
+<div class="flex gap-2 mt-6 relative z-10">
+<button class="flex-grow py-2.5 rounded-xl bg-white/10 hover:bg-white/20 transition-all text-[10px] font-bold text-white flex items-center justify-center gap-2 border border-white/5 uppercase tracking-widest">
+                        Next Question
+                    </button>
+<button class="w-10 h-10 rounded-xl glass-card flex items-center justify-center text-white">
+<span class="material-symbols-outlined text-lg">lightbulb</span>
+</button>
+</div>
+</div>
+<div class="surface-container-high rounded-2xl p-6 flex flex-col gap-6 border border-white/5 shadow-xl flex-grow overflow-y-auto custom-scrollbar">
+<h3 class="text-[10px] font-headline text-on-surface-variant uppercase tracking-widest font-bold">Integrated Status Hub</h3>
+<div class="space-y-3 stagger-children" data-stagger="60">
+<div>
+<div class="flex justify-between text-xs mb-1">
+<span class="text-on-surface-variant">Clarity</span><span class="text-primary" data-countup="87" data-suffix="%" data-delay="200">87%</span>
+</div>
+<div class="h-1.5 rounded-full bg-surface-container-highest overflow-hidden">
+<div class="h-full bg-primary rounded-full progress-bar-animated" data-width="87%" data-delay="250"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-xs mb-1">
+<span class="text-on-surface-variant">Pace</span><span class="text-secondary" data-countup="72" data-suffix="%" data-delay="350">72%</span>
+</div>
+<div class="h-1.5 rounded-full bg-surface-container-highest overflow-hidden">
+<div class="h-full bg-secondary rounded-full progress-bar-animated" data-width="72%" data-delay="400"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-xs mb-1">
+<span class="text-on-surface-variant">Structure</span><span class="text-tertiary" data-countup="91" data-suffix="%" data-delay="450">91%</span>
+</div>
+<div class="h-1.5 rounded-full bg-surface-container-highest overflow-hidden">
+<div class="h-full bg-tertiary rounded-full progress-bar-animated" data-width="91%" data-delay="500"></div>
+</div>
+</div>
+</div>
+<div class="h-px w-full bg-white/5"></div>
+<div class="space-y-3">
+<div class="flex justify-between items-end">
+<p class="text-lg font-bold text-white font-headline">Low <span class="text-[10px] text-green-400 font-normal uppercase tracking-normal ml-1">Anxiety</span></p>
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-green-400 inline-block dot-pulse"></span>
+<span class="material-symbols-outlined text-primary star-spin" style="font-size:18px">auto_awesome</span>
+<span class="text-xs text-on-surface-variant">AI Analysis Active</span>
+</div>
+</div>
+<div class="relative h-1.5 w-full bg-surface-container-lowest rounded-full overflow-hidden">
+<div class="absolute h-full w-[28%] rounded-full bg-gradient-to-r from-green-400 via-yellow-400 to-red-500 shadow-[0_0_10px_rgba(74,222,128,0.3)]"></div>
+</div>
+</div>
+<div class="h-px w-full bg-white/5"></div>
+<div class="space-y-3">
+<div class="flex justify-between items-end">
+<p class="text-lg font-bold text-white font-headline">Open <span class="text-[10px] text-primary font-normal uppercase tracking-normal ml-1">Posture</span></p>
+<div class="flex items-center gap-1.5 bg-primary/10 px-2 py-1 rounded">
+<span class="material-symbols-outlined text-[14px] text-primary">accessibility_new</span>
+<span class="text-[9px] font-bold text-primary uppercase tracking-widest">Body Language</span>
+</div>
+</div>
+<div class="relative h-1.5 w-full bg-surface-container-lowest rounded-full overflow-hidden">
+<div class="absolute h-full w-[82%] rounded-full bg-gradient-to-r from-primary to-primary-container shadow-[0_0_10px_rgba(191,129,255,0.3)]"></div>
+</div>
+</div>
+<div class="mt-auto p-4 rounded-xl bg-surface-container-low/50 border border-white/5">
+<p class="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest mb-3">Live Insights</p>
+<ul class="space-y-2">
+<li class="flex items-center gap-2 text-[11px] text-indigo-100/70">
+<div class="w-1.5 h-1.5 rounded-full bg-green-400"></div> Eye contact: Consistent
+                        </li>
+<li class="flex items-center gap-2 text-[11px] text-indigo-100/70">
+<div class="w-1.5 h-1.5 rounded-full bg-green-400"></div> Hand gestures: Natural
+                        </li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<footer class="w-full py-6 border-t border-purple-900/10 bg-background mt-4 shrink-0" style="margin-left:16rem;">
+<div class="max-w-screen-2xl mx-auto flex flex-col md:flex-row justify-between items-center px-8">
+<div class="flex gap-8 mb-4 md:mb-0">
+<a class="font-manrope text-[9px] uppercase tracking-[0.2em] text-indigo-400/40 hover:text-purple-300 transition-colors" href="#">Privacy</a>
+<a class="font-manrope text-[9px] uppercase tracking-[0.2em] text-indigo-400/40 hover:text-purple-300 transition-colors" href="#">Terms</a>
+<a class="font-manrope text-[9px] uppercase tracking-[0.2em] text-indigo-400/40 hover:text-purple-300 transition-colors" href="#">API Status</a>
+<a class="font-manrope text-[9px] uppercase tracking-[0.2em] text-indigo-400/40 hover:text-purple-300 transition-colors" href="#">Contact</a>
+</div>
+<p class="font-manrope text-[9px] uppercase tracking-[0.2em] text-indigo-400/30">© 2024 InterveuX. Active Mirror.</p>
+</div>
+</footer>
+<style>
+/* ── Interview Practice Tab Styles ── */
+.category-tab {
+  border-bottom: 3px solid transparent;
+  margin-bottom: -1px;
+}
+.category-tab.active-tab {
+  color: #bf81ff;
+  border-bottom-color: #bf81ff;
+  background: rgba(191,129,255,0.08);
+}
+.category-tab:not(.active-tab):hover {
+  background: rgba(255,255,255,0.03);
+}
+/* Question card transition */
+#questionCard {
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+#questionCard:hover {
+  box-shadow: 0 0 30px rgba(191,129,255,0.06);
+}
+/* Dot indicators */
+.q-dot {
+  width: 6px; height: 6px; border-radius: 9999px;
+  background: rgba(255,255,255,0.15);
+  transition: background 0.2s ease, transform 0.2s ease;
+  display: inline-block;
+}
+.q-dot.active {
+  background: #bf81ff;
+  transform: scale(1.5);
+}
+</style>
+<script>
+/* ═══════════════════════════════════════════
+   INTERVIEW PRACTICE — Question Bank
+═══════════════════════════════════════════ */
+const QUESTIONS = {
+  HR: {
+    color: 'primary',
+    questions: [
+      { q: "Tell me about yourself and walk me through your professional journey so far.", tip: "Start with your current role, then go back to your education/early career. Keep it to 90 seconds. End with why you're excited about this role." },
+      { q: "Why do you want to leave your current job and why are you interested in this position?", tip: "Be honest but positive — avoid criticizing your current employer. Focus on growth opportunities and what excites you about the new role." },
+      { q: "Where do you see yourself in 5 years professionally?", tip: "Show ambition that aligns with the company's growth path. Mention skills you want to develop and value you want to add." },
+      { q: "What are your greatest strengths and how have they helped you succeed?", tip: "Pick 2-3 strengths backed by specific examples. Quantify the impact if possible (e.g., 'reduced onboarding time by 30%')." },
+      { q: "Describe a situation where you had a conflict with a colleague or manager. How did you handle it?", tip: "Use the STAR method. Focus on the resolution and what you learned, not the conflict itself." },
+      { q: "What is your expected salary range and how did you arrive at that number?", tip: "Research market rates (Glassdoor, LinkedIn Salary). Give a range, not a single number. Anchor high but be flexible." },
+      { q: "Why should we hire you over other candidates applying for this position?", tip: "Highlight 3 unique differentiators. Connect your skills directly to the job description requirements." },
+      { q: "How do you handle stress and pressure during high-stakes situations at work?", tip: "Name your go-to technique (deep work blocks, time-boxing, delegation). Give a real example where you stayed calm under pressure." }
+    ]
+  },
+  Technical: {
+    color: 'secondary',
+    questions: [
+      { q: "Explain the difference between REST and GraphQL. When would you choose one over the other?", tip: "Key: REST is resource-based with fixed endpoints; GraphQL allows flexible queries. Choose GraphQL for complex data needs, REST for simplicity." },
+      { q: "Walk me through how you would design a system to handle 10 million concurrent users.", tip: "Cover: horizontal scaling, load balancers, caching (Redis), CDN, database sharding, async queues, and monitoring." },
+      { q: "What is the time and space complexity of your most recently implemented algorithm?", tip: "Know Big O for common structures: arrays, hash maps, trees, graphs. Practice explaining trade-offs between time and space." },
+      { q: "How would you approach debugging a production issue that's causing 5% of API calls to fail?", tip: "Steps: check logs → isolate with metrics → reproduce locally → fix → deploy with feature flag → monitor rollout." },
+      { q: "Describe your experience with CI/CD pipelines. How do you ensure zero-downtime deployments?", tip: "Mention: blue-green deployments, canary releases, rolling updates, automated testing gates, and rollback strategies." },
+      { q: "Explain how you would optimize a slow database query that's timing out in production.", tip: "Cover: EXPLAIN ANALYZE, indexing strategy, query rewrite, caching layer, read replicas, and connection pooling." },
+      { q: "How do you approach writing unit tests vs integration tests vs end-to-end tests?", tip: "Reference the testing pyramid: many unit tests, fewer integration tests, minimal E2E. Mention mocking, test isolation, and coverage targets." },
+      { q: "Describe a complex technical decision you made recently. What trade-offs did you consider?", tip: "Structure: context → options evaluated → decision criteria → outcome → what you'd do differently." }
+    ]
+  },
+  Behavioral: {
+    color: 'tertiary',
+    questions: [
+      { q: "Tell me about a time you led a project that failed. What did you learn from that experience?", tip: "Be honest about the failure. Show self-awareness, what you changed in your approach, and how the lesson improved future outcomes." },
+      { q: "Describe a situation where you had to influence someone without having direct authority over them.", tip: "Focus on relationship-building, data-driven arguments, and finding common ground. Show you can lead through persuasion." },
+      { q: "Give me an example of when you had to make a difficult decision with incomplete information.", tip: "Show your decision-making framework: gather what data exists, assess risks, define reversibility, make the call, monitor closely." },
+      { q: "Tell me about a time you received critical feedback. How did you respond and what changed?", tip: "Show openness to feedback. Describe what specific action you took and the measurable improvement that followed." },
+      { q: "Describe your most successful collaboration with a cross-functional team. What made it work?", tip: "Highlight clear goal alignment, communication cadence, conflict resolution, and your specific contribution to team success." },
+      { q: "Walk me through a time you had to manage competing priorities with tight deadlines.", tip: "Discuss how you triaged tasks (impact vs effort), communicated expectations to stakeholders, and delivered despite constraints." },
+      { q: "Tell me about a time you proactively identified a problem before it became critical.", tip: "Show your ability to think ahead, monitor systems/processes, and take initiative. Quantify the risk you mitigated." },
+      { q: "Describe a situation where you had to adapt quickly to a major change at work.", tip: "Show resilience and agility. Focus on how you reframed the situation positively and helped your team adapt alongside you." }
+    ]
+  },
+  MBA: {
+    color: 'primary',
+    questions: [
+      { q: "Walk me through a market entry strategy for a SaaS company expanding into Southeast Asia.", tip: "Framework: market sizing → competitive landscape → regulatory environment → go-to-market strategy → partnership vs organic growth." },
+      { q: "How would you perform a competitive analysis for a product launching into a saturated market?", tip: "Use Porter's Five Forces + jobs-to-be-done analysis. Identify your differentiated value proposition and potential white spaces." },
+      { q: "You have $5M to allocate across 3 business units. How do you decide the allocation?", tip: "Evaluate: ROI potential, strategic alignment, market opportunity, current performance, and risk profile. Build a decision matrix." },
+      { q: "A key client is threatening to churn. What's your retention strategy and escalation plan?", tip: "Immediate: executive outreach. Then: root cause analysis, custom recovery plan, success metrics, and executive sponsorship model." },
+      { q: "How would you build a business case for an initiative that requires $2M in investment?", tip: "Include: problem statement, market opportunity, NPV/IRR analysis, risk assessment, resource requirements, and success KPIs." },
+      { q: "Describe how you would restructure an underperforming team to improve output by 40%.", tip: "Assess current state → identify bottlenecks → realign roles to strengths → improve processes → set OKRs → coach/hire/release." },
+      { q: "What metrics would you track to measure the health of a subscription business?", tip: "Core: MRR, ARR, churn rate, NRR, CAC, LTV, CAC:LTV ratio, payback period, NPS, and product engagement metrics." },
+      { q: "How would you approach pricing strategy for a new B2B enterprise product?", tip: "Consider: value-based pricing, competitive benchmarking, cost-plus analysis, customer WTP research, and tiered packaging strategy." }
+    ]
+  }
+};
+
+let currentCategory = 'HR';
+let currentIndex = 0;
+let tipShown = false;
+
+function getQuestions() { return QUESTIONS[currentCategory].questions; }
+
+function renderQuestion() {
+  const qs = getQuestions();
+  const q = qs[currentIndex];
+  const total = qs.length;
+
+  // Animate question card out/in
+  const card = document.getElementById('questionCard');
+  card.style.opacity = '0';
+  card.style.transform = 'translateY(8px)';
+  setTimeout(() => {
+    document.getElementById('questionText').textContent = q.q;
+    document.getElementById('questionNumber').textContent = currentIndex + 1;
+    document.getElementById('questionBadge').textContent = currentCategory;
+    document.getElementById('qProgressLabel').textContent = `Q ${currentIndex + 1} / ${total}`;
+    document.getElementById('tipText').textContent = q.tip;
+    // Reset tip
+    if (tipShown) {
+      tipShown = false;
+      document.getElementById('tipPanel').classList.add('hidden');
+      document.getElementById('tipToggleText').textContent = 'Show Tip';
+    }
+    // Animate in
+    card.style.transition = 'opacity 0.2s ease, transform 0.2s ease';
+    card.style.opacity = '1';
+    card.style.transform = 'translateY(0)';
+    renderDots(total);
+  }, 150);
+}
+
+function renderDots(total) {
+  const container = document.getElementById('dotIndicators');
+  container.innerHTML = '';
+  for (let i = 0; i < total; i++) {
+    const dot = document.createElement('span');
+    dot.className = 'q-dot' + (i === currentIndex ? ' active' : '');
+    dot.onclick = () => { currentIndex = i; renderQuestion(); };
+    dot.style.cursor = 'pointer';
+    container.appendChild(dot);
+  }
+}
+
+function switchCategory(cat) {
+  currentCategory = cat;
+  currentIndex = 0;
+  // Update tab styles
+  document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active-tab', 'text-primary', 'font-bold'));
+  document.querySelectorAll('.category-tab').forEach(t => { if(!t.classList.contains('active-tab')) { t.classList.add('text-on-surface-variant','font-medium'); } });
+  const activeTab = document.getElementById('tab-' + cat);
+  if (activeTab) {
+    activeTab.classList.add('active-tab');
+    activeTab.classList.remove('text-on-surface-variant','font-medium');
+  }
+  renderQuestion();
+}
+
+function nextQuestion() {
+  const qs = getQuestions();
+  currentIndex = (currentIndex + 1) % qs.length;
+  renderQuestion();
+}
+
+function prevQuestion() {
+  const qs = getQuestions();
+  currentIndex = (currentIndex - 1 + qs.length) % qs.length;
+  renderQuestion();
+}
+
+function shuffleQuestion() {
+  const qs = getQuestions();
+  let newIdx;
+  do { newIdx = Math.floor(Math.random() * qs.length); } while (newIdx === currentIndex && qs.length > 1);
+  currentIndex = newIdx;
+  renderQuestion();
+}
+
+function toggleTip() {
+  tipShown = !tipShown;
+  document.getElementById('tipPanel').classList.toggle('hidden', !tipShown);
+  document.getElementById('tipToggleText').textContent = tipShown ? 'Hide Tip' : 'Show Tip';
+}
+
+// Init on load
+document.addEventListener('DOMContentLoaded', () => {
+  renderQuestion();
+  // Keyboard navigation
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight') nextQuestion();
+    if (e.key === 'ArrowLeft') prevQuestion();
+    if (e.key === 't' || e.key === 'T') toggleTip();
+  });
+});
+</script>
+<script src="../animations.js"></script>
+</body></html>

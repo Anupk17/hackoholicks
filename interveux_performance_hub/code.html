@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>InterveuX - Performance Overview</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../animations.css"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-container": "#fdb0d7",
+                        "on-primary": "#32005c",
+                        "surface-container-highest": "#222247",
+                        "on-primary-fixed-variant": "#6500b2",
+                        "on-background": "#e5e3ff",
+                        "surface-dim": "#0c0c1f",
+                        "on-error-container": "#ff97a3",
+                        "on-secondary-fixed": "#47366b",
+                        "secondary-dim": "#c4aeed",
+                        "error-dim": "#c8475d",
+                        "secondary-fixed": "#ebddff",
+                        "on-surface-variant": "#a8a7d5",
+                        "on-primary-fixed": "#3c006d",
+                        "primary-fixed-dim": "#ce9fff",
+                        "surface-container": "#161632",
+                        "tertiary-fixed": "#fdb0d7",
+                        "tertiary": "#ffc4e0",
+                        "outline": "#72719c",
+                        "on-tertiary-fixed": "#4d1838",
+                        "error-container": "#8a1632",
+                        "secondary-container": "#2d1b4f",
+                        "tertiary-fixed-dim": "#eda2c9",
+                        "primary": "#bf81ff",
+                        "surface-variant": "#222247",
+                        "primary-container": "#9c42f4",
+                        "on-surface": "#e5e3ff",
+                        "tertiary-dim": "#eda2c9",
+                        "secondary-fixed-dim": "#dfccff",
+                        "inverse-primary": "#8523dd",
+                        "primary-dim": "#9c42f4",
+                        "on-secondary-container": "#af9ad7",
+                        "surface-bright": "#272752",
+                        "surface": "#0c0c1f",
+                        "on-secondary-fixed-variant": "#645289",
+                        "on-primary-container": "#ffffff",
+                        "surface-container-lowest": "#000000",
+                        "background": "#0c0c1f",
+                        "primary-fixed": "#d8b1ff",
+                        "surface-container-high": "#1c1c3d",
+                        "error": "#fd6f85",
+                        "on-secondary": "#48366c",
+                        "inverse-on-surface": "#53536a",
+                        "secondary": "#d2bcfb",
+                        "outline-variant": "#44446c",
+                        "on-error": "#490013",
+                        "on-tertiary-fixed-variant": "#6f3556",
+                        "on-tertiary-container": "#652d4d",
+                        "surface-tint": "#bf81ff",
+                        "surface-container-low": "#111128",
+                        "inverse-surface": "#fcf8ff",
+                        "on-tertiary": "#6f3556"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Manrope"],
+                        "label": ["Manrope"]
+                    }
+                },
+            },
+        }
+    </script>
+<style type="text/tailwindcss">
+        :root {
+            --glow-purple: #bf81ff;
+            --glow-indigo: #4c1d95;
+        }
+        body {
+            background-color: #0c0c1f;
+            color: #e5e3ff;
+            font-family: 'Manrope', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .glass-panel {
+            background: rgba(34, 34, 71, 0.4);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .text-glow {
+            text-shadow: 0 0 15px rgba(191, 129, 255, 0.6);
+        }
+        .circular-score-glow {
+            box-shadow: 0 0 40px rgba(191, 129, 255, 0.3), inset 0 0 20px rgba(191, 129, 255, 0.2);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface">
+<nav class="fixed top-0 w-full z-50 bg-indigo-950/40 backdrop-blur-xl border-b border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.3)] flex justify-between items-center px-6 h-16">
+<div class="flex items-center gap-8">
+<a href="../interveux_landing_page/code.html" class="text-xl font-bold bg-gradient-to-r from-purple-400 to-indigo-300 bg-clip-text text-transparent font-headline">InterveuX</a>
+<div class="hidden md:flex items-center gap-6 font-plus-jakarta text-sm tracking-tight">
+<a class="text-purple-400 border-b-2 border-purple-500" href="../interveux_performance_hub/code.html">Performance Hub</a>
+<a class="text-indigo-200/60 hover:text-purple-300 transition-colors" href="../interveux_active_mirror/code.html">Active Mirror</a>
+<a class="text-indigo-200/60 hover:text-purple-300 transition-colors" href="../interveux_resume_checker/code.html">Resume Checker</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative hidden sm:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-indigo-300/50 text-sm">search</span>
+<input class="bg-surface-container-lowest border border-outline-variant/20 rounded-full py-1.5 pl-10 pr-4 text-xs focus:ring-1 focus:ring-primary focus:outline-none w-48 transition-all" placeholder="Search insights..." type="text"/>
+</div>
+<button class="text-indigo-200/60 hover:text-purple-300 transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="h-8 w-8 rounded-full overflow-hidden border border-primary/30">
+<img alt="User profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCGfMcKm_NY1D-4JURZsHvaTK0CQ33y9O2SnZ_WFyYjCdJqp4QJPRsu0iwhWhkg01R3_0kJm6FmlJp4hmt8qFgeij1WqvQilTBv2LafJZNlk4LL5zQgd68PArPGK-Tc3RaCI73jXVQOp6GLwD4bkmmUYrj3zFXLPlR52HV38u3FwvjRgVu2wDklPs0Y4Q3H0t-3XLz6L8vwx6eAq0mJ7nIK5Tn0p1VEVM8REgSMMXD8qYo2WL8CwOCbfHq-je_yZLJKJiToMxmIJ1c"/>
+</div>
+</div>
+</nav>
+<aside class="h-screen w-64 fixed left-0 top-0 bg-[#0a0a1e] flex flex-col py-8 shadow-2xl hidden lg:flex border-r border-white/5 z-40 overflow-y-auto">
+<div class="px-6 mb-10">
+<a href="../interveux_landing_page/code.html" class="block">
+<h2 class="text-lg font-black text-white font-headline uppercase tracking-tighter bg-gradient-to-r from-purple-400 to-indigo-300 bg-clip-text text-transparent">InterveuX</h2>
+</a>
+<p class="text-indigo-300/40 text-[10px] font-medium uppercase tracking-widest mt-0.5">Aetheris Lumina</p>
+</div>
+<nav class="flex-1 px-4 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 bg-purple-600/20 text-purple-400 border-r-4 border-purple-500 rounded-l-lg font-manrope text-sm font-medium" href="../interveux_performance_hub/code.html">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span class="font-manrope text-sm font-medium">Performance Hub</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-indigo-300/50 hover:text-white hover:bg-white/5 transition-all rounded-lg group" href="../interveux_active_mirror/code.html">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">videocam</span>
+<span>Active Mirror</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-indigo-300/50 hover:text-white hover:bg-white/5 transition-all rounded-lg group" href="../interveux_detailed_session_audit/code.html">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">assessment</span>
+<span class="font-manrope text-sm font-medium">Session Audit</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-indigo-300/50 hover:text-white hover:bg-white/5 transition-all rounded-lg group" href="../interveux_resume_checker/code.html">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">description</span>
+<span class="font-manrope text-sm font-medium">Resume Checker</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-indigo-300/50 hover:text-white hover:bg-white/5 transition-all rounded-lg group" href="../interveux_linkedin_auditor_aetheris/code.html">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">find_in_page</span>
+<span class="font-manrope text-sm font-medium">LinkedIn Auditor</span>
+</a>
+</nav>
+<div class="px-6 mt-auto space-y-4">
+<a href="../interveux_active_mirror/code.html" class="w-full py-3 px-4 bg-gradient-to-br from-primary to-primary-container text-on-primary-container rounded-full font-bold text-sm shadow-lg shadow-primary/20 active:scale-95 transition-transform flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm">videocam</span> Start Practice
+</a>
+<div class="pt-6 border-t border-white/5 space-y-2">
+<a class="flex items-center gap-3 px-4 py-2 text-indigo-300/50 hover:text-white transition-colors text-sm" href="#">
+<span class="material-symbols-outlined text-base">help</span>
+<span>Support</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2 text-indigo-300/50 hover:text-white transition-colors text-sm" href="#">
+<span class="material-symbols-outlined text-base">manage_accounts</span>
+<span>Account</span>
+</a>
+</div>
+</div>
+</aside>
+<main class="lg:pl-64 pt-16 min-h-screen">
+<div class="max-w-7xl mx-auto p-8 space-y-8">
+<header class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div>
+<span class="text-tertiary font-label text-xs uppercase tracking-widest font-bold mb-2 block">Level 12 Explorer</span>
+<h1 class="text-4xl md:text-5xl font-black text-white font-headline tracking-tight reveal-on-scroll" data-delay="100">Performance Hub</h1>
+<p class="text-on-surface-variant mt-2 max-w-lg reveal-on-scroll" data-delay="200">You're crushing your goals! Your score improved by <span class="text-primary font-bold">14.2%</span> this week. <span class="text-secondary">Keep the momentum going!</span></p>
+</div>
+<div class="flex items-center gap-3">
+<div class="glass-panel px-4 py-2 rounded-full flex items-center gap-2">
+<span class="h-2 w-2 rounded-full bg-primary animate-pulse shadow-[0_0_8px_var(--glow-purple)]"></span>
+<span class="text-xs font-bold text-indigo-200">GAME MODE ACTIVE</span>
+</div>
+<button class="p-2 glass-panel rounded-full text-white hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined">military_tech</span>
+</button>
+</div>
+</header>
+<div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+<div class="md:col-span-8 glass-panel rounded-lg p-6 relative overflow-hidden group">
+<div class="flex items-center justify-between mb-8">
+<div>
+<h3 class="text-lg font-bold text-white font-headline">Skill Progression</h3>
+<p class="text-xs text-on-surface-variant">Your journey to mastery</p>
+</div>
+<select class="bg-surface-container-lowest border-none text-xs rounded-full px-4 py-1.5 text-indigo-200 focus:ring-1 focus:ring-primary">
+<option>Last 30 Days</option>
+<option>Last 7 Days</option>
+</select>
+</div>
+<div class="h-64 w-full relative">
+<svg class="w-full h-full" preserveaspectratio="none" viewbox="0 0 800 200">
+<defs>
+<lineargradient id="line-gradient" x1="0" x2="1" y1="0" y2="0">
+<stop offset="0%" stop-color="#bf81ff"></stop>
+<stop offset="100%" stop-color="#9c42f4"></stop>
+</lineargradient>
+<lineargradient id="fill-gradient" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#bf81ff" stop-opacity="0.2"></stop>
+<stop offset="100%" stop-color="#bf81ff" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+<line stroke="rgba(255,255,255,0.05)" stroke-width="1" x1="0" x2="800" y1="50" y2="50"></line>
+<line stroke="rgba(255,255,255,0.05)" stroke-width="1" x1="0" x2="800" y1="100" y2="100"></line>
+<line stroke="rgba(255,255,255,0.05)" stroke-width="1" x1="0" x2="800" y1="150" y2="150"></line>
+<path d="M0,150 Q100,140 200,80 Q300,20 400,100 Q500,160 600,60 Q700,40 800,90 L800,200 L0,200 Z" fill="url(#fill-gradient)"></path>
+<path class="drop-shadow-[0_0_12px_rgba(191,129,255,0.8)]" d="M0,150 Q100,140 200,80 Q300,20 400,100 Q500,160 600,60 Q700,40 800,90" fill="none" stroke="url(#line-gradient)" stroke-linecap="round" stroke-width="4"></path>
+<circle class="shadow-lg" cx="200" cy="80" fill="#bf81ff" r="6"></circle>
+<circle class="shadow-lg" cx="600" cy="60" fill="#bf81ff" r="6"></circle>
+</svg>
+</div>
+<div class="flex justify-between mt-4 px-2">
+<span class="text-[10px] text-on-surface-variant font-bold">MON</span>
+<span class="text-[10px] text-on-surface-variant font-bold">TUE</span>
+<span class="text-[10px] text-on-surface-variant font-bold">WED</span>
+<span class="text-[10px] text-on-surface-variant font-bold">THU</span>
+<span class="text-[10px] text-on-surface-variant font-bold">FRI</span>
+<span class="text-[10px] text-on-surface-variant font-bold">SAT</span>
+<span class="text-[10px] text-on-surface-variant font-bold">SUN</span>
+</div>
+</div>
+<div class="md:col-span-4 flex flex-col gap-6">
+<div class="glass-panel rounded-lg p-6 flex-1 flex flex-col items-center justify-center relative overflow-hidden group">
+<div class="absolute top-4 left-4">
+<h4 class="text-xs font-bold text-indigo-200 uppercase tracking-widest">Overall Clarity</h4>
+</div>
+<div class="relative w-40 h-40 flex items-center justify-center" data-score-ring="88" data-delay="300">
+<svg class="w-full h-full absolute inset-0 -rotate-90" viewBox="0 0 160 160">
+  <circle class="score-ring-track" cx="80" cy="80" r="68" fill="none" stroke="rgba(68,68,108,0.3)" stroke-width="8"/>
+  <circle class="score-ring-fill" cx="80" cy="80" r="68" fill="none" stroke="#bf81ff" stroke-width="8" stroke-linecap="round"/>
+</svg>
+<div class="flex flex-col items-center relative z-10">
+<span class="text-6xl font-black text-white font-headline text-glow leading-none" data-count data-suffix="">88</span>
+<span class="text-lg font-bold text-primary">%</span>
+</div>
+</div>
+<div class="mt-4 flex items-center gap-2 bg-primary/10 px-3 py-1 rounded-full border border-primary/20">
+<span class="material-symbols-outlined text-sm text-primary">trending_up</span>
+<span class="text-[10px] font-bold text-primary">ELITE STATUS</span>
+</div>
+</div>
+<div class="bg-gradient-to-br from-indigo-900 to-surface-container rounded-lg p-6 flex-1 flex flex-col justify-between border border-primary/20 relative overflow-hidden group">
+<div class="absolute -right-4 -top-4 opacity-20 group-hover:opacity-40 transition-opacity">
+<span class="material-symbols-outlined text-8xl text-secondary">workspace_premium</span>
+</div>
+<div class="flex justify-between items-start relative z-10">
+<h4 class="text-xs font-bold text-secondary uppercase tracking-widest">Challenges Completed</h4>
+<div class="h-10 w-10 rounded-full bg-secondary/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">rocket_launch</span>
+</div>
+</div>
+<div class="mt-4 relative z-10">
+<div class="flex items-baseline gap-2">
+<span class="text-5xl font-black text-white">42</span>
+<span class="text-xs font-bold text-secondary-dim uppercase">Attempts</span>
+</div>
+<p class="text-[10px] text-on-surface-variant mt-1">Level up in 8 more attempts!</p>
+</div>
+<div class="w-full h-1 bg-surface-container-highest rounded-full mt-4 overflow-hidden relative z-10">
+<div class="h-full bg-secondary w-4/6 rounded-full"></div>
+</div>
+</div>
+</div>
+<div class="md:col-span-12 glass-panel rounded-lg overflow-hidden border border-white/5 shadow-2xl reveal-on-scroll" data-delay="200">
+<div class="px-6 py-4 border-b border-white/5 flex items-center justify-between bg-surface-container-low/50">
+<h3 class="text-lg font-bold text-white font-headline">Session History</h3>
+<button class="text-xs font-bold text-primary hover:text-white transition-colors uppercase tracking-widest">View Archives</button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead class="bg-surface-container-low text-[10px] uppercase tracking-widest text-on-surface-variant font-bold">
+<tr>
+<th class="px-6 py-4">Role / Session</th>
+<th class="px-6 py-4">Date</th>
+<th class="px-6 py-4 text-center">Clarity Performance</th>
+<th class="px-6 py-4 text-center">Sentiment</th>
+<th class="px-6 py-4 text-right">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-white/5 text-sm">
+<tr class="hover:bg-white/5 transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary border border-primary/20">
+<span class="material-symbols-outlined">terminal</span>
+</div>
+<div>
+<p class="font-bold text-white">Senior Product Engineer</p>
+<p class="text-xs text-on-surface-variant">Technical Round</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-on-surface-variant">Oct 24, 2024</td>
+<td class="px-6 py-4">
+<div class="flex flex-col items-center">
+<span class="text-xl font-extrabold text-white drop-shadow-md" data-countup="92" data-suffix="%" data-delay="400">92%</span>
+<div class="w-16 h-[2px] bg-surface-container-highest rounded-full overflow-hidden mt-1">
+<div class="h-full bg-primary progress-bar-animated" data-width="92%" data-delay="450"></div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex justify-center">
+<span class="px-3 py-1 bg-primary/10 text-primary text-[10px] font-bold rounded-full border border-primary/20">CONFIDENT</span>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<a href="../interveux_detailed_session_audit/code.html" class="h-8 w-8 rounded-full flex items-center justify-center text-indigo-300/50 group-hover:text-primary group-hover:bg-primary/10 transition-all">
+<span class="material-symbols-outlined">chevron_right</span>
+</a>
+</td>
+</tr>
+<tr class="hover:bg-white/5 transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="h-10 w-10 rounded-lg bg-secondary/10 flex items-center justify-center text-secondary border border-secondary/20">
+<span class="material-symbols-outlined">psychology</span>
+</div>
+<div>
+<p class="font-bold text-white">UX Design Lead</p>
+<p class="text-xs text-on-surface-variant">Behavioral Round</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-on-surface-variant">Oct 21, 2024</td>
+<td class="px-6 py-4">
+<div class="flex flex-col items-center">
+<span class="text-xl font-extrabold text-white drop-shadow-md" data-countup="76" data-suffix="%" data-delay="500">76%</span>
+<div class="w-16 h-[2px] bg-surface-container-highest rounded-full overflow-hidden mt-1">
+<div class="h-full bg-secondary progress-bar-animated" data-width="76%" data-delay="550"></div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex justify-center">
+<span class="px-3 py-1 bg-secondary/10 text-secondary text-[10px] font-bold rounded-full border border-secondary/20">STEADY</span>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<a href="../interveux_detailed_session_audit/code.html" class="h-8 w-8 rounded-full flex items-center justify-center text-indigo-300/50 group-hover:text-primary group-hover:bg-primary/10 transition-all">
+<span class="material-symbols-outlined">chevron_right</span>
+</a>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="md:col-span-6 glass-panel rounded-lg p-6 border-l-4 border-tertiary bg-gradient-to-r from-tertiary/5 to-transparent reveal-on-scroll" data-delay="200">
+<h3 class="text-lg font-bold text-white font-headline mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-tertiary">psychology_alt</span>
+                        Tactical Advice
+                    </h3>
+<div class="flex gap-4">
+<div class="shrink-0 h-12 w-12 rounded-xl bg-tertiary/10 flex items-center justify-center border border-tertiary/20">
+<span class="material-symbols-outlined text-tertiary">lightbulb</span>
+</div>
+<div class="space-y-2">
+<p class="text-sm text-indigo-100 font-medium leading-relaxed">Your "Clarity Score" is peaking! To reach Level 13, focus on slowing down your technical delivery. Pause for 2 seconds after each key takeaway.</p>
+<a href="../interveux_detailed_session_audit/code.html" class="text-xs font-bold text-tertiary uppercase tracking-widest flex items-center gap-1 hover:gap-2 transition-all">
+                                Review Session <span class="material-symbols-outlined text-xs">arrow_forward</span>
+</a>
+</div>
+</div>
+</div>
+<div class="md:col-span-6 glass-panel rounded-lg p-6 border-l-4 border-primary bg-gradient-to-r from-primary/5 to-transparent reveal-on-scroll" data-delay="300">
+<div class="flex justify-between items-center mb-4">
+<h3 class="text-lg font-bold text-white font-headline">Weekly Quest</h3>
+<span class="text-xs font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-full border border-primary/20">75% COMPLETE</span>
+</div>
+<p class="text-sm text-indigo-100 mb-6 font-medium">Conquer 3 system design mock interviews to earn the 'Architect' badge.</p>
+<div class="flex items-center gap-6">
+<div class="flex -space-x-3">
+<div class="h-10 w-10 rounded-full border-2 border-background bg-primary flex items-center justify-center text-xs font-black shadow-lg shadow-primary/20">1</div>
+<div class="h-10 w-10 rounded-full border-2 border-background bg-primary flex items-center justify-center text-xs font-black shadow-lg shadow-primary/20">2</div>
+<div class="h-10 w-10 rounded-full border-2 border-background bg-surface-container-highest flex items-center justify-center text-xs font-black border-dashed border-primary text-primary/40">3</div>
+</div>
+<div class="flex flex-col">
+<span class="text-xs font-bold text-white">Final Step Remaining</span>
+<span class="text-[10px] text-on-surface-variant uppercase tracking-widest">System Design Specialist</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<footer class="w-full py-12 mt-auto border-t border-purple-900/30 bg-[#0c0c1f]">
+<div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center px-8">
+<div class="text-indigo-400/40 font-manrope text-xs uppercase tracking-widest mb-6 md:mb-0">© 2024 InterveuX Intelligence. All rights reserved.</div>
+<div class="flex gap-8">
+<a class="text-indigo-400/40 hover:text-purple-300 font-manrope text-xs uppercase tracking-widest transition-colors" href="#">Privacy</a>
+<a class="text-indigo-400/40 hover:text-purple-300 font-manrope text-xs uppercase tracking-widest transition-colors" href="#">Terms</a>
+<a class="text-indigo-400/40 hover:text-purple-300 font-manrope text-xs uppercase tracking-widest transition-colors" href="#">Security</a>
+<a class="text-indigo-400/40 hover:text-purple-300 font-manrope text-xs uppercase tracking-widest transition-colors" href="#">GitHub</a>
+</div>
+</div>
+</footer>
+<script src="../animations.js"></script>
+</body></html>

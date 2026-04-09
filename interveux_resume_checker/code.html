@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>InterveuX | Resume Checker</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Manrope:wght@400;500;600;700&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../animations.css"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(34, 34, 71, 0.4);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(68, 68, 108, 0.2);
+        }
+        .ghost-border {
+            border: 1px solid rgba(68, 68, 108, 0.2);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-high": "#1c1c3d",
+                        "tertiary-dim": "#eda2c9",
+                        "surface-container": "#161632",
+                        "secondary-fixed-dim": "#dfccff",
+                        "on-secondary-container": "#af9ad7",
+                        "tertiary-container": "#fdb0d7",
+                        "surface-container-highest": "#222247",
+                        "surface-tint": "#bf81ff",
+                        "on-primary-container": "#ffffff",
+                        "on-primary": "#32005c",
+                        "on-background": "#e5e3ff",
+                        "tertiary-fixed-dim": "#eda2c9",
+                        "error-dim": "#c8475d",
+                        "outline": "#72719c",
+                        "on-tertiary-fixed-variant": "#6f3556",
+                        "error-container": "#8a1632",
+                        "on-error-container": "#ff97a3",
+                        "primary": "#bf81ff",
+                        "primary-fixed": "#d8b1ff",
+                        "secondary-dim": "#c4aeed",
+                        "primary-container": "#9c42f4",
+                        "primary-dim": "#9c42f4",
+                        "background": "#0c0c1f",
+                        "on-surface": "#e5e3ff",
+                        "on-error": "#490013",
+                        "tertiary": "#ffc4e0",
+                        "on-tertiary": "#6f3556",
+                        "on-secondary": "#48366c",
+                        "surface-container-lowest": "#000000",
+                        "inverse-on-surface": "#53536a",
+                        "secondary-container": "#2d1b4f",
+                        "surface-container-low": "#111128",
+                        "tertiary-fixed": "#fdb0d7",
+                        "on-secondary-fixed-variant": "#645289",
+                        "secondary-fixed": "#ebddff",
+                        "primary-fixed-dim": "#ce9fff",
+                        "surface-dim": "#0c0c1f",
+                        "outline-variant": "#44446c",
+                        "on-primary-fixed-variant": "#6500b2",
+                        "surface-bright": "#272752",
+                        "on-tertiary-fixed": "#4d1838",
+                        "secondary": "#d2bcfb",
+                        "on-tertiary-container": "#652d4d",
+                        "surface": "#0c0c1f",
+                        "on-primary-fixed": "#3c006d",
+                        "surface-variant": "#222247",
+                        "error": "#fd6f85",
+                        "on-secondary-fixed": "#47366b",
+                        "inverse-surface": "#fcf8ff",
+                        "inverse-primary": "#8523dd",
+                        "on-surface-variant": "#a8a7d5"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Manrope"],
+                        "label": ["Manrope"]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface font-body selection:bg-primary/30">
+<!-- SideNavBar -->
+<aside class="h-screen w-64 fixed left-0 top-0 overflow-y-auto bg-[#111128] shadow-2xl flex flex-col py-6 gap-4 z-40">
+<div class="px-6 mb-8">
+<a href="../interveux_landing_page/code.html" class="block">
+<h1 class="font-headline font-extrabold text-white text-xl tracking-tight">InterveuX</h1>
+</a>
+<p class="text-xs text-outline font-medium tracking-widest uppercase opacity-70">Ethereal Intelligence</p>
+</div>
+<nav class="flex-1 space-y-2">
+<a class="flex items-center text-[#72719c] hover:text-[#d2bcfb] px-4 py-3 mx-2 hover:bg-white/5 rounded-full transition-all duration-300 hover:translate-x-1" href="../interveux_performance_hub/code.html">
+<span class="material-symbols-outlined mr-3">dashboard</span>
+<span class="font-label text-sm font-medium">Performance Hub</span>
+</a>
+<a class="flex items-center text-[#72719c] hover:text-[#d2bcfb] px-4 py-3 mx-2 hover:bg-white/5 rounded-full transition-all duration-300 hover:translate-x-1" href="../interveux_active_mirror/code.html">
+<span class="material-symbols-outlined mr-3">videocam</span>
+<span class="font-label text-sm font-medium">Active Mirror</span>
+</a>
+<a class="flex items-center text-[#72719c] hover:text-[#d2bcfb] px-4 py-3 mx-2 hover:bg-white/5 rounded-full transition-all duration-300 hover:translate-x-1" href="../interveux_detailed_session_audit/code.html">
+<span class="material-symbols-outlined mr-3">assessment</span>
+<span class="font-label text-sm font-medium">Session Audit</span>
+</a>
+<!-- Active State: Resume Checker -->
+<a class="flex items-center bg-gradient-to-br from-[#bf81ff] to-[#9c42f4] text-white rounded-full mx-2 shadow-[0_0_15px_rgba(191,129,255,0.3)] px-4 py-3 border-r-4 border-white/40" href="../interveux_resume_checker/code.html">
+<span class="material-symbols-outlined mr-3" style="font-variation-settings: 'FILL' 1;">description</span>
+<span class="font-label text-sm font-medium">Resume Checker</span>
+</a>
+<a class="flex items-center text-[#72719c] hover:text-[#d2bcfb] px-4 py-3 mx-2 hover:bg-white/5 rounded-full transition-all duration-300 hover:translate-x-1" href="../interveux_linkedin_auditor_aetheris/code.html">
+<span class="material-symbols-outlined mr-3">find_in_page</span>
+<span class="font-label text-sm font-medium">LinkedIn Auditor</span>
+</a>
+</nav>
+<div class="px-4 mt-auto">
+<button data-analyse-btn class="w-full py-4 bg-primary text-on-primary rounded-full font-bold text-sm uppercase tracking-widest shadow-lg hover:opacity-90 transition cta-glow flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">search</span> Analyse Resume
+</button>
+</div>
+</aside>
+<!-- TopNavBar -->
+<header class="w-full sticky top-0 z-30 bg-[#0c0c1f]/80 backdrop-blur-xl border-b border-white/10 shadow-[0_20px_40px_rgba(0,0,0,0.4)] flex justify-between items-center px-6 h-16 ml-64 w-[calc(100%-16rem)]">
+<div class="flex items-center bg-surface-container-lowest/50 rounded-full px-4 py-1.5 ghost-border">
+<span class="material-symbols-outlined text-outline text-lg mr-2">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm text-on-surface w-64 placeholder:text-outline" placeholder="Search insights..." type="text"/>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-outline hover:text-white transition-all"><span class="material-symbols-outlined">smart_toy</span></button>
+<button class="text-outline hover:text-white transition-all relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-0 right-0 w-2 h-2 bg-primary rounded-full"></span>
+</button>
+<div class="w-8 h-8 rounded-full overflow-hidden ghost-border">
+<img class="w-full h-full object-cover" data-alt="close-up portrait of a professional woman with a confident expression against a soft-lit architectural background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAcf7wxeTKUdXpTKjzcfsG6cJtgBl9VFaaAaD5qaFz1BZ06Xi_LG08sZg2_9gDsLRrHZOpCYIARS-g6Iy3tKN1atBP5foP6sKer0DK68aJfW2vdqSGKBA41XicTAhwJ3vFKrTGuZdX-SFgpuabAQ55RgI_CYSKwIbvmvAG2mAv1vvjEiXv4nDeS4EYowIsDxd86lILB_9sz8wSkyYYadClv08r-lOOjwYpLdhjEURFgplWOQMIvIZVm8EuHGAQnjW2WDMVOnipo0fs"/>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 p-8 min-h-screen">
+<div class="max-w-7xl mx-auto space-y-8">
+<!-- Page Title Header -->
+<div class="mb-12">
+<h2 class="font-headline text-4xl tracking-tight">
+<span class="font-light text-secondary">Resume</span>
+<span class="font-bold text-white">Checker</span>
+</h2>
+<p class="text-outline mt-2 font-medium">Optimize your professional narrative with architectural precision.</p>
+</div>
+<div class="grid grid-cols-12 gap-8 items-start">
+<!-- Left Column: Input & Upload -->
+<div class="col-span-12 lg:col-span-5 space-y-6">
+<div class="bg-surface-container-low p-8 rounded-lg ghost-border shadow-2xl relative overflow-hidden group">
+<div class="absolute -top-24 -right-24 w-48 h-48 bg-primary/10 rounded-full blur-3xl transition-all group-hover:bg-primary/20"></div>
+<label class="block mb-6">
+<span class="text-xs font-label uppercase tracking-widest text-outline mb-3 block">Document Upload</span>
+<div class="border-2 border-dashed border-primary/20 rounded-2xl p-12 flex flex-col items-center gap-4 cursor-pointer upload-zone glass-focus-pulse">
+<span class="material-symbols-outlined text-primary upload-icon float-idle" style="font-size:48px">upload_file</span>
+<p class="text-sm font-medium text-on-surface">Drop your resume here</p>
+<p class="text-xs text-outline mt-1">PDF or DOCX (Max 5MB)</p>
+</div>
+</label>
+<div class="flex items-center p-3 bg-surface-container rounded-md mb-8 ghost-border">
+<span class="material-symbols-outlined text-secondary mr-3">description</span>
+<div class="flex-1 overflow-hidden">
+<p class="text-xs font-semibold text-white truncate">Alexander_Vance_Senior_Architect_2024.pdf</p>
+<p class="text-[10px] text-outline">2.4 MB • Uploaded 2m ago</p>
+</div>
+<span class="material-symbols-outlined text-outline-variant hover:text-error cursor-pointer transition-colors">close</span>
+</div>
+<div class="space-y-4">
+<div class="space-y-2">
+<span class="text-xs font-label uppercase tracking-widest text-outline block">Target Role</span>
+<input class="w-full bg-surface-container-lowest border-none rounded-md px-4 py-3 text-sm focus:ring-1 focus:ring-primary/40 ghost-border text-on-surface" placeholder="e.g. Principal Systems Architect" type="text"/>
+</div>
+<div class="space-y-2">
+<span class="text-xs font-label uppercase tracking-widest text-outline block">Job Description</span>
+<textarea class="w-full bg-surface-container-lowest border-none rounded-md px-4 py-3 text-sm focus:ring-1 focus:ring-primary/40 ghost-border text-on-surface resize-none" placeholder="Paste the job requirements here for AI alignment matching..." rows="4"></textarea>
+</div>
+</div>
+<button class="w-full mt-8 py-4 bg-gradient-to-r from-primary to-primary-container text-white font-bold rounded-full shadow-[0_10px_20px_rgba(156,66,244,0.3)] hover:shadow-[0_15px_30px_rgba(156,66,244,0.4)] flex items-center justify-center gap-2 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-xl">auto_awesome</span>
+                            Analyse Resume
+                        </button>
+</div>
+</div>
+<!-- Right Column: Results -->
+<div class="col-span-12 lg:col-span-7 space-y-6">
+<!-- Score Ring Card -->
+<div class="bg-surface-container-low p-8 rounded-lg ghost-border flex flex-col md:flex-row items-center gap-10">
+<div class="relative w-40 h-40 flex items-center justify-center">
+<svg class="w-full h-full transform -rotate-90">
+<circle class="text-surface-container-highest" cx="80" cy="80" fill="transparent" r="72" stroke="currentColor" stroke-width="8"></circle>
+<circle class="text-primary" cx="80" cy="80" fill="transparent" r="72" stroke="currentColor" stroke-dasharray="452.3" stroke-dashoffset="81.4" stroke-linecap="round" stroke-width="8"></circle>
+</svg>
+<div class="absolute flex flex-col items-center">
+<span class="text-4xl font-headline font-extrabold text-white">82%</span>
+<span class="text-[10px] uppercase tracking-tighter text-outline font-bold">ATS Score</span>
+</div>
+</div>
+<div class="flex flex-col items-center gap-4 py-16 text-center">
+<span class="material-symbols-outlined text-outline float-idle" style="font-size:64px">description</span>
+<h3 class="font-headline font-bold text-xl text-on-surface-variant">Upload Your Resume</h3>
+<p class="text-sm text-outline max-w-xs">Drag & drop your PDF or DOCX above, then click Analyse. Our AI will provide deep ATS scoring and recommendations.</p>
+</div>
+<div class="flex-1 space-y-4 text-center md:text-left">
+<div>
+<h3 class="text-xl font-headline font-bold text-white mb-1">Strong Matching Candidate</h3>
+<p class="text-sm text-on-surface-variant">Your profile exhibits a 94% alignment with the core technical requirements for the Architect position.</p>
+</div>
+<div class="flex flex-wrap gap-2 justify-center md:justify-start">
+<span class="px-3 py-1 bg-primary/10 text-primary text-[10px] font-bold uppercase rounded-full ghost-border">Strategic Depth</span>
+<span class="px-3 py-1 bg-tertiary/10 text-tertiary text-[10px] font-bold uppercase rounded-full ghost-border">Action Oriented</span>
+<span class="px-3 py-1 bg-white/5 text-outline text-[10px] font-bold uppercase rounded-full ghost-border">Concise</span>
+</div>
+</div>
+</div>
+<!-- Metrics Grid -->
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-surface-container-high p-5 rounded-lg ghost-border">
+<span class="text-[10px] font-label text-outline uppercase tracking-widest block mb-2">Readability</span>
+<div class="flex items-end justify-between">
+<span class="text-2xl font-headline font-bold text-white">High</span>
+<span class="text-xs text-primary font-medium mb-1">Tier 1</span>
+</div>
+<div class="w-full bg-surface-container-lowest h-1 rounded-full mt-3">
+<div class="bg-primary h-1 rounded-full" style="width: 85%"></div>
+</div>
+</div>
+<div class="bg-surface-container-high p-5 rounded-lg ghost-border">
+<span class="text-[10px] font-label text-outline uppercase tracking-widest block mb-2">Keyword Density</span>
+<div class="flex items-end justify-between">
+<span class="text-2xl font-headline font-bold text-white">12.4%</span>
+<span class="text-xs text-tertiary font-medium mb-1">Optimal</span>
+</div>
+<div class="w-full bg-surface-container-lowest h-1 rounded-full mt-3">
+<div class="bg-tertiary h-1 rounded-full" style="width: 70%"></div>
+</div>
+</div>
+<div class="bg-surface-container-high p-5 rounded-lg ghost-border">
+<span class="text-[10px] font-label text-outline uppercase tracking-widest block mb-2">Quantifiable Impacts</span>
+<div class="flex items-end justify-between">
+<span class="text-2xl font-headline font-bold text-white">18</span>
+<span class="text-xs text-error font-medium mb-1">Needs +5</span>
+</div>
+<div class="w-full bg-surface-container-lowest h-1 rounded-full mt-3">
+<div class="bg-error h-1 rounded-full" style="width: 45%"></div>
+</div>
+</div>
+<div class="bg-surface-container-high p-5 rounded-lg ghost-border">
+<span class="text-[10px] font-label text-outline uppercase tracking-widest block mb-2">Structure Score</span>
+<div class="flex items-end justify-between">
+<span class="text-2xl font-headline font-bold text-white">Gold</span>
+<span class="text-xs text-secondary font-medium mb-1">Architectural</span>
+</div>
+<div class="w-full bg-surface-container-lowest h-1 rounded-full mt-3">
+<div class="bg-secondary h-1 rounded-full" style="width: 95%"></div>
+</div>
+</div>
+</div>
+<!-- Strengths & Weaknesses -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="bg-surface-container-low p-6 rounded-lg ghost-border">
+<h4 class="text-xs font-label uppercase tracking-widest text-primary mb-4 flex items-center">
+<span class="material-symbols-outlined text-sm mr-2">verified</span> Key Strengths
+                            </h4>
+<ul class="space-y-3">
+<li class="flex items-start gap-3">
+<span class="w-1.5 h-1.5 rounded-full bg-primary mt-1.5 shrink-0 shadow-[0_0_8px_rgba(191,129,255,1)]"></span>
+<p class="text-xs text-on-surface leading-relaxed">Exceptional use of action verbs (e.g., "Spearheaded", "Orchestrated") in the Experience section.</p>
+</li>
+<li class="flex items-start gap-3">
+<span class="w-1.5 h-1.5 rounded-full bg-primary mt-1.5 shrink-0 shadow-[0_0_8px_rgba(191,129,255,1)]"></span>
+<p class="text-xs text-on-surface leading-relaxed">Clear architectural hierarchy makes the document easily parsable by VMS and ATS systems.</p>
+</li>
+</ul>
+</div>
+<div class="bg-surface-container-low p-6 rounded-lg ghost-border">
+<h4 class="text-xs font-label uppercase tracking-widest text-error mb-4 flex items-center">
+<span class="material-symbols-outlined text-sm mr-2">warning</span> Critical Gaps
+                            </h4>
+<ul class="space-y-3">
+<li class="flex items-start gap-3">
+<span class="w-1.5 h-1.5 rounded-full bg-error mt-1.5 shrink-0 shadow-[0_0_8px_rgba(253,111,133,1)]"></span>
+<p class="text-xs text-on-surface leading-relaxed">Missing "Cloud Native Infrastructure" keyword mentioned 4 times in the job description.</p>
+</li>
+<li class="flex items-start gap-3">
+<span class="w-1.5 h-1.5 rounded-full bg-error mt-1.5 shrink-0 shadow-[0_0_8px_rgba(253,111,133,1)]"></span>
+<p class="text-xs text-on-surface leading-relaxed">Personal summary lacks a direct link to the firm's specific project sustainability goals.</p>
+</li>
+</ul>
+</div>
+</div>
+<!-- AI Recommendations (Glassmorphic) -->
+<div class="glass-panel p-6 rounded-lg relative overflow-hidden">
+<div class="absolute top-0 right-0 p-4">
+<span class="material-symbols-outlined text-primary-dim opacity-20 text-6xl">psychology</span>
+</div>
+<h4 class="text-xs font-label uppercase tracking-widest text-secondary-fixed-dim mb-4">InterveuX Recommendations</h4>
+<div class="bg-white/5 rounded-md p-4 mb-4 ghost-border border-white/10">
+<p class="text-sm text-secondary-fixed-dim italic leading-relaxed">"Revise your role at 'Nexus Core' to highlight your leadership in Kubernetes orchestration. Adding a specific metric like 'reduced latency by 40%' will bridge the gap between technical skill and business impact."</p>
+</div>
+<div class="flex items-center justify-between">
+<p class="text-[10px] text-outline font-medium">Confidence Score: 98.2%</p>
+<button class="text-xs font-bold text-primary flex items-center gap-1 hover:underline">
+                                Apply Auto-Fix <span class="material-symbols-outlined text-sm">bolt</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Decorative Gradient Glows -->
+<div class="fixed top-[-20%] left-[-10%] w-[600px] h-[600px] bg-primary/5 rounded-full blur-[120px] -z-10 pointer-events-none"></div>
+<div class="fixed bottom-[-10%] right-[-5%] w-[400px] h-[400px] bg-secondary/5 rounded-full blur-[100px] -z-10 pointer-events-none"></div>
+<script src="../animations.js"></script>
+</body></html>
