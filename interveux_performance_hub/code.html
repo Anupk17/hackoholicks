@@ -138,6 +138,54 @@
     </style>
 </head>
 <body class="bg-background text-on-surface">
+<!-- Preferences Modal overlay -->
+<div id="preferencesModal" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm opacity-0 pointer-events-none transition-all duration-300">
+    <div class="bg-[#0c0c1f] border border-[#1f1e33] rounded-3xl shadow-2xl w-full max-w-md p-6 transform scale-95 transition-transform duration-300" id="preferencesModalContent">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-xl font-headline font-bold text-white flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary">settings</span> User Preferences
+            </h2>
+            <button id="closePreferencesBtn" class="text-on-surface-variant hover:text-white transition-colors">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        <div class="space-y-4">
+            <!-- Theme -->
+            <div class="flex justify-between items-center p-3 rounded-xl bg-surface-container-high border border-white/5">
+                <div>
+                    <p class="text-sm font-bold text-white">Dark Theme</p>
+                    <p class="text-xs text-on-surface-variant">Default Interface mode</p>
+                </div>
+                <div class="w-10 h-5 bg-primary rounded-full relative cursor-not-allowed opacity-80">
+                    <div class="absolute right-1 top-0.5 w-4 h-4 bg-white rounded-full shadow-sm"></div>
+                </div>
+            </div>
+            <!-- Notifications -->
+            <div class="flex justify-between items-center p-3 rounded-xl bg-surface-container-high border border-white/5">
+                <div>
+                    <p class="text-sm font-bold text-white">Push Notifications</p>
+                    <p class="text-xs text-on-surface-variant">Receive performance alerts</p>
+                </div>
+                <div class="w-10 h-5 bg-[#1f1e33] rounded-full relative cursor-pointer border border-[#44446c] hover:border-primary transition-colors">
+                    <div class="absolute left-1 top-0.5 w-4 h-4 bg-[#72719c] rounded-full shadow-sm"></div>
+                </div>
+            </div>
+            <!-- Audio Feedback -->
+            <div class="flex justify-between items-center p-3 rounded-xl bg-surface-container-high border border-white/5">
+                <div>
+                    <p class="text-sm font-bold text-white">Audio Coach</p>
+                    <p class="text-xs text-on-surface-variant">Spoken feedback summaries</p>
+                </div>
+                <div class="w-10 h-5 bg-primary rounded-full relative cursor-pointer shadow-[0_0_8px_rgba(191,129,255,0.4)] hover:shadow-[0_0_12px_rgba(191,129,255,0.6)] transition-all">
+                    <div class="absolute right-1 top-0.5 w-4 h-4 bg-white rounded-full shadow-sm"></div>
+                </div>
+            </div>
+        </div>
+        <div class="mt-8">
+            <button id="savePreferencesBtn" class="w-full py-3 rounded-full bg-primary text-on-primary font-bold hover:shadow-[0_0_15px_rgba(191,129,255,0.4)] transition-all">Save Changes</button>
+        </div>
+    </div>
+</div>
 <nav class="fixed top-0 w-full z-50 bg-indigo-950/40 backdrop-blur-xl border-b border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.3)] flex justify-between items-center px-6 h-16">
 <div class="flex items-center gap-8">
 <a href="../interveux_landing_page/code.html" class="text-xl font-bold bg-gradient-to-r from-purple-400 to-indigo-300 bg-clip-text text-transparent font-headline">InterveuX</a>
@@ -167,7 +215,7 @@
             <span class="text-[10px] uppercase font-bold text-primary tracking-widest mb-1 block">Account</span>
             <p id="globalDropdownEmail" class="text-sm text-[#e5e3ff] truncate">loading...</p>
         </div>
-        <button class="w-full text-left px-4 py-2.5 text-sm text-[#e5e3ff] hover:bg-[#1a1936] transition-colors flex items-center gap-3">
+        <button id="globalPreferencesBtn" class="w-full text-left px-4 py-2.5 text-sm text-[#e5e3ff] hover:bg-[#1a1936] transition-colors flex items-center gap-3">
             <span class="material-symbols-outlined text-[18px] text-[#a8a7d5]">settings</span> Preferences
         </button>
         <button id="globalLogoutBtn" class="w-full text-left px-4 py-2.5 text-sm text-[#fd6f85] hover:bg-[#1a1936] transition-colors flex items-center gap-3">
@@ -485,6 +533,30 @@
     signOut(auth).then(() => {
         window.location.href = '../interveux_landing_page/code.html';
     });
+  });
+
+  // Preferences Modal Logic
+  const prefBtn = document.getElementById('globalPreferencesBtn');
+  const prefModal = document.getElementById('preferencesModal');
+  const prefModalContent = document.getElementById('preferencesModalContent');
+  const closePrefBtn = document.getElementById('closePreferencesBtn');
+  const savePrefBtn = document.getElementById('savePreferencesBtn');
+
+  function openModal() {
+      prefModal.classList.remove('opacity-0', 'pointer-events-none');
+      prefModalContent.classList.remove('scale-95');
+  }
+
+  function closeModal() {
+      prefModal.classList.add('opacity-0', 'pointer-events-none');
+      prefModalContent.classList.add('scale-95');
+  }
+
+  prefBtn.addEventListener('click', openModal);
+  closePrefBtn.addEventListener('click', closeModal);
+  savePrefBtn.addEventListener('click', closeModal);
+  prefModal.addEventListener('click', (e) => {
+      if (e.target === prefModal) closeModal();
   });
 </script>
 </body></html>
