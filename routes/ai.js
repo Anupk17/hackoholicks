@@ -159,12 +159,13 @@ Return ONLY valid JSON. No markdown.`;
 
   try {
     const raw = await geminiText(prompt);
-    const clean = raw.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
-    const data = JSON.parse(clean);
+    const match = raw.match(/\{[\s\S]*\}/);
+    if (!match) throw new Error("No JSON structure found in AI response");
+    const data = JSON.parse(match[0]);
     res.json({ success: true, data });
   } catch (err) {
     console.error('analyze-resume error:', err.message);
-    res.status(500).json({ error: 'Resume analysis failed.' });
+    res.status(500).json({ error: err.message });
   }
 });
 
@@ -212,12 +213,13 @@ Return ONLY valid JSON. No markdown.`;
 
   try {
     const raw = await geminiText(prompt);
-    const clean = raw.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
-    const data = JSON.parse(clean);
+    const match = raw.match(/\{[\s\S]*\}/);
+    if (!match) throw new Error("No JSON structure found in AI response");
+    const data = JSON.parse(match[0]);
     res.json({ success: true, data });
   } catch (err) {
     console.error('analyze-linkedin error:', err.message);
-    res.status(500).json({ error: 'LinkedIn analysis failed.' });
+    res.status(500).json({ error: err.message });
   }
 });
 
