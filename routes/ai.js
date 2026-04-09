@@ -52,11 +52,17 @@ router.post('/process-interview', async (req, res) => {
     return res.json({ success: true, data: analysisCache.get(cacheKey) });
   }
 
-  // Ultra-minified prompt to save Input Tokens
-  const prompt = `Analyze interview answer. Question: "${question || 'General'}". Answer: "${transcript}".
-Return exactly this JSON:
-{"overallScore":<0-100>,"confidenceScore":<0-100>,"clarityScore":<0-100>,"relevanceScore":<0-100>,"structureScore":<0-100>,"fillerWordCount":<num>,"fillerWords":["word"],"starAnalysis":{"situation":"<txt>","task":"<txt>","action":"<txt>","result":"<txt>","completeness":<0-100>},"strengths":["<txt>"],"improvements":["<txt>"],"optimizedAnswer":"<short STAR>","coachingNote":"<1 tip>"}
-NO MARKDOWN.`;
+  // Enhanced prompt to force a high-quality 10/10 STAR answer and deep coaching
+  const prompt = `You are a world-class executive interview coach. Analyze the following interview answer.
+Question Asked: "${question || 'General conversational prompt'}"
+Candidate's Answer: "${transcript}"
+
+Task: Provide extremely harsh, accurate scoring and a flawless, 10/10 "Optimized Answer".
+The Optimized Answer must be written in the first person ("I"), follow the STAR framework perfectly (Situation, Task, Action, Result), use strong action verbs, and quantify results. It should sound natural but highly professional.
+
+Return EXACTLY and ONLY this JSON structure without markdown formatting or code blocks:
+{"overallScore":<0-100>,"confidenceScore":<0-100>,"clarityScore":<0-100>,"relevanceScore":<0-100>,"structureScore":<0-100>,"fillerWordCount":<num>,"fillerWords":["word"],"starAnalysis":{"situation":"<txt>","task":"<txt>","action":"<txt>","result":"<txt>","completeness":<0-100>},"strengths":["<txt>"],"improvements":["<txt>"],"optimizedAnswer":"<The flawless 10/10 answer here>","coachingNote":"<Deep, insightful coaching note here>"}`;
+
 
   try {
     const raw = await groqText(prompt);

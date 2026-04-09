@@ -824,7 +824,6 @@ if ('webkitSpeechRecognition' in window) {
   
   recognition.onstart = function() {
     isRecording = true;
-    finalTranscript = '';
     document.getElementById('recordText').textContent = 'Stop Recording';
     document.getElementById('recordIcon').style.color = '#ff97a3';
     document.getElementById('stopAnalyzeBtn').disabled = false;
@@ -891,6 +890,7 @@ function toggleRecording() {
     isRecording = false;
     recognition.stop();
   } else {
+    finalTranscript = ''; // Only clear on fresh manual start
     recognition.start();
   }
 }
@@ -1033,12 +1033,27 @@ async function stopAndAnalyze() {
     const resultData = await res.json();
     
     if (resultData.success) {
-      // Save data locally and redirect
+      // Create session object
+      const sessionObj = {
+        id: Date.now(),
+        date: new Date().toISOString(),
+        ai: resultData.data,
+        rawTranscript: finalTranscript,
+        question: currentQuestion
+      };
+      
+      // Save data locally for Detailed Audit page
       localStorage.setItem('lastAnalysisData', JSON.stringify({
         ai: resultData.data,
         rawTranscript: finalTranscript,
         question: currentQuestion
       }));
+      
+      // Also push to history array for the Performance Hub Dashboard
+      const history = JSON.parse(localStorage.getItem('interveux_sessions') || '[]');
+      history.push(sessionObj);
+      localStorage.setItem('interveux_sessions', JSON.stringify(history));
+      
       window.location.href = '../interveux_detailed_session_audit/code.html';
     } else {
       alert("Analysis failed: " + resultData.error);

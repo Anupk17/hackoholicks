@@ -264,7 +264,7 @@
   <circle class="score-ring-fill" cx="80" cy="80" r="68" fill="none" stroke="#bf81ff" stroke-width="8" stroke-linecap="round"/>
 </svg>
 <div class="flex flex-col items-center justify-center relative z-10 w-full h-full pt-2">
-<span class="text-6xl font-black text-white font-headline text-glow leading-none" data-count data-suffix="%">88</span>
+<span id="overallClarityValue" class="text-6xl font-black text-white font-headline text-glow leading-none">--</span><span class="text-xs font-bold text-primary mt-1">%</span>
 </div>
 </div>
 <div class="mt-4 flex items-center gap-2 bg-primary/10 px-3 py-1 rounded-full border border-primary/20">
@@ -284,7 +284,7 @@
 </div>
 <div class="mt-4 relative z-10">
 <div class="flex items-baseline gap-2">
-<span class="text-5xl font-black text-white">42</span>
+<span id="totalAttemptsLabel" class="text-5xl font-black text-white">0</span>
 <span class="text-xs font-bold text-secondary-dim uppercase">Attempts</span>
 </div>
 <p class="text-[10px] text-on-surface-variant mt-1">Level up in 8 more attempts!</p>
@@ -310,71 +310,8 @@
 <th class="px-6 py-4 text-right">Action</th>
 </tr>
 </thead>
-<tbody class="divide-y divide-white/5 text-sm">
-<tr class="hover:bg-white/5 transition-colors group">
-<td class="px-6 py-4">
-<div class="flex items-center gap-3">
-<div class="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary border border-primary/20">
-<span class="material-symbols-outlined">terminal</span>
-</div>
-<div>
-<p class="font-bold text-white">Senior Product Engineer</p>
-<p class="text-xs text-on-surface-variant">Technical Round</p>
-</div>
-</div>
-</td>
-<td class="px-6 py-4 text-on-surface-variant">Oct 24, 2024</td>
-<td class="px-6 py-4">
-<div class="flex flex-col items-center">
-<span class="text-xl font-extrabold text-white drop-shadow-md" data-countup="92" data-suffix="%" data-delay="400">92%</span>
-<div class="w-16 h-[2px] bg-surface-container-highest rounded-full overflow-hidden mt-1">
-<div class="h-full bg-primary progress-bar-animated" data-width="92%" data-delay="450"></div>
-</div>
-</div>
-</td>
-<td class="px-6 py-4">
-<div class="flex justify-center">
-<span class="px-3 py-1 bg-primary/10 text-primary text-[10px] font-bold rounded-full border border-primary/20">CONFIDENT</span>
-</div>
-</td>
-<td class="px-6 py-4 text-right">
-<a href="../interveux_detailed_session_audit/code.html" class="h-8 w-8 rounded-full flex items-center justify-center text-indigo-300/50 group-hover:text-primary group-hover:bg-primary/10 transition-all">
-<span class="material-symbols-outlined">chevron_right</span>
-</a>
-</td>
-</tr>
-<tr class="hover:bg-white/5 transition-colors group">
-<td class="px-6 py-4">
-<div class="flex items-center gap-3">
-<div class="h-10 w-10 rounded-lg bg-secondary/10 flex items-center justify-center text-secondary border border-secondary/20">
-<span class="material-symbols-outlined">psychology</span>
-</div>
-<div>
-<p class="font-bold text-white">UX Design Lead</p>
-<p class="text-xs text-on-surface-variant">Behavioral Round</p>
-</div>
-</div>
-</td>
-<td class="px-6 py-4 text-on-surface-variant">Oct 21, 2024</td>
-<td class="px-6 py-4">
-<div class="flex flex-col items-center">
-<span class="text-xl font-extrabold text-white drop-shadow-md" data-countup="76" data-suffix="%" data-delay="500">76%</span>
-<div class="w-16 h-[2px] bg-surface-container-highest rounded-full overflow-hidden mt-1">
-<div class="h-full bg-secondary progress-bar-animated" data-width="76%" data-delay="550"></div>
-</div>
-</div>
-</td>
-<td class="px-6 py-4">
-<div class="flex justify-center">
-<span class="px-3 py-1 bg-secondary/10 text-secondary text-[10px] font-bold rounded-full border border-secondary/20">STEADY</span>
-</div>
-</td>
-<td class="px-6 py-4 text-right">
-<a href="../interveux_detailed_session_audit/code.html" class="h-8 w-8 rounded-full flex items-center justify-center text-indigo-300/50 group-hover:text-primary group-hover:bg-primary/10 transition-all">
-<span class="material-symbols-outlined">chevron_right</span>
-</a>
-</td>
-</tr>
+<tbody id="sessionHistoryBody" class="divide-y divide-white/5 text-sm">
+<tr class="hover:bg-white/5 transition-colors group"><td colspan="5" class="px-6 py-4 text-center text-on-surface-variant">No sessions recorded yet. Start an Active Mirror session to see data here.</td></tr>
 </tbody>
 </table>
 </div>
@@ -440,6 +377,89 @@
       window.location.href = '../interveux_landing_page/code.html';
     }
   });
+  
+  // Custom script to parse actual active mirror sessions
+  document.addEventListener('DOMContentLoaded', () => {
+    try {
+      const historyStr = localStorage.getItem('interveux_sessions');
+      if (!historyStr) return;
+      const history = JSON.parse(historyStr);
+      if (history.length === 0) return;
+      
+      // Update Attempts Counter
+      document.getElementById('totalAttemptsLabel').textContent = history.length;
+      
+      // Calculate Overall Clarity avg
+      const avgClarity = Math.round(history.reduce((sum, s) => sum + (s.ai?.clarityScore || 0), 0) / history.length);
+      document.getElementById('overallClarityValue').textContent = avgClarity;
+      
+      // Build Table Rows
+      const tbody = document.getElementById('sessionHistoryBody');
+      const rows = history.reverse().slice(0, 8).map(s => {
+        const dateObj = new Date(s.date);
+        const dateStr = dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        const score = s.ai?.overallScore || 0;
+        let sentiment = 'NEUTRAL';
+        let colorTheme = 'primary';
+        if (score >= 80) { sentiment = 'CONFIDENT'; colorTheme = 'primary'; }
+        else if (score >= 60) { sentiment = 'STEADY'; colorTheme = 'secondary'; }
+        else { sentiment = 'ANXIOUS'; colorTheme = 'error'; }
+        
+        return \`
+          <tr class="hover:bg-white/5 transition-colors group cursor-pointer" onclick="viewSession(\${s.id})">
+            <td class="px-6 py-4">
+              <div class="flex items-center gap-3">
+                <div class="h-10 w-10 rounded-lg bg-\${colorTheme}/10 flex items-center justify-center text-\${colorTheme} border border-\${colorTheme}/20">
+                  <span class="material-symbols-outlined">terminal</span>
+                </div>
+                <div>
+                  <p class="font-bold text-white max-w-[200px] truncate">\${s.question}</p>
+                  <p class="text-xs text-on-surface-variant">Active Mirror</p>
+                </div>
+              </div>
+            </td>
+            <td class="px-6 py-4 text-on-surface-variant">\${dateStr}</td>
+            <td class="px-6 py-4">
+              <div class="flex flex-col items-center">
+                <span class="text-xl font-extrabold text-white drop-shadow-md">\${score}%</span>
+                <div class="w-16 h-[2px] bg-surface-container-highest rounded-full overflow-hidden mt-1">
+                  <div class="h-full bg-\${colorTheme}" style="width: \${score}%"></div>
+                </div>
+              </div>
+            </td>
+            <td class="px-6 py-4">
+              <div class="flex justify-center">
+                <span class="px-3 py-1 bg-\${colorTheme}/10 text-\${colorTheme} text-[10px] font-bold rounded-full border border-\${colorTheme}/20">\${sentiment}</span>
+              </div>
+            </td>
+            <td class="px-6 py-4 text-right">
+              <div class="h-8 w-8 rounded-full flex items-center justify-center text-indigo-300/50 group-hover:text-\${colorTheme} group-hover:bg-\${colorTheme}/10 transition-all ml-auto">
+                <span class="material-symbols-outlined">chevron_right</span>
+              </div>
+            </td>
+          </tr>
+        \`;
+      });
+      tbody.innerHTML = rows.join('');
+      
+    } catch(err) {
+      console.error(err);
+    }
+  });
+
+  window.viewSession = (id) => {
+     const history = JSON.parse(localStorage.getItem('interveux_sessions') || '[]');
+     const session = history.find(s => s.id === id);
+     if (session) {
+        localStorage.setItem('lastAnalysisData', JSON.stringify({
+            ai: session.ai,
+            rawTranscript: session.rawTranscript,
+            question: session.question
+        }));
+        window.location.href = '../interveux_detailed_session_audit/code.html';
+     }
+  };
+});
 </script>
 <script type="module" src="../auth-header.js"></script>
 </body></html>
