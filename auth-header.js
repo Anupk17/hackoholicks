@@ -1,191 +1,298 @@
 /**
  * auth-header.js
- * Injects the global profile dropdown, preferences modal, and Firebase auth
- * into every page that includes this script.
+ * Injects a fixed top-right profile badge + dropdown and preferences modal
+ * into every page. Works independently of page layout structure.
  *
- * Usage: Add <script src="../auth-header.js" type="module"></script>
- * before </body> on pages that have the top-right icon area.
+ * Usage: <script type="module" src="../auth-header.js"></script>
  */
 
 import { auth, onAuthStateChanged, signOut } from './firebase-client.js';
 
-// ─── Inject Preferences Modal ──────────────────────────────────────────────
-const modalHTML = `
-<div id="authPrefModal" class="fixed inset-0 z-[200] flex items-center justify-center bg-black/60 backdrop-blur-sm opacity-0 pointer-events-none transition-all duration-300">
-    <div class="bg-[#0c0c1f] border border-[#1f1e33] rounded-3xl shadow-2xl w-full max-w-md p-6 transform scale-95 transition-transform duration-300" id="authPrefModalContent">
-        <div class="flex justify-between items-center mb-6">
-            <h2 class="text-xl font-bold text-white flex items-center gap-2" style="font-family:'Plus Jakarta Sans',sans-serif">
-                <span class="material-symbols-outlined" style="color:#bf81ff">settings</span> User Preferences
-            </h2>
-            <button id="authClosePrefBtn" class="text-gray-400 hover:text-white transition-colors">
-                <span class="material-symbols-outlined">close</span>
-            </button>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:12px">
-            <div style="display:flex;justify-content:space-between;align-items:center;padding:12px;border-radius:12px;background:#1c1c3d;border:1px solid rgba(255,255,255,0.05)">
-                <div>
-                    <p style="font-size:14px;font-weight:700;color:#e5e3ff">Dark Theme</p>
-                    <p style="font-size:12px;color:#a8a7d5">Default Interface mode</p>
-                </div>
-                <div style="width:40px;height:20px;background:#bf81ff;border-radius:999px;position:relative;cursor:not-allowed;opacity:0.8">
-                    <div style="position:absolute;right:3px;top:3px;width:14px;height:14px;background:white;border-radius:50%"></div>
-                </div>
-            </div>
-            <div style="display:flex;justify-content:space-between;align-items:center;padding:12px;border-radius:12px;background:#1c1c3d;border:1px solid rgba(255,255,255,0.05)">
-                <div>
-                    <p style="font-size:14px;font-weight:700;color:#e5e3ff">Push Notifications</p>
-                    <p style="font-size:12px;color:#a8a7d5">Receive performance alerts</p>
-                </div>
-                <div id="notifToggle" style="width:40px;height:20px;background:#1f1e33;border-radius:999px;position:relative;cursor:pointer;border:1px solid #44446c;transition:all 0.2s">
-                    <div id="notifToggleThumb" style="position:absolute;left:3px;top:3px;width:14px;height:14px;background:#72719c;border-radius:50%;transition:all 0.2s"></div>
-                </div>
-            </div>
-            <div style="display:flex;justify-content:space-between;align-items:center;padding:12px;border-radius:12px;background:#1c1c3d;border:1px solid rgba(255,255,255,0.05)">
-                <div>
-                    <p style="font-size:14px;font-weight:700;color:#e5e3ff">Audio Coach</p>
-                    <p style="font-size:12px;color:#a8a7d5">Spoken feedback summaries</p>
-                </div>
-                <div id="audioToggle" style="width:40px;height:20px;background:#bf81ff;border-radius:999px;position:relative;cursor:pointer;box-shadow:0 0 8px rgba(191,129,255,0.4);transition:all 0.2s">
-                    <div id="audioToggleThumb" style="position:absolute;right:3px;top:3px;width:14px;height:14px;background:white;border-radius:50%;transition:all 0.2s"></div>
-                </div>
-            </div>
-        </div>
-        <div style="margin-top:24px">
-            <button id="authSavePrefBtn" style="width:100%;padding:12px;border-radius:999px;background:#bf81ff;color:#32005c;font-weight:700;font-size:15px;border:none;cursor:pointer;transition:all 0.2s" onmouseover="this.style.boxShadow='0 0 15px rgba(191,129,255,0.5)'" onmouseout="this.style.boxShadow='none'">
-                Save Changes
-            </button>
-        </div>
+// ─── Inject CSS ──────────────────────────────────────────────────────────────
+const style = document.createElement('style');
+style.textContent = `
+  #auth-widget {
+    position: fixed;
+    top: 12px;
+    right: 20px;
+    z-index: 9999;
+    display: none;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Manrope', sans-serif;
+  }
+  #auth-notif-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: rgba(165,180,252,0.7);
+    display: flex;
+    align-items: center;
+    transition: color 0.2s;
+  }
+  #auth-notif-btn:hover { color: #ce8afb; }
+
+  #auth-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: #1a1936;
+    border: 1.5px solid rgba(206,138,251,0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    box-shadow: 0 0 12px rgba(206,138,251,0.08);
+    user-select: none;
+  }
+  #auth-avatar:hover {
+    border-color: #ce8afb;
+    box-shadow: 0 0 18px rgba(206,138,251,0.3);
+  }
+  #auth-initials {
+    color: #ce8afb;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.06em;
+  }
+  #auth-dropdown {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 10px);
+    width: 230px;
+    background: #0c0c1f;
+    border: 1px solid #1f1e33;
+    border-radius: 18px;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.7);
+    padding: 8px 0;
+    opacity: 0;
+    transform: translateY(10px);
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+  #auth-dropdown.open {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: all;
+  }
+  .auth-dd-header {
+    padding: 12px 16px;
+    border-bottom: 1px solid #1f1e33;
+    margin-bottom: 6px;
+  }
+  .auth-dd-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: #bf81ff;
+    letter-spacing: 0.12em;
+    display: block;
+    margin-bottom: 4px;
+  }
+  #auth-email {
+    font-size: 13px;
+    color: #e5e3ff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: 500;
+  }
+  .auth-dd-btn {
+    width: 100%;
+    text-align: left;
+    padding: 10px 16px;
+    font-size: 13px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: background 0.15s;
+    font-family: 'Manrope', sans-serif;
+  }
+  .auth-dd-btn:hover { background: #1a1936; }
+  .auth-dd-btn.pref { color: #e5e3ff; }
+  .auth-dd-btn.logout { color: #fd6f85; }
+
+  /* Preferences Modal */
+  #auth-pref-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.65);
+    backdrop-filter: blur(6px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s;
+  }
+  #auth-pref-overlay.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+  #auth-pref-modal {
+    background: #0c0c1f;
+    border: 1px solid #1f1e33;
+    border-radius: 24px;
+    padding: 28px;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 40px 80px rgba(0,0,0,0.8);
+    transform: scale(0.95);
+    transition: transform 0.25s;
+  }
+  #auth-pref-overlay.open #auth-pref-modal { transform: scale(1); }
+  .pref-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 13px;
+    border-radius: 13px;
+    background: #1c1c3d;
+    border: 1px solid rgba(255,255,255,0.05);
+    margin-bottom: 10px;
+  }
+  .pref-row-title { font-size: 14px; font-weight: 700; color: #e5e3ff; margin-bottom: 2px; }
+  .pref-row-sub { font-size: 11px; color: #a8a7d5; }
+  .toggle-track {
+    width: 42px;
+    height: 22px;
+    border-radius: 999px;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.2s, box-shadow 0.2s;
+    flex-shrink: 0;
+  }
+  .toggle-track.on { background: #bf81ff; box-shadow: 0 0 10px rgba(191,129,255,0.4); }
+  .toggle-track.off { background: #1f1e33; border: 1px solid #44446c; }
+  .toggle-thumb {
+    position: absolute;
+    top: 3px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    transition: left 0.2s, background 0.2s;
+  }
+  .toggle-track.on .toggle-thumb { left: calc(100% - 19px); background: white; }
+  .toggle-track.off .toggle-thumb { left: 3px; background: #72719c; }
+`;
+document.head.appendChild(style);
+
+// ─── Inject HTML ─────────────────────────────────────────────────────────────
+const widgetHTML = `
+<div id="auth-widget">
+  <button id="auth-notif-btn" title="Notifications">
+    <span class="material-symbols-outlined" style="font-size:22px">notifications</span>
+  </button>
+  <div style="position:relative">
+    <div id="auth-avatar">
+      <span id="auth-initials">--</span>
     </div>
-</div>`;
+    <div id="auth-dropdown">
+      <div class="auth-dd-header">
+        <span class="auth-dd-label">Account</span>
+        <span id="auth-email">loading...</span>
+      </div>
+      <button class="auth-dd-btn pref" id="auth-pref-btn">
+        <span class="material-symbols-outlined" style="font-size:17px;color:#a8a7d5">settings</span>
+        Preferences
+      </button>
+      <button class="auth-dd-btn logout" id="auth-logout-btn">
+        <span class="material-symbols-outlined" style="font-size:17px">logout</span>
+        Log Out
+      </button>
+    </div>
+  </div>
+</div>
 
-document.body.insertAdjacentHTML('afterbegin', modalHTML);
-
-// ─── Inject Profile Dropdown into top-right icon area ─────────────────────
-const profileHTML = `
-<div id="authProfileWrap" style="display:none;align-items:center;gap:12px">
-    <button style="background:none;border:none;cursor:pointer;color:rgba(165,180,252,0.6)" id="authNotifBtn" title="Notifications">
-        <span class="material-symbols-outlined" style="font-size:22px">notifications</span>
+<div id="auth-pref-overlay">
+  <div id="auth-pref-modal">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:22px">
+      <h2 style="font-size:18px;font-weight:700;color:white;display:flex;align-items:center;gap:8px;font-family:'Plus Jakarta Sans',sans-serif">
+        <span class="material-symbols-outlined" style="color:#bf81ff">settings</span> User Preferences
+      </h2>
+      <button id="auth-pref-close" style="background:none;border:none;cursor:pointer;color:#a8a7d5;display:flex">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+    <div class="pref-row">
+      <div><div class="pref-row-title">Dark Theme</div><div class="pref-row-sub">Default interface mode</div></div>
+      <div class="toggle-track on" style="cursor:not-allowed;opacity:0.75"><div class="toggle-thumb"></div></div>
+    </div>
+    <div class="pref-row">
+      <div><div class="pref-row-title">Push Notifications</div><div class="pref-row-sub">Receive performance alerts</div></div>
+      <div class="toggle-track off" id="notif-toggle"><div class="toggle-thumb"></div></div>
+    </div>
+    <div class="pref-row">
+      <div><div class="pref-row-title">Audio Coach</div><div class="pref-row-sub">Spoken feedback summaries</div></div>
+      <div class="toggle-track on" id="audio-toggle"><div class="toggle-thumb"></div></div>
+    </div>
+    <button id="auth-pref-save" style="margin-top:22px;width:100%;padding:13px;border-radius:999px;background:#bf81ff;color:#32005c;font-weight:700;font-size:15px;border:none;cursor:pointer;font-family:'Manrope',sans-serif;transition:box-shadow 0.2s">
+      Save Changes
     </button>
-    <div style="position:relative" id="authProfileDropdownWrap">
-        <div id="authProfileBadge" style="width:36px;height:36px;border-radius:50%;background:#1a1936;border:1.5px solid rgba(206,138,251,0.2);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s;box-shadow:0 0 10px rgba(206,138,251,0.1)">
-            <span id="authUserInitials" style="color:#ce8afb;font-weight:700;font-size:13px;letter-spacing:0.05em">--</span>
-        </div>
-        <div id="authDropdownMenu" style="position:absolute;right:0;top:calc(100% + 8px);width:220px;background:#0c0c1f;border:1px solid #1f1e33;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,0.6);opacity:0;transform:translateY(8px);pointer-events:none;transition:all 0.25s;padding:8px 0;z-index:200">
-            <div style="padding:12px 16px;border-bottom:1px solid #1f1e33;margin-bottom:4px">
-                <span style="font-size:10px;text-transform:uppercase;font-weight:700;color:#bf81ff;letter-spacing:0.12em;display:block;margin-bottom:4px">Account</span>
-                <p id="authDropdownEmail" style="font-size:13px;color:#e5e3ff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">loading...</p>
-            </div>
-            <button id="authOpenPrefBtn" style="width:100%;text-align:left;padding:10px 16px;font-size:13px;color:#e5e3ff;background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:10px;transition:background 0.15s" onmouseover="this.style.background='#1a1936'" onmouseout="this.style.background='none'">
-                <span class="material-symbols-outlined" style="font-size:17px;color:#a8a7d5">settings</span> Preferences
-            </button>
-            <button id="authLogoutBtn" style="width:100%;text-align:left;padding:10px 16px;font-size:13px;color:#fd6f85;background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:10px;transition:background 0.15s" onmouseover="this.style.background='#1a1936'" onmouseout="this.style.background='none'">
-                <span class="material-symbols-outlined" style="font-size:17px">logout</span> Log Out
-            </button>
-        </div>
-    </div>
+  </div>
 </div>`;
 
-// Find the top-right icon slots and inject there (look for the icon area in top nav)
-// We inject into a placeholder div generated on each page or just append to nav
-const targetNav = document.querySelector('nav.fixed');
-if (targetNav) {
-    const navRight = targetNav.querySelector('.flex.items-center.gap-4, .flex.items-center.gap-3');
-    if (navRight) {
-        navRight.insertAdjacentHTML('beforeend', profileHTML);
-    }
-}
+document.body.insertAdjacentHTML('beforeend', widgetHTML);
 
-// ─── Toggle dropdown on click ──────────────────────────────────────────────
-const profileBadge = document.getElementById('authProfileBadge');
-const dropdownMenu = document.getElementById('authDropdownMenu');
-
-profileBadge.addEventListener('click', () => {
-    const isOpen = dropdownMenu.style.opacity === '1';
-    dropdownMenu.style.opacity = isOpen ? '0' : '1';
-    dropdownMenu.style.transform = isOpen ? 'translateY(8px)' : 'translateY(0)';
-    dropdownMenu.style.pointerEvents = isOpen ? 'none' : 'all';
+// ─── Dropdown Toggle ──────────────────────────────────────────────────────────
+const dropdown = document.getElementById('auth-dropdown');
+document.getElementById('auth-avatar').addEventListener('click', (e) => {
+  e.stopPropagation();
+  dropdown.classList.toggle('open');
 });
-
-// Close when clicking outside
 document.addEventListener('click', (e) => {
-    if (!document.getElementById('authProfileDropdownWrap').contains(e.target)) {
-        dropdownMenu.style.opacity = '0';
-        dropdownMenu.style.transform = 'translateY(8px)';
-        dropdownMenu.style.pointerEvents = 'none';
-    }
+  if (!e.target.closest('#auth-widget')) dropdown.classList.remove('open');
 });
 
-// ─── Preferences Modal Logic ─────────────────────────────────────────────
-const prefModal = document.getElementById('authPrefModal');
-const prefContent = document.getElementById('authPrefModalContent');
-
-function openPref() {
-    prefModal.style.opacity = '1';
-    prefModal.style.pointerEvents = 'all';
-    prefContent.style.transform = 'scale(1)';
-    // Close dropdown
-    dropdownMenu.style.opacity = '0';
-    dropdownMenu.style.transform = 'translateY(8px)';
-    dropdownMenu.style.pointerEvents = 'none';
-}
-function closePref() {
-    prefModal.style.opacity = '0';
-    prefModal.style.pointerEvents = 'none';
-    prefContent.style.transform = 'scale(0.95)';
-}
-
-document.getElementById('authOpenPrefBtn').addEventListener('click', openPref);
-document.getElementById('authClosePrefBtn').addEventListener('click', closePref);
-document.getElementById('authSavePrefBtn').addEventListener('click', closePref);
-prefModal.addEventListener('click', (e) => { if (e.target === prefModal) closePref(); });
-
-// ─── Toggle switches ──────────────────────────────────────────────────────
-let notifOn = false, audioOn = true;
-document.getElementById('notifToggle').addEventListener('click', () => {
-    notifOn = !notifOn;
-    const t = document.getElementById('notifToggle');
-    const th = document.getElementById('notifToggleThumb');
-    t.style.background = notifOn ? '#bf81ff' : '#1f1e33';
-    t.style.boxShadow = notifOn ? '0 0 8px rgba(191,129,255,0.4)' : 'none';
-    th.style.left = notifOn ? 'auto' : '3px';
-    th.style.right = notifOn ? '3px' : 'auto';
-    th.style.background = notifOn ? 'white' : '#72719c';
+// ─── Preferences Modal ────────────────────────────────────────────────────────
+const overlay = document.getElementById('auth-pref-overlay');
+document.getElementById('auth-pref-btn').addEventListener('click', () => {
+  overlay.classList.add('open');
+  dropdown.classList.remove('open');
 });
-document.getElementById('audioToggle').addEventListener('click', () => {
-    audioOn = !audioOn;
-    const t = document.getElementById('audioToggle');
-    const th = document.getElementById('audioToggleThumb');
-    t.style.background = audioOn ? '#bf81ff' : '#1f1e33';
-    t.style.boxShadow = audioOn ? '0 0 8px rgba(191,129,255,0.4)' : 'none';
-    th.style.left = audioOn ? 'auto' : '3px';
-    th.style.right = audioOn ? '3px' : 'auto';
-    th.style.background = audioOn ? 'white' : '#72719c';
+const closePref = () => overlay.classList.remove('open');
+document.getElementById('auth-pref-close').addEventListener('click', closePref);
+document.getElementById('auth-pref-save').addEventListener('click', closePref);
+overlay.addEventListener('click', (e) => { if (e.target === overlay) closePref(); });
+
+// ─── Toggle switches ──────────────────────────────────────────────────────────
+['notif-toggle', 'audio-toggle'].forEach(id => {
+  document.getElementById(id).addEventListener('click', function() {
+    this.classList.toggle('on');
+    this.classList.toggle('off');
+  });
 });
 
-// ─── Firebase Auth State ─────────────────────────────────────────────────
-const profileWrap = document.getElementById('authProfileWrap');
+// ─── Firebase Auth ────────────────────────────────────────────────────────────
+const widget = document.getElementById('auth-widget');
 
 onAuthStateChanged(auth, (user) => {
-    if (user) {
-        profileWrap.style.display = 'flex';
-        const nameStr = user.displayName || user.email.split('@')[0];
-        document.getElementById('authDropdownEmail').textContent = user.email;
-        // Initials
-        const parts = nameStr.trim().split(' ');
-        let init = parts[0].charAt(0);
-        if (parts.length > 1) init += parts[parts.length - 1].charAt(0);
-        else init = nameStr.substring(0, 2);
-        document.getElementById('authUserInitials').textContent = init.toUpperCase();
+  if (user) {
+    widget.style.display = 'flex';
+    const nameStr = user.displayName || user.email.split('@')[0];
+    document.getElementById('auth-email').textContent = user.email;
 
-        // Also update Performance Hub welcome heading if exists
-        const nameEl = document.getElementById('userNameDisplay');
-        if (nameEl) nameEl.textContent = nameStr;
-    }
-    // No redirect here — each page can decide
+    // Compute initials
+    const parts = nameStr.trim().split(' ').filter(Boolean);
+    let init = parts[0].charAt(0);
+    if (parts.length > 1) init += parts[parts.length - 1].charAt(0);
+    else init = nameStr.substring(0, 2);
+    document.getElementById('auth-initials').textContent = init.toUpperCase();
+
+    // Update welcome heading if this page has one
+    const nameEl = document.getElementById('userNameDisplay');
+    if (nameEl) nameEl.textContent = nameStr;
+  }
+  // Don't redirect here — let each page's own logic handle it
 });
 
-document.getElementById('authLogoutBtn').addEventListener('click', () => {
-    signOut(auth).then(() => {
-        window.location.href = '../interveux_landing_page/code.html';
-    });
+document.getElementById('auth-logout-btn').addEventListener('click', () => {
+  signOut(auth).then(() => {
+    window.location.href = '../interveux_landing_page/code.html';
+  });
 });
