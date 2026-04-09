@@ -358,65 +358,65 @@
 <div class="space-y-3 stagger-children" data-stagger="60">
 <div>
 <div class="flex justify-between text-xs mb-1">
-<span class="text-on-surface-variant">Clarity</span><span class="text-primary" data-countup="87" data-suffix="%" data-delay="200">87%</span>
+<span class="text-on-surface-variant">Clarity</span><span class="text-primary" id="clarityVal">--</span>
 </div>
 <div class="h-1.5 rounded-full bg-surface-container-highest overflow-hidden">
-<div class="h-full bg-primary rounded-full progress-bar-animated" data-width="87%" data-delay="250"></div>
+<div class="h-full bg-primary rounded-full transition-all duration-700" id="clarityBar" style="width:0%"></div>
 </div>
 </div>
 <div>
 <div class="flex justify-between text-xs mb-1">
-<span class="text-on-surface-variant">Pace</span><span class="text-secondary" data-countup="72" data-suffix="%" data-delay="350">72%</span>
+<span class="text-on-surface-variant">Pace</span><span class="text-secondary" id="paceVal">--</span>
 </div>
 <div class="h-1.5 rounded-full bg-surface-container-highest overflow-hidden">
-<div class="h-full bg-secondary rounded-full progress-bar-animated" data-width="72%" data-delay="400"></div>
+<div class="h-full bg-secondary rounded-full transition-all duration-700" id="paceBar" style="width:0%"></div>
 </div>
 </div>
 <div>
 <div class="flex justify-between text-xs mb-1">
-<span class="text-on-surface-variant">Structure</span><span class="text-tertiary" data-countup="91" data-suffix="%" data-delay="450">91%</span>
+<span class="text-on-surface-variant">Structure</span><span class="text-tertiary" id="structureVal">--</span>
 </div>
 <div class="h-1.5 rounded-full bg-surface-container-highest overflow-hidden">
-<div class="h-full bg-tertiary rounded-full progress-bar-animated" data-width="91%" data-delay="500"></div>
+<div class="h-full bg-tertiary rounded-full transition-all duration-700" id="structureBar" style="width:0%"></div>
 </div>
 </div>
 </div>
 <div class="h-px w-full bg-white/5"></div>
 <div class="space-y-3">
 <div class="flex justify-between items-end">
-<p class="text-lg font-bold text-white font-headline">Low <span class="text-[10px] text-green-400 font-normal uppercase tracking-normal ml-1">Anxiety</span></p>
+<p class="text-lg font-bold text-white font-headline"><span id="anxietyLabel">Low</span> <span class="text-[10px] text-green-400 font-normal uppercase tracking-normal ml-1">Anxiety</span></p>
 <div class="flex items-center gap-2">
-<span class="w-2 h-2 rounded-full bg-green-400 inline-block dot-pulse"></span>
+<span class="w-2 h-2 rounded-full bg-green-400 inline-block dot-pulse" id="anxietyDot"></span>
 <span class="material-symbols-outlined text-primary star-spin" style="font-size:18px">auto_awesome</span>
 <span class="text-xs text-on-surface-variant">AI Analysis Active</span>
 </div>
 </div>
 <div class="relative h-1.5 w-full bg-surface-container-lowest rounded-full overflow-hidden">
-<div class="absolute h-full w-[28%] rounded-full bg-gradient-to-r from-green-400 via-yellow-400 to-red-500 shadow-[0_0_10px_rgba(74,222,128,0.3)]"></div>
+<div class="absolute h-full rounded-full bg-gradient-to-r from-green-400 via-yellow-400 to-red-500 shadow-[0_0_10px_rgba(74,222,128,0.3)] transition-all duration-700" id="anxietyBar" style="width:28%"></div>
 </div>
 </div>
 <div class="h-px w-full bg-white/5"></div>
 <div class="space-y-3">
 <div class="flex justify-between items-end">
-<p class="text-lg font-bold text-white font-headline">Open <span class="text-[10px] text-primary font-normal uppercase tracking-normal ml-1">Posture</span></p>
+<p class="text-lg font-bold text-white font-headline"><span id="postureLabel">Open</span> <span class="text-[10px] text-primary font-normal uppercase tracking-normal ml-1">Posture</span></p>
 <div class="flex items-center gap-1.5 bg-primary/10 px-2 py-1 rounded">
 <span class="material-symbols-outlined text-[14px] text-primary">accessibility_new</span>
 <span class="text-[9px] font-bold text-primary uppercase tracking-widest">Body Language</span>
 </div>
 </div>
 <div class="relative h-1.5 w-full bg-surface-container-lowest rounded-full overflow-hidden">
-<div class="absolute h-full w-[82%] rounded-full bg-gradient-to-r from-primary to-primary-container shadow-[0_0_10px_rgba(191,129,255,0.3)]"></div>
+<div class="absolute h-full rounded-full bg-gradient-to-r from-primary to-primary-container shadow-[0_0_10px_rgba(191,129,255,0.3)] transition-all duration-700" id="postureBar" style="width:82%"></div>
 </div>
 </div>
 <div class="mt-auto p-4 rounded-xl bg-surface-container-low/50 border border-white/5">
 <p class="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest mb-3">Live Insights</p>
-<ul class="space-y-2">
+<ul class="space-y-2" id="liveInsightsList">
 <li class="flex items-center gap-2 text-[11px] text-indigo-100/70">
 <div class="w-1.5 h-1.5 rounded-full bg-green-400"></div> Eye contact: Consistent
-                        </li>
+</li>
 <li class="flex items-center gap-2 text-[11px] text-indigo-100/70">
 <div class="w-1.5 h-1.5 rounded-full bg-green-400"></div> Hand gestures: Natural
-                        </li>
+</li>
 </ul>
 </div>
 </div>
@@ -649,11 +649,18 @@ if ('webkitSpeechRecognition' in window) {
     isRecording = true;
     finalTranscript = '';
     document.getElementById('recordText').textContent = 'Stop Recording';
-    document.getElementById('recordIcon').style.color = '#ff97a3'; // Error color
+    document.getElementById('recordIcon').style.color = '#ff97a3';
     document.getElementById('stopAnalyzeBtn').disabled = false;
     document.getElementById('stopAnalyzeBtn').classList.remove('opacity-50', 'cursor-not-allowed');
     document.getElementById('transcriptContainer').innerHTML = '<p class="text-xs text-indigo-100/90 leading-relaxed italic" id="interimText">Listening...</p>';
     
+    // Reset metrics to loading state
+    ['clarityVal','paceVal','structureVal'].forEach(id => { const el = document.getElementById(id); if(el) el.textContent = '--'; });
+    ['clarityBar','paceBar','structureBar','anxietyBar'].forEach(id => { const el = document.getElementById(id); if(el) el.style.width = '0%'; });
+    
+    // Start the live metrics engine
+    startLiveMetrics();
+
     // Automatically turn on camera for effect
     const img = document.getElementById('cameraImg');
     if (img.style.opacity === '0') toggleCamera();
@@ -702,11 +709,112 @@ function toggleRecording() {
   }
 }
 
+// ═══════════════════════════════════════════
+//   LIVE METRICS ENGINE
+// ═══════════════════════════════════════════
+let liveMetricsInterval = null;
+
+function setBar(id, val) {
+  const el = document.getElementById(id);
+  if (el) el.style.width = val + '%';
+}
+function setTxt(id, val) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = val;
+}
+
+function computeLiveMetrics() {
+  const text = (finalTranscript + ' ' + (window.interimTranscript || '')).trim();
+  if (!text || text.split(/\s+/).length < 3) return;
+
+  const words = text.split(/\s+/).filter(Boolean);
+  const wordCount = words.length;
+
+  // Filler words
+  const fillers = text.toLowerCase().match(/\b(um|uh|like|so|basically|actually|you know|sort of|i mean|right|well)\b/g) || [];
+  const fillerRatio = fillers.length / Math.max(wordCount, 1);
+
+  // STAR / structural keywords
+  const starMatches = (text.match(/\b(situation|task|action|result|decided|implemented|achieved|led|resolved|outcome|managed|because|therefore|ultimately)\b/gi) || []).length;
+
+  // Sentence count
+  const sentenceCount = Math.max(1, (text.match(/[.!?]+/g) || []).length);
+  const avgWordsPerSent = wordCount / sentenceCount;
+
+  // === Clarity ===
+  let clarity = 78;
+  if (avgWordsPerSent < 10) clarity = Math.min(96, clarity + 12);
+  else if (avgWordsPerSent > 28) clarity = Math.max(30, clarity - 22);
+  clarity = Math.max(25, Math.round(clarity - fillerRatio * 65));
+
+  // === Pace ===
+  let pace = 68;
+  if (wordCount < 20)  pace = 45 + Math.floor(wordCount * 1.4);
+  else if (wordCount < 80) pace = 72 + Math.floor(Math.random() * 12);
+  else pace = 80 + Math.floor(Math.random() * 14);
+  pace = Math.min(98, Math.round(pace));
+
+  // === Structure ===
+  let structure = 38 + Math.min(52, starMatches * 9) + Math.min(10, sentenceCount * 2);
+  if (wordCount > 30) structure += 10;
+  structure = Math.round(Math.min(97, structure));
+
+  // === Anxiety (inverse of filler ratio) ===
+  const anxietyScore = Math.round(Math.min(88, fillerRatio * 220));
+  let anxietyLabel = 'Low';
+  let anxietyColor = '#4ade80';
+  if (anxietyScore > 55) { anxietyLabel = 'High'; anxietyColor = '#fd6f85'; }
+  else if (anxietyScore > 28) { anxietyLabel = 'Medium'; anxietyColor = '#facc15'; }
+
+  // === Posture (simulated) ===
+  const posture = Math.round(72 + Math.random() * 22);
+  const postureLabel = posture > 85 ? 'Open' : 'Neutral';
+
+  // — Update DOM —
+  setBar('clarityBar', clarity); setTxt('clarityVal', clarity + '%');
+  setBar('paceBar', pace);       setTxt('paceVal', pace + '%');
+  setBar('structureBar', structure); setTxt('structureVal', structure + '%');
+  setBar('anxietyBar', anxietyScore); setTxt('anxietyLabel', anxietyLabel);
+  setBar('postureBar', posture); setTxt('postureLabel', postureLabel);
+  const dot = document.getElementById('anxietyDot');
+  if (dot) dot.style.background = anxietyColor;
+
+  // — Live Insights —
+  const insights = [];
+  if (fillerRatio < 0.05) insights.push({ color: '#4ade80', text: 'Speech fluency: Excellent' });
+  else if (fillerRatio < 0.12) insights.push({ color: '#facc15', text: `Filler words detected: ${fillers.length}x — slow down` });
+  else insights.push({ color: '#fd6f85', text: `Too many fillers (${fillers.length}x) — pause & breathe` });
+
+  if (starMatches >= 3) insights.push({ color: '#4ade80', text: 'STAR structure: Clearly detected' });
+  else if (wordCount > 30) insights.push({ color: '#facc15', text: 'STAR structure: Weak — add a result' });
+  else insights.push({ color: '#a8a7d5', text: 'Keep speaking for structure analysis...' });
+
+  if (wordCount < 20) insights.push({ color: '#facc15', text: 'Response too short — elaborate more' });
+  else insights.push({ color: '#4ade80', text: `Response length: Good (${wordCount} words)` });
+
+  const listEl = document.getElementById('liveInsightsList');
+  if (listEl) listEl.innerHTML = insights.map(i =>
+    `<li class="flex items-center gap-2 text-[11px] text-indigo-100/70">
+      <div class="w-1.5 h-1.5 rounded-full" style="background:${i.color}"></div>${i.text}
+    </li>`
+  ).join('');
+}
+
+function startLiveMetrics() {
+  computeLiveMetrics();
+  liveMetricsInterval = setInterval(computeLiveMetrics, 1800);
+}
+function stopLiveMetrics() {
+  if (liveMetricsInterval) { clearInterval(liveMetricsInterval); liveMetricsInterval = null; }
+}
+
 function stopRecordingUI() {
   isRecording = false;
+  stopLiveMetrics();
   document.getElementById('recordText').textContent = 'Start Recording';
-  document.getElementById('recordIcon').style.color = ''; 
+  document.getElementById('recordIcon').style.color = '';
 }
+
 
 async function stopAndAnalyze() {
   if (isRecording && recognition) {
