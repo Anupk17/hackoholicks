@@ -839,8 +839,7 @@ if ('webkitSpeechRecognition' in window) {
     startLiveMetrics();
 
     // Automatically turn on camera for effect
-    const img = document.getElementById('cameraImg');
-    if (img.style.opacity === '0') toggleCamera();
+    if (!cameraOn) startCamera();
   };
   
   recognition.onresult = function(event) {
@@ -889,6 +888,7 @@ if ('webkitSpeechRecognition' in window) {
 function toggleRecording() {
   if (!recognition) return;
   if (isRecording) {
+    isRecording = false;
     recognition.stop();
   } else {
     recognition.start();
