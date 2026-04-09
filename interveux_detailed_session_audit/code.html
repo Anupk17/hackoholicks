@@ -259,8 +259,8 @@
                     <h3 class="text-[16px] font-bold text-white tracking-wide flex items-center gap-2">
                         <span class="material-symbols-outlined text-[#bf81ff] text-xl" style="font-variation-settings: 'FILL' 1;">auto_fix_high</span>
                         AI-Powered Analysis
-                        <button class="ml-1 w-6 h-6 rounded-full bg-[#bf81ff]/10 hover:bg-[#bf81ff]/20 text-[#bf81ff] flex items-center justify-center transition-colors" title="Listen to analysis">
-                            <span class="material-symbols-outlined text-[14px]">volume_up</span>
+                        <button id="ttsBtn" class="ml-1 w-6 h-6 rounded-full bg-[#bf81ff]/10 hover:bg-[#bf81ff]/20 text-[#bf81ff] flex items-center justify-center transition-colors" title="Listen to analysis">
+                            <span class="material-symbols-outlined text-[14px] tts-icon">volume_up</span>
                         </button>
                     </h3>
                     <span class="bg-[#2d1b4f] text-[#dfccff] text-[9px] rounded-full py-1 uppercase font-bold tracking-widest px-3">HIGH CLARITY</span>
@@ -403,6 +403,33 @@
                     <p><strong>Strengths:</strong> ${ai.strengths ? ai.strengths.join(', ') : 'Solid delivery'}</p>
                     <p><strong>To Improve:</strong> ${ai.improvements ? ai.improvements.join(', ') : 'Keep practicing'}</p>
                 `;
+            }
+            
+            // Text to speech feature
+            const ttsBtn = document.getElementById('ttsBtn');
+            if (ttsBtn && ai.optimizedAnswer) {
+                let isPlaying = false;
+                ttsBtn.addEventListener('click', () => {
+                    if (isPlaying || window.speechSynthesis.speaking) {
+                        window.speechSynthesis.cancel();
+                        isPlaying = false;
+                        ttsBtn.querySelector('.tts-icon').textContent = 'volume_up';
+                        return;
+                    }
+                    const text = "Here is an optimized way to answer: " + ai.optimizedAnswer;
+                    const utterance = new SpeechSynthesisUtterance(text);
+                    utterance.rate = 0.95; // medium pace
+                    utterance.onend = () => {
+                        isPlaying = false;
+                        if (ttsBtn.querySelector('.tts-icon')) ttsBtn.querySelector('.tts-icon').textContent = 'volume_up';
+                    };
+                    isPlaying = true;
+                    ttsBtn.querySelector('.tts-icon').textContent = 'stop';
+                    window.speechSynthesis.speak(utterance);
+                });
+                
+                // Stop speech if they leave the page
+                window.addEventListener('beforeunload', () => window.speechSynthesis.cancel());
             }
 
             // Update title
