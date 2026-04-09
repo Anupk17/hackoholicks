@@ -6,7 +6,7 @@ const upload = multer({ storage: multer.memoryStorage() });
 
 // Initialize Gemini with API key from .env
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-const MODEL = 'gemini-1.5-flash';
+const MODEL = 'gemini-2.0-flash';
 
 // Simple in-memory cache to prevent duplicate requests while testing
 const analysisCache = new Map();
@@ -56,12 +56,30 @@ NO MARKDOWN.`;
     
     // Simulate some logic to make the response seem dynamic
     const wordCount = transcript.trim().split(/\s+/).length;
-    const fillerMatches = transcript.toLowerCase().match(/\b(um|uh|like|so|basically|actually)\b/g) || [];
+    const fillerMatches = transcript.toLowerCase().match(/\b(um|uh|like|so|basically|actually|you\s+know|sort\s+of|i\s+mean|right|well)\b/g) || [];
     const uniqueFillers = [...new Set(fillerMatches)];
     
-    // Score based on word count (short = bad, long = good) and fillers
-    let baseScore = Math.min(95, 40 + (wordCount * 1.5));
-    baseScore = Math.max(0, baseScore - (fillerMatches.length * 2));
+    // Check for "Good" professional keywords
+    const profKeywords = transcript.toLowerCase().match(/\b(project|team|design|architecture|build|managed|led|worked|developed|software|code|system|app|data|manager|users|client|challenge|resolved)\b/g) || [];
+    
+    // Base score calculation
+    let baseScore = 40;
+    if (wordCount < 10) baseScore -= 15; // Too short
+    else if (wordCount > 30) baseScore += 20; // Good length
+    else baseScore += 10;
+    
+    // If it's just random generic "bad comments" without any professional terms
+    if (profKeywords.length === 0) {
+      baseScore = Math.min(baseScore, 35); // Punish heavily if no relevance
+    } else {
+      baseScore += (profKeywords.length * 5); // Reward good terms
+    }
+    
+    // Punish for fillers
+    baseScore = Math.max(0, baseScore - (fillerMatches.length * 4));
+    
+    // Cap at 95
+    baseScore = Math.min(95, baseScore);
     
     const data = {
       overallScore: Math.round(baseScore),

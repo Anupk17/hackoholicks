@@ -355,16 +355,20 @@
             // 3. Filler Words
             const fillerContainer = document.querySelectorAll('.stagger-children.justify-between')[0];
             if(fillerContainer && ai.fillerWords && ai.fillerWords.length > 0) {
+               // Count frequency of each filler word from the transcript
+               const transcript = result.rawTranscript || '';
                let html = '';
                ai.fillerWords.slice(0,5).forEach(fw => {
+                   const fwRegex = new RegExp('\\b' + fw + '\\b', 'gi');
+                   const count = (transcript.match(fwRegex) || []).length || ai.fillerWordCount || 1;
                    html += `<div class="flex-1 min-w-[120px] bg-[#1a1936] rounded-2xl p-4 flex flex-col items-center justify-center border border-[#1f1e33]">
-                       <span class="text-[9px] text-[#a8a7d5] uppercase tracking-[0.2em] font-medium mb-1">FILLER</span>
+                       <span class="text-[9px] text-[#a8a7d5] uppercase tracking-[0.2em] font-medium mb-1">FREQUENCY <span class="text-[#4e4d73] mx-1">•</span> ${count}</span>
                        <span class="text-2xl font-black text-[#dfccff] font-headline tracking-tighter">${fw}</span>
                    </div>`;
                });
                fillerContainer.innerHTML = html;
             } else if (fillerContainer) {
-               fillerContainer.innerHTML = `<div class="flex-1 w-full bg-[#1a1936] rounded-2xl p-4 flex flex-col items-center justify-center border border-[#1f1e33]"><span class="text-sm font-bold text-green-400">No filler words detected!</span></div>`;
+               fillerContainer.innerHTML = `<div class="flex-1 w-full bg-[#1a1936] rounded-2xl p-4 flex flex-col items-center justify-center border border-[#1f1e33]"><span class="text-sm font-bold text-green-400">✓ No filler words detected!</span></div>`;
             }
 
             // 4. Raw Transcript
