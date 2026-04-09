@@ -97,6 +97,14 @@
             background: #bf81ff;
             box-shadow: 0 0 10px rgba(191, 129, 255, 0.5);
         }
+        @keyframes pulse-wave {
+            0%, 100% { transform: scaleY(0.4); opacity: 0.6; }
+            50% { transform: scaleY(1); opacity: 1; }
+        }
+        .waveform-bar-animated {
+            animation: pulse-wave 1.2s ease-in-out infinite;
+            transform-origin: center;
+        }
         .transcript-glow {
             box-shadow: 0 0 25px rgba(191, 129, 255, 0.1);
         }
@@ -276,21 +284,20 @@
 </div>
 <span class="text-xs font-label text-primary bg-primary/10 px-3 py-1 rounded-full font-bold">Live Stream</span>
 </div>
-<div class="flex-grow flex items-center justify-center gap-2 bg-surface-container-low/30 rounded-2xl px-8">
-<div class="waveform-bar w-1 bg-primary rounded-full" style="animation-delay: 0.1s"></div>
-<div class="waveform-bar w-1 bg-primary rounded-full" style="animation-delay: 0.2s"></div>
-<div class="waveform-bar w-1 bg-primary rounded-full" style="animation-delay: 0.3s"></div>
-<div class="waveform-bar w-1 bg-primary rounded-full" style="animation-delay: 0.4s"></div>
-<div class="waveform-bar w-1 bg-primary rounded-full" style="animation-delay: 0.5s"></div>
-<div class="waveform-bar w-1 bg-primary/80 rounded-full" style="animation-delay: 0.6s"></div>
-<div class="waveform-bar w-1 bg-primary/80 rounded-full" style="animation-delay: 0.7s"></div>
-<div class="waveform-bar w-1 bg-primary/80 rounded-full" style="animation-delay: 0.8s"></div>
-<div class="waveform-bar w-1 bg-primary/60 rounded-full" style="animation-delay: 0.9s"></div>
-<div class="waveform-bar w-1 bg-primary/60 rounded-full" style="animation-delay: 1.0s"></div>
-<div class="waveform-bar w-1 bg-primary/40 rounded-full" style="animation-delay: 1.1s"></div>
-<div class="waveform-bar w-1 bg-primary/40 rounded-full" style="animation-delay: 1.2s"></div>
-<div class="waveform-bar w-1 bg-primary/20 rounded-full" style="animation-delay: 1.3s"></div>
-<div class="waveform-bar w-1 bg-primary/20 rounded-full" style="animation-delay: 1.4s"></div>
+<div class="flex-grow flex items-center justify-center gap-[6px] rounded-2xl px-8 min-h-[160px] my-4">
+    <div class="waveform-bar-animated w-2 h-6 bg-[#bf81ff]/40 rounded-full" style="animation-delay: 0.8s"></div>
+    <div class="waveform-bar-animated w-2 h-10 bg-[#bf81ff]/50 rounded-full" style="animation-delay: 0.1s"></div>
+    <div class="waveform-bar-animated w-2 h-16 bg-[#bf81ff]/70 rounded-full" style="animation-delay: 0.5s"></div>
+    <div class="waveform-bar-animated w-2 h-20 bg-[#bf81ff]/90 rounded-full drop-shadow-[0_0_8px_rgba(191,129,255,0.6)]" style="animation-delay: 0.2s"></div>
+    <div class="waveform-bar-animated w-2 h-28 bg-[#bf81ff] rounded-full drop-shadow-[0_0_12px_rgba(191,129,255,0.8)]" style="animation-delay: 0.7s"></div>
+    <div class="waveform-bar-animated w-2 h-24 bg-[#bf81ff] rounded-full drop-shadow-[0_0_10px_rgba(191,129,255,0.8)]" style="animation-delay: 0.4s"></div>
+    <div class="waveform-bar-animated w-2 h-32 bg-[#bf81ff] rounded-full drop-shadow-[0_0_15px_rgba(191,129,255,1)]" style="animation-delay: 0.0s"></div>
+    <div class="waveform-bar-animated w-2 h-28 bg-[#bf81ff] rounded-full drop-shadow-[0_0_12px_rgba(191,129,255,0.8)]" style="animation-delay: 0.5s"></div>
+    <div class="waveform-bar-animated w-2 h-20 bg-[#bf81ff]/90 rounded-full drop-shadow-[0_0_8px_rgba(191,129,255,0.6)]" style="animation-delay: 0.1s"></div>
+    <div class="waveform-bar-animated w-2 h-24 bg-[#bf81ff] rounded-full drop-shadow-[0_0_10px_rgba(191,129,255,0.8)]" style="animation-delay: 0.6s"></div>
+    <div class="waveform-bar-animated w-2 h-16 bg-[#bf81ff]/70 rounded-full" style="animation-delay: 0.3s"></div>
+    <div class="waveform-bar-animated w-2 h-10 bg-[#bf81ff]/50 rounded-full" style="animation-delay: 0.9s"></div>
+    <div class="waveform-bar-animated w-2 h-6 bg-[#bf81ff]/40 rounded-full" style="animation-delay: 0.2s"></div>
 </div>
 <div class="mt-6 p-4 rounded-xl bg-primary/5 border border-primary/10 flex items-center gap-4">
 <span class="material-symbols-outlined text-primary">graphic_eq</span>
