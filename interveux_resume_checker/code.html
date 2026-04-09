@@ -404,6 +404,51 @@
     if (summaryEl) summaryEl.textContent = data.atsScore >= 70 ? 'Strong Matching Candidate' : data.atsScore >= 50 ? 'Average Match' : 'Needs Improvement';
     if (summaryDesc) summaryDesc.textContent = data.summary || 'Analysis complete.';
 
+    // Update 4 Metric Grid Boxes
+    const metricsContainers = document.querySelectorAll('.grid.grid-cols-2 > .bg-surface-container-high');
+    
+    // 1. Readability (based on formattingScore)
+    if (metricsContainers[0]) {
+      const mainVal = metricsContainers[0].querySelector('.text-2xl');
+      const subVal = metricsContainers[0].querySelector('.mb-1');
+      const bar = metricsContainers[0].querySelector('.h-1.rounded-full.bg-primary');
+      if (mainVal) mainVal.textContent = (data.formattingScore || 0) > 80 ? 'High' : (data.formattingScore || 0) > 50 ? 'Medium' : 'Low';
+      if (subVal) subVal.textContent = (data.formattingScore || 0) > 80 ? 'Tier 1' : (data.formattingScore || 0) > 50 ? 'Tier 2' : 'Tier 3';
+      if (bar) bar.style.width = (data.formattingScore || 0) + '%';
+    }
+
+    // 2. Keyword Density (based on keywordMatch)
+    if (metricsContainers[1]) {
+      const mainVal = metricsContainers[1].querySelector('.text-2xl');
+      const subVal = metricsContainers[1].querySelector('.mb-1');
+      const bar = metricsContainers[1].querySelector('.h-1.rounded-full.bg-tertiary');
+      if (mainVal) mainVal.textContent = (data.keywordMatch || 0) + '%';
+      if (subVal) subVal.textContent = (data.keywordMatch || 0) > 70 ? 'Optimal' : 'Needs Integration';
+      if (bar) bar.style.width = (data.keywordMatch || 0) + '%';
+    }
+
+    // 3. Quantifiable Impacts (based on impactScore)
+    if (metricsContainers[2]) {
+      const mainVal = metricsContainers[2].querySelector('.text-2xl');
+      const subVal = metricsContainers[2].querySelector('.mb-1');
+      const bar = metricsContainers[2].querySelector('.h-1.rounded-full.bg-error');
+      const impactCount = Math.floor((data.impactScore || 0) / 4);
+      if (mainVal) mainVal.textContent = impactCount;
+      if (subVal) subVal.textContent = impactCount >= 15 ? 'Excellent' : 'Needs +' + Math.max(0, 15 - impactCount);
+      if (bar) bar.style.width = (data.impactScore || 0) + '%';
+    }
+
+    // 4. Structure Score (based on average of atsScore and formattingScore)
+    if (metricsContainers[3]) {
+      const mainVal = metricsContainers[3].querySelector('.text-2xl');
+      const subVal = metricsContainers[3].querySelector('.mb-1');
+      const bar = metricsContainers[3].querySelector('.h-1.rounded-full.bg-secondary');
+      const structureScore = Math.floor(((data.atsScore || 0) + (data.formattingScore || 0)) / 2);
+      if (mainVal) mainVal.textContent = structureScore >= 85 ? 'Gold' : structureScore >= 60 ? 'Silver' : 'Bronze';
+      if (subVal) subVal.textContent = structureScore >= 85 ? 'Architectural' : structureScore >= 60 ? 'Standard' : 'Fragmented';
+      if (bar) bar.style.width = structureScore + '%';
+    }
+
     // Strong keyword tags
     const tagsContainer = document.querySelector('.flex.flex-wrap.gap-2');
     if (tagsContainer && data.strongKeywords) {
