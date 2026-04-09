@@ -142,17 +142,32 @@
 <div class="space-y-6 pt-6 border-t border-outline/10">
 <label class="block text-[10px] font-extrabold text-primary-light/60 uppercase tracking-[0.2em]">Targeting Alignment</label>
 <input class="w-full bg-surface-variant/50 border border-outline/30 rounded-xl h-14 px-5 focus:border-primary focus:ring-0 text-on-surface font-light placeholder:text-on-surface-variant/40" placeholder="Target Job Title (e.g. Senior Product Designer)" type="text"/>
-<div class="relative group">
-<select class="w-full bg-surface-variant/50 border border-outline/30 rounded-xl h-14 px-5 focus:border-primary focus:ring-0 text-on-surface font-light appearance-none cursor-pointer hover:border-outline/50 transition-all" id="industryFocusSelect">
-<option value="" disabled selected hidden>Industry Focus</option>
-<option value="Tech & Software">Tech & Software</option>
-<option value="Finance & FinTech">Finance & FinTech</option>
-<option value="Healthcare & Life Sciences">Healthcare & Life Sciences</option>
-<option value="Creative & Design">Creative & Design</option>
-<option value="Other">Other</option>
-</select>
-<span class="material-symbols-outlined text-on-surface-variant absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none" data-icon="expand_more">expand_more</span>
-</div>
+<div class="relative group" id="industryDropdownContainer">
+  <div class="w-full bg-surface-variant/50 border border-outline/30 rounded-xl h-14 px-5 flex justify-between items-center cursor-pointer hover:border-outline/50 transition-all font-light" onclick="document.getElementById('industryMenu').classList.toggle('hidden')">
+    <span class="text-on-surface-variant" id="industryDisplay">Industry Focus</span>
+    <span class="material-symbols-outlined text-on-surface-variant" data-icon="expand_more">expand_more</span>
+  </div>
+  <input type="hidden" id="industryFocusSelect" value="">
+  <ul id="industryMenu" class="absolute z-50 w-full mt-2 bg-[#13122c] border border-outline/20 rounded-xl shadow-2xl hidden flex-col p-2 top-full backdrop-blur-3xl">
+     <li class="px-4 py-3.5 rounded-lg hover:bg-primary/20 hover:text-primary-light cursor-pointer text-sm text-on-surface-variant transition-all font-medium" onclick="selectIndustry('Tech & Software')">Tech & Software</li>
+     <li class="px-4 py-3.5 rounded-lg hover:bg-primary/20 hover:text-primary-light cursor-pointer text-sm text-on-surface-variant transition-all font-medium" onclick="selectIndustry('Finance & FinTech')">Finance & FinTech</li>
+     <li class="px-4 py-3.5 rounded-lg hover:bg-primary/20 hover:text-primary-light cursor-pointer text-sm text-on-surface-variant transition-all font-medium" onclick="selectIndustry('Healthcare & Life Sciences')">Healthcare & Life Sciences</li>
+     <li class="px-4 py-3.5 rounded-lg hover:bg-primary/20 hover:text-primary-light cursor-pointer text-sm text-on-surface-variant transition-all font-medium" onclick="selectIndustry('Creative & Design')">Creative & Design</li>
+  </ul>
+  <script>
+    function selectIndustry(val) {
+      document.getElementById('industryDisplay').textContent = val;
+      document.getElementById('industryDisplay').classList.replace('text-on-surface-variant', 'text-on-surface');
+      document.getElementById('industryFocusSelect').value = val;
+      document.getElementById('industryMenu').classList.add('hidden');
+    }
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!document.getElementById('industryDropdownContainer').contains(e.target)) {
+        document.getElementById('industryMenu').classList.add('hidden');
+      }
+    });
+  </script>
 </div>
 </div>
 </div>
