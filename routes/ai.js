@@ -3,31 +3,33 @@ const router = express.Router();
 const multer = require('multer');
 const upload = multer({ storage: multer.memoryStorage() });
 
-// OpenRouter uses the OpenAI format under the hood
-const MODEL = 'google/gemini-2.0-flash-001';
+// Groq API - llama-3.3-70b is fast and extremely capable
+const GROQ_MODEL = 'llama-3.3-70b-versatile';
 
 // Simple in-memory cache to prevent duplicate requests while testing
 const analysisCache = new Map();
 
-// ─── Helper: call OpenRouter with a text prompt ──────────────────────────────
-async function geminiText(prompt) {
-  const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+// ─── Helper: call Groq with a text prompt ────────────────────────────────────
+async function groqText(prompt) {
+  const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
     method: "POST",
     headers: {
-      "Authorization": `Bearer ${process.env.OPENROUTER_API_KEY}`,
+      "Authorization": `Bearer ${process.env.GROQ_API_KEY}`,
       "Content-Type": "application/json"
     },
     body: JSON.stringify({
-      "model": MODEL,
+      "model": GROQ_MODEL,
       "messages": [
         {"role": "user", "content": prompt}
-      ]
+      ],
+      "temperature": 0.7,
+      "max_tokens": 1500
     })
   });
   
   const data = await response.json();
   if (!response.ok) {
-     throw new Error(data.error?.message || "OpenRouter API Error");
+     throw new Error(data.error?.message || "Groq API Error");
   }
   return data.choices[0].message.content;
 }
@@ -57,7 +59,7 @@ Return exactly this JSON:
 NO MARKDOWN.`;
 
   try {
-    const raw = await geminiText(prompt);
+    const raw = await groqText(prompt);
     const clean = raw.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
     const data = JSON.parse(clean);
     analysisCache.set(cacheKey, data);
@@ -170,7 +172,7 @@ Analyze this resume and return a JSON object with exactly these fields:
 Return ONLY valid JSON. No markdown.`;
 
   try {
-    const raw = await geminiText(prompt);
+    const raw = await groqText(prompt);
     const match = raw.match(/\{[\s\S]*\}/);
     if (!match) throw new Error("No JSON structure found in AI response");
     const data = JSON.parse(match[0]);
@@ -256,7 +258,7 @@ Analyze this LinkedIn profile and return a JSON object with exactly these fields
 Return ONLY valid JSON. No markdown.`;
 
   try {
-    const raw = await geminiText(prompt);
+    const raw = await groqText(prompt);
     const match = raw.match(/\{[\s\S]*\}/);
     if (!match) throw new Error("No JSON structure found in AI response");
     const data = JSON.parse(match[0]);

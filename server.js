@@ -46,7 +46,7 @@ app.get('/api/health', (req, res) => {
   res.json({
     status: 'healthy',
     timestamp: new Date().toISOString(),
-    openRouterKey: process.env.OPENROUTER_API_KEY ? '✅ Set' : '❌ Missing — add to .env',
+    groqKey: process.env.GROQ_API_KEY ? '✅ Set' : '❌ Missing — add to .env',
   });
 });
 
@@ -65,10 +65,10 @@ app.listen(PORT, () => {
   console.log(`   Resume:      POST http://localhost:${PORT}/api/analyze-resume`);
   console.log(`   LinkedIn:    POST http://localhost:${PORT}/api/analyze-linkedin`);
   console.log('');
-  if (!process.env.OPENROUTER_API_KEY || process.env.OPENROUTER_API_KEY.includes('PASTE')) {
-    console.warn('⚠️  OPENROUTER_API_KEY not set! Add your key to .env to enable AI features.');
+  if (!process.env.GROQ_API_KEY || process.env.GROQ_API_KEY.includes('PASTE')) {
+    console.warn('⚠️  GROQ_API_KEY not set! Add your key to .env to enable AI features.');
   } else {
-    console.log('✅ OpenRouter AI key loaded.');
+    console.log('✅ Groq AI key loaded.');
   }
   console.log('');
 });
