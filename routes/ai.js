@@ -165,42 +165,7 @@ Return ONLY valid JSON. No markdown.`;
     res.json({ success: true, data });
   } catch (err) {
     console.error('analyze-resume error:', err.message);
-    if (err.message.includes('429') || true) {
-      console.warn('Using randomized mock resume data to ensure UI dynamics.');
-      const ats = Math.floor(Math.random() * 25) + 65;
-      const kwMatch = Math.floor(Math.random() * 30) + 60;
-      const fmtScore = Math.floor(Math.random() * 40) + 60;
-      const impScore = Math.floor(Math.random() * 50) + 45;
-      const keywordPool = ["Kubernetes", "GraphQL", "CI/CD", "AWS", "Microservices", "Python", "Data Structure", "Redis", "Docker", "System Design"];
-      const strongPool = ["React", "Node.js", "Performance", "Architecture", "Agile", "TypeScript", "Problem Solving"];
-      
-      const missing = keywordPool.sort(() => 0.5 - Math.random()).slice(0, 3);
-      const strong = strongPool.sort(() => 0.5 - Math.random()).slice(0, 4);
-
-      return res.json({
-        success: true,
-        data: {
-          "atsScore": ats,
-          "keywordMatch": kwMatch,
-          "formattingScore": fmtScore,
-          "impactScore": impScore,
-          "missingKeywords": missing,
-          "strongKeywords": strong,
-          "criticalIssues": [
-            "Resume is missing quantifiable metrics in the latest role",
-            "Professional summary is too generic for senior roles"
-          ],
-          "improvements": [
-            { "section": "Experience", "suggestion": `Add specific metrics (e.g. 'reduced latency by ${Math.floor(Math.random()*40)+20}%')` },
-            { "section": "Summary", "suggestion": "Tailor the summary specifically to full-stack engineering." },
-            { "section": "Skills", "suggestion": "Group skills by category (Frontend, Backend, DevOps) for better readability." }
-          ],
-          "summary": `This is a solid resume showing a decent ${ats}% ATS alignment, but it lacks quantifiable achievements.`,
-          "tailoredSummary": "Performance-driven Senior Engineer with a proven track record of optimizing UI and integrating complex APIs."
-        }
-      });
-    }
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: 'AI Error: ' + err.message });
   }
 });
 
@@ -254,43 +219,7 @@ Return ONLY valid JSON. No markdown.`;
     res.json({ success: true, data });
   } catch (err) {
     console.error('analyze-linkedin error:', err.message);
-    if (err.message.includes('429') || true) {
-      console.warn('Using randomized mock LinkedIn data to ensure UI dynamics.');
-      const overall = Math.floor(Math.random() * 30) + 60;
-      const headScore = Math.floor(Math.random() * 40) + 50;
-      const sumScore = Math.floor(Math.random() * 30) + 65;
-      const expScore = Math.floor(Math.random() * 35) + 60;
-      const keyScore = Math.floor(Math.random() * 40) + 55;
-      const conScore = Math.floor(Math.random() * 20) + 80;
-
-      return res.json({
-        success: true,
-        data: {
-          "overallScore": overall,
-          "headlineScore": headScore,
-          "summaryScore": sumScore,
-          "experienceScore": expScore,
-          "keywordsScore": keyScore,
-          "connectabilityScore": conScore,
-          "missingElements": [
-            "Headline lacks an outcome-based metric",
-            "Missing a 'Featured' media/portfolio section",
-            "Recommendations section is empty"
-          ],
-          "topStrengths": [
-            "Detailed About Section hook",
-            "Strong consistent employment history"
-          ],
-          "improvements": [
-            { "section": "Headline", "current": "Software Engineer", "suggested": "Senior Full-Stack Engineer | React & Node.js | Scalable Systems" },
-            { "section": "About", "issue": "Lacks personal voice", "fix": "Add a sentence explaining WHY you love building software, not just what you build." },
-            { "section": "Skills", "missing": ["Next.js", "Tailwind CSS", "REST APIs"] }
-          ],
-          "profileSummary": "Dedicated and innovative Full-Stack Engineer with a passion for building scalable web applications and intuitive user interfaces."
-        }
-      });
-    }
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: 'AI Error: ' + err.message });
   }
 });
 
