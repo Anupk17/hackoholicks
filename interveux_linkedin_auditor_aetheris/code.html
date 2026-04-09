@@ -348,9 +348,8 @@
       profileText = 'LinkedIn URL: ' + urlInput.value.trim() + '. Target role: ' + targetRole;
     }
 
-    if (profileText.length < 10) {
-      alert('Please paste your LinkedIn profile text or enter a profile URL to analyze.');
-      return;
+    if (profileText.length < 5) {
+      profileText = "Demo Profile Text Default";
     }
 
     auditBtn.innerHTML = '<span class="material-symbols-outlined animate-spin" data-icon="sync">sync</span> AUDITING PROFILE...';

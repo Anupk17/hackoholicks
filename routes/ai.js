@@ -210,10 +210,10 @@ Return ONLY valid JSON. No markdown.`;
 // Returns: LinkedIn profile optimization score and tips
 // ═══════════════════════════════════════════════════════════════
 router.post('/analyze-linkedin', async (req, res) => {
-  const { profileText, targetRole } = req.body;
-
-  if (!profileText || profileText.trim().length < 30) {
-    return res.status(400).json({ error: 'LinkedIn profile content is too short.' });
+  let { profileText, targetRole } = req.body;
+  
+  if (!profileText || profileText.trim().length < 5) {
+    profileText = "LinkedIn URL: linkedin.com/in/demouser";
   }
 
   const prompt = `
