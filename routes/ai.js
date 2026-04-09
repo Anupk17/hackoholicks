@@ -58,7 +58,11 @@ Question Asked: "${question || 'General conversational prompt'}"
 Candidate's Answer: "${transcript}"
 
 Task: Provide extremely harsh, accurate scoring and a flawless, 10/10 "Optimized Answer".
-The Optimized Answer must be written in the first person ("I"), follow the STAR framework perfectly (Situation, Task, Action, Result), use strong action verbs, and quantify results. It should sound natural but highly professional.
+The Optimized Answer must be written in the first person ("I"), follow the STAR framework perfectly (Situation, Task, Action, Result), use strong action verbs, and quantify results. 
+
+CRITICAL RULES:
+1. DO NOT USE PLACEHOLDERS like "X years", "Y field", "Company Z". If the candidate's answer lacks specifics, creatively INVENT a plausible, realistic, and highly professional scenario based on the question context. 
+2. The optimized answer must sound completely natural, as if an expert candidate is reciting it fluidly.
 
 Return EXACTLY and ONLY this JSON structure without markdown formatting or code blocks:
 {"overallScore":<0-100>,"confidenceScore":<0-100>,"clarityScore":<0-100>,"relevanceScore":<0-100>,"structureScore":<0-100>,"fillerWordCount":<num>,"fillerWords":["word"],"starAnalysis":{"situation":"<txt>","task":"<txt>","action":"<txt>","result":"<txt>","completeness":<0-100>},"strengths":["<txt>"],"improvements":["<txt>"],"optimizedAnswer":"<The flawless 10/10 answer here>","coachingNote":"<Deep, insightful coaching note here>"}`;
