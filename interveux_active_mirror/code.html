@@ -752,9 +752,10 @@ function onFaceResults(results) {
   const totalDev = deviationX + deviationY;
   eyeLookTotal++;
 
-  if (totalDev > 0.18) {
+  // Stricter eye tracking threshold (was 0.18, now 0.10 for looking slightly away)
+  if (totalDev > 0.10) {
     eyeOffCount++;
-    if (eyeOffCount >= EYE_WARNING_THRESHOLD) {
+    if (eyeOffCount >= 3) { // Stricter frame threshold (3 instead of 4)
       const dir = deviationX > deviationY ? (avgX < 0.5 ? 'right' : 'left') : (avgY < 0.45 ? 'down' : 'up');
       showEyeWarning(`👀 Eyes drifting ${dir} — look directly at the camera!`);
     }
@@ -865,12 +866,21 @@ if ('webkitSpeechRecognition' in window) {
   };
   
   recognition.onerror = function(event) {
-    console.error('Speech recognition error', event.error);
-    stopRecordingUI();
+    console.warn('Speech recognition error/warning:', event.error);
+    // Ignore harmless 'no-speech' network pauses, only stop on fatal errors
+    if (event.error !== 'no-speech' && event.error !== 'network') {
+       stopRecordingUI();
+    }
   };
   
   recognition.onend = function() {
-    stopRecordingUI();
+    // Chrome automatically stops recognition during pauses. 
+    // Restart it seamlessly if the user hasn't explicitly hit 'Stop'.
+    if (isRecording) {
+      try { recognition.start(); } catch(e) {}
+    } else {
+      stopRecordingUI();
+    }
   };
 } else {
   alert('Web Speech API is not supported in this browser. Please use Google Chrome for this feature.');
