@@ -152,11 +152,28 @@
 <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-indigo-300/50 text-sm">search</span>
 <input class="bg-surface-container-lowest border border-outline-variant/20 rounded-full py-1.5 pl-10 pr-4 text-xs focus:ring-1 focus:ring-primary focus:outline-none w-48 transition-all" placeholder="Search insights..." type="text"/>
 </div>
-<button class="text-indigo-200/60 hover:text-purple-300 transition-colors">
-<span class="material-symbols-outlined">notifications</span>
+<button class="text-indigo-200/60 hover:text-purple-300 transition-colors mr-2">
+<span class="material-symbols-outlined text-[24px]">notifications</span>
 </button>
-<div class="h-8 w-8 rounded-full overflow-hidden border border-primary/30">
-<img alt="User profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCGfMcKm_NY1D-4JURZsHvaTK0CQ33y9O2SnZ_WFyYjCdJqp4QJPRsu0iwhWhkg01R3_0kJm6FmlJp4hmt8qFgeij1WqvQilTBv2LafJZNlk4LL5zQgd68PArPGK-Tc3RaCI73jXVQOp6GLwD4bkmmUYrj3zFXLPlR52HV38u3FwvjRgVu2wDklPs0Y4Q3H0t-3XLz6L8vwx6eAq0mJ7nIK5Tn0p1VEVM8REgSMMXD8qYo2WL8CwOCbfHq-je_yZLJKJiToMxmIJ1c"/>
+<!-- Global Profile and Logout Actions -->
+<div class="relative group cursor-pointer z-50">
+    <div class="w-10 h-10 rounded-full bg-[#1a1936] flex items-center justify-center border border-[#ce8afb]/20 group-hover:border-[#ce8afb] transition-all shadow-[0_0_10px_rgba(206,138,251,0.1)]">
+        <span id="globalUserInitials" class="text-[#ce8afb] font-headline font-bold text-sm tracking-wide">--</span>
+    </div>
+    
+    <!-- Dropdown Menu -->
+    <div class="absolute right-0 top-[120%] w-56 bg-[#0c0c1f] border border-[#1f1e33] rounded-2xl shadow-2xl opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-300 py-2">
+        <div class="px-4 py-3 border-b border-[#1f1e33] mb-1">
+            <span class="text-[10px] uppercase font-bold text-primary tracking-widest mb-1 block">Account</span>
+            <p id="globalDropdownEmail" class="text-sm text-[#e5e3ff] truncate">loading...</p>
+        </div>
+        <button class="w-full text-left px-4 py-2.5 text-sm text-[#e5e3ff] hover:bg-[#1a1936] transition-colors flex items-center gap-3">
+            <span class="material-symbols-outlined text-[18px] text-[#a8a7d5]">settings</span> Preferences
+        </button>
+        <button id="globalLogoutBtn" class="w-full text-left px-4 py-2.5 text-sm text-[#fd6f85] hover:bg-[#1a1936] transition-colors flex items-center gap-3">
+            <span class="material-symbols-outlined text-[18px]">logout</span> Log Out
+        </button>
+    </div>
 </div>
 </div>
 </nav>
@@ -197,7 +214,7 @@
 </aside>
 <main class="lg:pl-64 pt-16 min-h-screen">
 <div class="max-w-7xl mx-auto p-8 space-y-8">
-<header class="flex flex-col md:flex-row md:items-start justify-between gap-6 relative">
+<header class="flex flex-col md:flex-row md:items-end justify-between gap-6 relative">
 <div>
 <span id="userLevelBadge" class="text-tertiary font-label text-xs uppercase tracking-widest font-bold mb-2 block">Level 12 Explorer</span>
 <h1 class="text-4xl md:text-5xl font-black text-white font-headline tracking-tight reveal-on-scroll" data-delay="100">
@@ -205,26 +222,14 @@
 </h1>
 <p class="text-on-surface-variant mt-2 max-w-lg reveal-on-scroll" data-delay="200">You're crushing your goals! Your score improved by <span class="text-primary font-bold">14.2%</span> this week. <span class="text-secondary">Keep the momentum going!</span></p>
 </div>
-<!-- Profile and Logout Actions -->
-<div class="flex items-center gap-5 mt-2 md:mt-0">
-    <button class="text-slate-400 hover:text-purple-300 transition-all"><span class="material-symbols-outlined text-[28px]">notifications</span></button>
-    <button class="text-slate-400 hover:text-purple-300 transition-all"><span class="material-symbols-outlined text-[28px]">settings</span></button>
-    
-    <div class="relative group cursor-pointer ml-2">
-        <div class="w-14 h-14 rounded-full bg-[#1a1936] flex items-center justify-center border border-[#ce8afb]/20 group-hover:border-[#ce8afb] transition-all shadow-[0_0_15px_rgba(206,138,251,0.1)]">
-            <span id="userInitials" class="text-[#ce8afb] font-headline font-bold text-xl tracking-wide">--</span>
-        </div>
-        
-        <!-- Dropdown Menu -->
-        <div class="absolute right-0 top-[110%] w-48 bg-[#0c0c1f] border border-[#1f1e33] rounded-2xl shadow-2xl opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-300 py-2 z-50">
-            <div class="px-4 py-3 border-b border-[#1f1e33] mb-1">
-                <p id="dropdownEmail" class="text-xs text-[#a8a7d5] truncate">loading...</p>
-            </div>
-            <button id="logoutBtn" class="w-full text-left px-4 py-2 text-sm text-[#fd6f85] hover:bg-[#1a1936] transition-colors flex items-center gap-3">
-                <span class="material-symbols-outlined text-[18px]">logout</span> Log Out
-            </button>
-        </div>
-    </div>
+<div class="flex items-center gap-3">
+<div class="glass-panel px-4 py-2 rounded-full flex items-center gap-2">
+<span class="h-2 w-2 rounded-full bg-primary animate-pulse shadow-[0_0_8px_var(--glow-purple)]"></span>
+<span class="text-xs font-bold text-indigo-200">GAME MODE ACTIVE</span>
+</div>
+<button class="p-2 glass-panel rounded-full text-white hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined">military_tech</span>
+</button>
 </div>
 </header>
 <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
@@ -450,9 +455,9 @@
   import { auth, onAuthStateChanged, signOut } from '../firebase-client.js';
 
   const userNameDisplay = document.getElementById('userNameDisplay');
-  const userInitials = document.getElementById('userInitials');
-  const dropdownEmail = document.getElementById('dropdownEmail');
-  const logoutBtn = document.getElementById('logoutBtn');
+  const userInitials = document.getElementById('globalUserInitials');
+  const dropdownEmail = document.getElementById('globalDropdownEmail');
+  const logoutBtn = document.getElementById('globalLogoutBtn');
 
   onAuthStateChanged(auth, (user) => {
     if (user) {
