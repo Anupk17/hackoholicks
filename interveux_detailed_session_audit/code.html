@@ -371,8 +371,7 @@
                fillerContainer.innerHTML = `<div class="flex-1 w-full bg-[#1a1936] rounded-2xl p-4 flex flex-col items-center justify-center border border-[#1f1e33]"><span class="text-sm font-bold text-green-400">✓ No filler words detected!</span></div>`;
             }
 
-            // 4. Raw Transcript
-            // The container is the sibling div after the header, inside the Raw Source Transcript card
+            // 4. Raw Transcript with highlighted filler words
             const transcriptHeaders = document.querySelectorAll('h3');
             let rawContainer = null;
             let aiContainer = null;
@@ -380,7 +379,18 @@
                 if(h3.textContent.includes('Raw Source Transcript')) rawContainer = h3.parentElement.nextElementSibling;
                 if(h3.textContent.includes('AI-Powered Analysis')) aiContainer = h3.parentElement.nextElementSibling;
             });
-            if(rawContainer) rawContainer.innerHTML = `<p class="italic text-white">"${result.rawTranscript || 'No transcript'}"</p>`;
+            if(rawContainer) {
+               let displayText = result.rawTranscript || 'No transcript';
+               // Highlight filler words in orange-red
+               const fillers = (ai.fillerWords && ai.fillerWords.length > 0)
+                   ? ai.fillerWords
+                   : ['um','uh','like','so','basically','actually','you know','sort of','i mean','right','well'];
+               fillers.forEach(fw => {
+                   const regex = new RegExp(`\\b(${fw.replace(/\s+/g,'\\s+')})\\b`, 'gi');
+                   displayText = displayText.replace(regex, `<span style="background:#7a2010;color:#ff9a80;padding:1px 6px;border-radius:4px;font-weight:700;margin:0 1px;">$1</span>`);
+               });
+               rawContainer.innerHTML = `<p class="italic text-white leading-loose">"${displayText}"</p>`;
+            }
             
             // 5. AI Analysis
             if(aiContainer) {
