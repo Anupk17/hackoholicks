@@ -142,10 +142,7 @@
 <div class="space-y-6 pt-6 border-t border-outline/10">
 <label class="block text-[10px] font-extrabold text-primary-light/60 uppercase tracking-[0.2em]">Targeting Alignment</label>
 <input class="w-full bg-surface-variant/50 border border-outline/30 rounded-xl h-14 px-5 focus:border-primary focus:ring-0 text-on-surface font-light placeholder:text-on-surface-variant/40" placeholder="Target Job Title (e.g. Senior Product Designer)" type="text"/>
-<div class="relative group">
-<div class="w-full bg-surface-variant/50 border border-outline/30 rounded-xl h-14 px-5 flex justify-between items-center cursor-pointer hover:border-outline/50 transition-all">
-<span class="text-on-surface-variant font-light">Industry Focus</span>
-<span class="material-symbols-outlined text-on-surface-variant" data-icon="expand_more">expand_more</span>
+<input class="w-full bg-surface-variant/50 border border-outline/30 rounded-xl h-14 px-5 focus:border-primary focus:ring-0 text-on-surface font-light placeholder:text-on-surface-variant/40" placeholder="Industry Focus (e.g. Fintech, Healthcare)" type="text"/>
 </div>
 </div>
 </div>
@@ -338,6 +335,7 @@
     // Collect profile text from URL input or raw text tab textarea
     const urlInput = document.querySelector('input[placeholder*="linkedin.com"]');
     const targetRole = document.querySelector('input[placeholder*="Target Job Title"]')?.value?.trim() || 'Tech Professional';
+    const industryFocus = document.querySelector('input[placeholder*="Industry Focus"]')?.value?.trim() || '';
 
     // Try to get raw text from a textarea if it exists, otherwise use URL as context
     let profileText = '';
@@ -359,7 +357,7 @@
       const res = await fetch('http://localhost:3000/api/analyze-linkedin', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ profileText, targetRole })
+        body: JSON.stringify({ profileText, targetRole, industryFocus })
       });
       const result = await res.json();
       if (result.success) {
@@ -378,7 +376,18 @@
   function updateLinkedInUI(data) {
     // Overall score
     const scoreEl = document.querySelector('span.text-8xl');
-    if (scoreEl) scoreEl.textContent = data.overallScore;
+    if (scoreEl) {
+      let curOverall = 0;
+      const targetOverall = parseInt(data.overallScore);
+      const ovInterval = setInterval(() => {
+          curOverall += Math.ceil((targetOverall - curOverall) / 5) || 1;
+          scoreEl.textContent = curOverall;
+          if (curOverall >= targetOverall) {
+              scoreEl.textContent = targetOverall;
+              clearInterval(ovInterval);
+          }
+      }, 40);
+    }
 
     // Score bar
     const scoreBar = document.querySelector('.h-full.purple-gradient');
@@ -411,7 +420,18 @@
     scoreFields.forEach((field, i) => {
       if (data[field] !== undefined) {
         if (bars[i]) { bars[i].style.width = data[field] + '%'; bars[i].setAttribute('data-width', data[field] + '%'); }
-        if (scoreTexts[i]) scoreTexts[i].textContent = data[field] + '%';
+        if (scoreTexts[i]) {
+            let current = 0;
+            const target = parseInt(data[field]);
+            const interval = setInterval(() => {
+                current += Math.ceil((target - current) / 5) || 1;
+                scoreTexts[i].textContent = current + (scoreTexts[i].dataset.suffix || '%');
+                if (current >= target) {
+                    scoreTexts[i].textContent = target + (scoreTexts[i].dataset.suffix || '%');
+                    clearInterval(interval);
+                }
+            }, 40);
+        }
       }
     });
 

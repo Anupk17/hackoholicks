@@ -186,7 +186,7 @@ Return ONLY valid JSON. No markdown.`;
 // Returns: LinkedIn profile optimization score and tips
 // ═══════════════════════════════════════════════════════════════
 router.post('/analyze-linkedin', async (req, res) => {
-  let { profileText, targetRole } = req.body;
+  let { profileText, targetRole, industryFocus } = req.body;
   
   if (!profileText || profileText.trim().length < 5) {
     profileText = "LinkedIn URL: linkedin.com/in/demouser";
@@ -196,6 +196,7 @@ router.post('/analyze-linkedin', async (req, res) => {
 You are a LinkedIn profile optimization expert.
 
 Target Role: "${targetRole || 'Tech Professional'}"
+Target Industry: "${industryFocus || 'Not specified'}"
 
 LinkedIn Profile Content:
 """
