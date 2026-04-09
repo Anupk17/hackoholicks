@@ -117,9 +117,9 @@
 </div>
 <div class="flex items-center gap-4">
 <button class="hidden sm:flex p-2 text-slate-400 hover:text-purple-300 transition-all"><span class="material-symbols-outlined">notifications</span></button>
-<button class="hidden sm:flex p-2 text-slate-400 hover:text-purple-300 transition-all"><span class="material-symbols-outlined">account_circle</span></button>
-<a href="../interveux_performance_hub/code.html" class="bg-primary-container text-on-primary-container px-6 py-2.5 rounded-full font-headline font-semibold text-sm hover:opacity-90 active:scale-95 transition-all duration-200 cta-glow">
-                Begin Evaluation
+<button class="hidden sm:flex p-2 text-slate-400 hover:text-purple-300 transition-all auth-trigger"><span class="material-symbols-outlined">account_circle</span></button>
+<a href="#" class="auth-trigger bg-primary-container text-on-primary-container px-6 py-2.5 rounded-full font-headline font-semibold text-sm hover:opacity-90 active:scale-95 transition-all duration-200 cta-glow flex items-center gap-2">
+                <span class="material-symbols-outlined text-[18px]">login</span> Sign In with Google
             </a>
 </div>
 </nav>
@@ -140,10 +140,10 @@
                         Navigate high-stakes evaluations with a synthetic intelligence designed to refine your reasoning, clarify your verbal delivery, and structure your excellence.
                     </p>
 <div class="flex flex-wrap gap-4 reveal-on-scroll" data-delay="600">
-<a href="../interveux_active_mirror/code.html" class="bg-primary text-on-primary px-8 py-4 rounded-full font-headline font-bold text-lg hover:shadow-2xl hover:shadow-primary/40 transition-all active:scale-95 cta-glow">
-                            Launch AI Catalyst
+<a href="#" class="auth-trigger bg-primary text-on-primary px-8 py-4 rounded-full font-headline font-bold text-lg hover:shadow-2xl hover:shadow-primary/40 transition-all active:scale-95 cta-glow flex items-center gap-3">
+                            <span class="material-symbols-outlined">rocket_launch</span> Launch AI Catalyst
                         </a>
-<a href="../interveux_performance_hub/code.html" class="bg-surface-variant/40 backdrop-blur text-on-surface px-8 py-4 rounded-full font-headline font-bold text-lg border border-white/10 hover:bg-surface-variant/60 transition-all">
+<a href="#" class="auth-trigger bg-surface-variant/40 backdrop-blur text-on-surface px-8 py-4 rounded-full font-headline font-bold text-lg border border-white/10 hover:bg-surface-variant/60 transition-all">
                             View Performance Hub
                         </a>
 </div>
@@ -402,4 +402,42 @@
 </div>
 </footer>
 <script src="../animations.js"></script>
+<script type="module">
+  import { auth, googleProvider, signInWithPopup, onAuthStateChanged, db, doc, setDoc } from '../firebase-client.js';
+
+  // Automatically redirect if already logged in
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      console.log('User signed in automatically:', user.email);
+       window.location.href = '../interveux_performance_hub/code.html';
+    }
+  });
+
+  document.querySelectorAll('.auth-trigger').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      // Show loading state
+      const originalHtml = btn.innerHTML;
+      btn.innerHTML = '<span class="material-symbols-outlined animate-spin text-[18px]">sync</span> Authenticating...';
+      
+      signInWithPopup(auth, googleProvider).then(async (result) => {
+         const user = result.user;
+         
+         // Initialize user profile in Firestore
+         await setDoc(doc(db, "users", user.uid), {
+             uid: user.uid,
+             email: user.email,
+             displayName: user.displayName,
+             photoURL: user.photoURL,
+             lastLogin: new Date().toISOString()
+         }, { merge: true });
+
+         window.location.href = '../interveux_performance_hub/code.html';
+      }).catch(err => {
+         alert("Login Failed: " + err.message);
+         btn.innerHTML = originalHtml;
+      });
+    });
+  });
+</script>
 </body></html>
