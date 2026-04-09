@@ -320,4 +320,126 @@
 <div class="fixed bottom-[-10%] right-[-5%] w-[400px] h-[400px] bg-secondary/5 rounded-full blur-[100px] -z-10 pointer-events-none"></div>
 <script src="../animations.js"></script>
 <script type="module" src="../auth-header.js"></script>
+<script>
+(function() {
+  // Wire up file upload display
+  const uploadZone = document.querySelector('.upload-zone');
+  let resumeText = '';
+  let fileInput = document.createElement('input');
+  fileInput.type = 'file';
+  fileInput.accept = '.pdf,.doc,.docx,.txt';
+  fileInput.style.display = 'none';
+  document.body.appendChild(fileInput);
+
+  uploadZone.addEventListener('click', () => fileInput.click());
+  uploadZone.addEventListener('dragover', (e) => { e.preventDefault(); uploadZone.style.borderColor = '#bf81ff'; });
+  uploadZone.addEventListener('dragleave', () => uploadZone.style.borderColor = ''); 
+  uploadZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    if (e.dataTransfer.files[0]) processFile(e.dataTransfer.files[0]);
+  });
+  fileInput.addEventListener('change', () => { if (fileInput.files[0]) processFile(fileInput.files[0]); });
+
+  function processFile(file) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      resumeText = e.target.result;
+      const fileInfo = document.querySelector('.flex.items-center.p-3.bg-surface-container');
+      fileInfo.querySelector('p.text-xs.font-semibold').textContent = file.name;
+      fileInfo.querySelector('p.text-\\[10px\\]').textContent = (file.size/1024).toFixed(0) + ' KB • Just uploaded';
+      fileInfo.style.borderColor = '#bf81ff';
+    };
+    reader.readAsText(file);
+  }
+
+  // Wire analyse button
+  const analyseBtn = document.querySelector('button.w-full.mt-8');
+  analyseBtn.addEventListener('click', async () => {
+    const jobTitle = document.querySelector('input[placeholder*="Principal"]').value || 'Software Engineer';
+    const jobDesc = document.querySelector('textarea').value;
+    const fullText = resumeText + (jobDesc ? '\n\nJob Description:\n' + jobDesc : '');
+
+    if (fullText.trim().length < 50) {
+      alert('Please upload your resume or paste some text before analyzing.');
+      return;
+    }
+
+    analyseBtn.innerHTML = '<span class="material-symbols-outlined animate-spin text-xl">sync</span> Analyzing...';
+    analyseBtn.disabled = true;
+
+    try {
+      const res = await fetch('http://localhost:3000/api/analyze-resume', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ resumeText: fullText, jobTitle })
+      });
+      const result = await res.json();
+      if (result.success) {
+        updateResumeUI(result.data);
+      } else {
+        alert('Analysis failed: ' + (result.error || 'Unknown error'));
+      }
+    } catch(err) {
+      alert('Could not reach server. Make sure the backend is running.');
+    } finally {
+      analyseBtn.innerHTML = '<span class="material-symbols-outlined text-xl">auto_awesome</span> Analyse Resume';
+      analyseBtn.disabled = false;
+    }
+  });
+
+  function updateResumeUI(data) {
+    // ATS Score ring
+    const scoreEl = document.querySelector('.absolute.flex.flex-col.items-center span.text-4xl');
+    if (scoreEl) scoreEl.textContent = data.atsScore + '%';
+    const scoreFill = document.querySelector('circle.text-primary');
+    if (scoreFill) {
+      const circumference = 452.3;
+      const offset = circumference - (data.atsScore / 100) * circumference;
+      scoreFill.setAttribute('stroke-dashoffset', offset.toFixed(1));
+    }
+
+    // Summary
+    const summaryEl = document.querySelector('h3.text-xl.font-headline');
+    const summaryDesc = summaryEl ? summaryEl.nextElementSibling : null;
+    if (summaryEl) summaryEl.textContent = data.atsScore >= 70 ? 'Strong Matching Candidate' : data.atsScore >= 50 ? 'Average Match' : 'Needs Improvement';
+    if (summaryDesc) summaryDesc.textContent = data.summary || 'Analysis complete.';
+
+    // Strong keyword tags
+    const tagsContainer = document.querySelector('.flex.flex-wrap.gap-2');
+    if (tagsContainer && data.strongKeywords) {
+      tagsContainer.innerHTML = data.strongKeywords.map(k =>
+        `<span class="px-3 py-1 bg-primary/10 text-primary text-[10px] font-bold uppercase rounded-full ghost-border">${k}</span>`
+      ).join('');
+    }
+
+    // Strengths
+    const strengthsList = document.querySelector('h4.text-xs.text-primary').nextElementSibling;
+    if (strengthsList) {
+      strengthsList.innerHTML = (data.improvements || []).slice(0, 2).map(imp =>
+        `<li class="flex items-start gap-3"><span class="w-1.5 h-1.5 rounded-full bg-primary mt-1.5 shrink-0 shadow-[0_0_8px_rgba(191,129,255,1)]"></span>
+         <p class="text-xs text-on-surface leading-relaxed">${imp.suggestion || imp}</p></li>`
+      ).join('');
+    }
+
+    // Critical Gaps
+    const gapsList = document.querySelector('h4.text-xs.text-error').nextElementSibling;
+    if (gapsList) {
+      gapsList.innerHTML = (data.criticalIssues || data.missingKeywords || []).slice(0, 2).map(issue =>
+        `<li class="flex items-start gap-3"><span class="w-1.5 h-1.5 rounded-full bg-error mt-1.5 shrink-0 shadow-[0_0_8px_rgba(253,111,133,1)]"></span>
+         <p class="text-xs text-on-surface leading-relaxed">${issue}</p></li>`
+      ).join('');
+    }
+
+    // AI Recommendation
+    const recBox = document.querySelector('.bg-white\\/5.rounded-md p');
+    if (recBox) recBox.textContent = data.tailoredSummary || data.summary || 'Great resume overall!';
+    const confScore = document.querySelector('p.text-\\[10px\\].text-outline');
+    if (confScore) confScore.textContent = `ATS Match Score: ${data.keywordMatch || data.atsScore}%`;
+
+    // Hide "upload your resume" placeholder
+    const placeholder = document.querySelector('.flex.flex-col.items-center.gap-4.py-16');
+    if (placeholder) placeholder.style.display = 'none';
+  }
+})();
+</script>
 </body></html>

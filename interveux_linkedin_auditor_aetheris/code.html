@@ -328,4 +328,115 @@
 </main>
 <script src="../animations.js"></script>
 <script type="module" src="../auth-header.js"></script>
+<script>
+(function() {
+  // Wire the Audit button
+  const auditBtn = document.querySelector('button.w-full.h-16');
+  if (!auditBtn) return;
+
+  auditBtn.addEventListener('click', async () => {
+    // Collect profile text from URL input or raw text tab textarea
+    const urlInput = document.querySelector('input[placeholder*="linkedin.com"]');
+    const targetRole = document.querySelector('input[placeholder*="Target Job Title"]')?.value?.trim() || 'Tech Professional';
+
+    // Try to get raw text from a textarea if it exists, otherwise use URL as context
+    let profileText = '';
+    const textarea = document.querySelector('textarea');
+    if (textarea && textarea.value.trim().length > 20) {
+      profileText = textarea.value.trim();
+    } else if (urlInput && urlInput.value.trim().length > 5) {
+      profileText = 'LinkedIn URL: ' + urlInput.value.trim() + '. Target role: ' + targetRole;
+    }
+
+    if (profileText.length < 10) {
+      alert('Please paste your LinkedIn profile text or enter a profile URL to analyze.');
+      return;
+    }
+
+    auditBtn.innerHTML = '<span class="material-symbols-outlined animate-spin" data-icon="sync">sync</span> AUDITING PROFILE...';
+    auditBtn.disabled = true;
+
+    try {
+      const res = await fetch('http://localhost:3000/api/analyze-linkedin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ profileText, targetRole })
+      });
+      const result = await res.json();
+      if (result.success) {
+        updateLinkedInUI(result.data);
+      } else {
+        alert('Analysis failed: ' + (result.error || 'Unknown error'));
+      }
+    } catch(err) {
+      alert('Could not reach server. Make sure the backend is running on port 3000.');
+    } finally {
+      auditBtn.innerHTML = '<span class="material-symbols-outlined" data-icon="search">search</span> AUDIT PROFILE';
+      auditBtn.disabled = false;
+    }
+  });
+
+  function updateLinkedInUI(data) {
+    // Overall score
+    const scoreEl = document.querySelector('span.text-8xl');
+    if (scoreEl) scoreEl.textContent = data.overallScore;
+
+    // Score bar
+    const scoreBar = document.querySelector('.h-full.purple-gradient');
+    if (scoreBar) scoreBar.style.width = data.overallScore + '%';
+
+    // Score label
+    const scoreLabel = document.querySelector('p.text-\\[11px\\].font-extrabold.text-primary-light');
+    if (scoreLabel) {
+      scoreLabel.textContent = data.overallScore >= 75 ? 'Strong Profile' : data.overallScore >= 55 ? 'Growth Required' : 'Needs Significant Work';
+    }
+
+    // AI Impression
+    const impressionEl = document.querySelector('p.text-2xl.font-normal.italic');
+    if (impressionEl && data.profileSummary) {
+      impressionEl.textContent = '"' + data.profileSummary + '"';
+    }
+
+    // Strength tags
+    const tagsContainer = document.querySelector('.flex.flex-wrap.gap-3');
+    if (tagsContainer && data.topStrengths) {
+      tagsContainer.innerHTML = data.topStrengths.map((s, i) =>
+        `<span class="${i === 0 ? 'bg-primary/20 text-primary-light' : 'bg-white/5 text-on-surface-variant'} px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider">${s}</span>`
+      ).join('');
+    }
+
+    // Segment bars (Headline, About, Experience, Skills)
+    const scoreFields = ['headlineScore','summaryScore','experienceScore','keywordsScore'];
+    const bars = document.querySelectorAll('.progress-bar-animated');
+    const scoreTexts = document.querySelectorAll('[data-countup]');
+    scoreFields.forEach((field, i) => {
+      if (data[field] !== undefined) {
+        if (bars[i]) { bars[i].style.width = data[field] + '%'; bars[i].setAttribute('data-width', data[field] + '%'); }
+        if (scoreTexts[i]) scoreTexts[i].textContent = data[field] + '%';
+      }
+    });
+
+    // Critical anomalies list
+    const anomaliesList = document.querySelector('h4.text-\\[10px\\].font-extrabold.text-red-400').nextElementSibling;
+    if (anomaliesList && data.missingElements) {
+      anomaliesList.innerHTML = data.missingElements.map(m =>
+        `<li class="flex items-start gap-x-4"><span class="material-symbols-outlined text-red-400 text-lg" data-icon="error_outline">error_outline</span><span class="text-xs text-on-surface-variant font-medium leading-tight">${m}</span></li>`
+      ).join('');
+    }
+
+    // Strategic accelerators
+    const improvementsPanels = document.querySelectorAll('.flex.gap-x-8 > div');
+    if (improvementsPanels.length > 0 && data.improvements) {
+      data.improvements.slice(0, 2).forEach((imp, i) => {
+        const panel = improvementsPanels[i];
+        if (!panel) return;
+        const h5 = panel.querySelector('h5');
+        const p = panel.querySelector('p');
+        if (h5) h5.textContent = (imp.section || 'Improvement ' + (i+1)) + ' Optimization';
+        if (p) p.textContent = imp.suggested || imp.fix || (imp.missing ? 'Missing: ' + imp.missing.join(', ') : 'Review this section.');
+      });
+    }
+  }
+})();
+</script>
 </body></html>
