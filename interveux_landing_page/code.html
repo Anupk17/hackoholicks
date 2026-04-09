@@ -403,40 +403,38 @@
 </footer>
 <script src="../animations.js"></script>
 <script type="module">
-  import { auth, googleProvider, signInWithPopup, onAuthStateChanged, db, doc, setDoc } from '../firebase-client.js';
+  import { auth, googleProvider, onAuthStateChanged, db, doc, setDoc } from '../firebase-client.js';
+  import { signInWithRedirect, getRedirectResult } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js';
+
+  // Handle redirect result (user returning from Google sign-in)
+  getRedirectResult(auth).then(async (result) => {
+    if (result && result.user) {
+      const user = result.user;
+      await setDoc(doc(db, "users", user.uid), {
+        uid: user.uid,
+        email: user.email,
+        displayName: user.displayName,
+        photoURL: user.photoURL,
+        lastLogin: new Date().toISOString()
+      }, { merge: true });
+      window.location.href = '../interveux_performance_hub/code.html';
+    }
+  }).catch(err => {
+    console.error('Redirect result error:', err.message);
+  });
 
   // Automatically redirect if already logged in
   onAuthStateChanged(auth, async (user) => {
     if (user) {
-      console.log('User signed in automatically:', user.email);
-       window.location.href = '../interveux_performance_hub/code.html';
+      window.location.href = '../interveux_performance_hub/code.html';
     }
   });
 
   document.querySelectorAll('.auth-trigger').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.preventDefault();
-      // Show loading state
-      const originalHtml = btn.innerHTML;
-      btn.innerHTML = '<span class="material-symbols-outlined animate-spin text-[18px]">sync</span> Authenticating...';
-      
-      signInWithPopup(auth, googleProvider).then(async (result) => {
-         const user = result.user;
-         
-         // Initialize user profile in Firestore
-         await setDoc(doc(db, "users", user.uid), {
-             uid: user.uid,
-             email: user.email,
-             displayName: user.displayName,
-             photoURL: user.photoURL,
-             lastLogin: new Date().toISOString()
-         }, { merge: true });
-
-         window.location.href = '../interveux_performance_hub/code.html';
-      }).catch(err => {
-         alert("Login Failed: " + err.message);
-         btn.innerHTML = originalHtml;
-      });
+      btn.innerHTML = '<span class="material-symbols-outlined animate-spin text-[18px]">sync</span> Redirecting...';
+      signInWithRedirect(auth, googleProvider);
     });
   });
 </script>
