@@ -65,7 +65,7 @@ CRITICAL RULES:
 2. The optimized answer must sound completely natural, as if an expert candidate is reciting it fluidly.
 
 Return EXACTLY and ONLY this JSON structure without markdown formatting or code blocks:
-{"overallScore":<0-100>,"confidenceScore":<0-100>,"clarityScore":<0-100>,"relevanceScore":<0-100>,"structureScore":<0-100>,"fillerWordCount":<num>,"fillerWords":["word"],"starAnalysis":{"situation":"<txt>","task":"<txt>","action":"<txt>","result":"<txt>","completeness":<0-100>},"strengths":["<txt>"],"improvements":["<txt>"],"optimizedAnswer":"<The flawless 10/10 answer here>","coachingNote":"<Deep, insightful coaching note here>"}`;
+{"overallScore":<0-100>,"confidenceScore":<0-100>,"clarityScore":<0-100>,"relevanceScore":<0-100>,"structureScore":<0-100>,"fillerWordCount":<num>,"fillerWords":["word"],"starAnalysis":{"situation":"<txt>","situationScore":<0-100>,"task":"<txt>","taskScore":<0-100>,"action":"<txt>","actionScore":<0-100>,"result":"<txt>","resultScore":<0-100>,"completeness":<0-100>},"strengths":["<txt>"],"improvements":["<txt>"],"optimizedAnswer":"<The flawless 10/10 answer here>","coachingNote":"<Deep, insightful coaching note here>"}`;
 
 
   try {
@@ -115,9 +115,13 @@ Return EXACTLY and ONLY this JSON structure without markdown formatting or code 
       fillerWords: uniqueFillers.slice(0, 3),
       starAnalysis: {
         situation: "You began by mentioning: '" + transcript.substring(0, 40) + "...'",
+        situationScore: Math.round(baseScore + 5),
         task: "You outlined what needed to be done.",
+        taskScore: Math.round(baseScore),
         action: wordCount > 20 ? "You detailed your specific actions well." : "Try to add more detail about your specific actions.",
+        actionScore: wordCount > 20 ? 80 : 40,
         result: "Could be stronger by adding quantifiable metrics.",
+        resultScore: Math.max(0, baseScore - 15),
         completeness: Math.round(baseScore)
       },
       strengths: ["Clear spoken pace", wordCount > 10 ? "Good amount of detail" : "Direct answer"],
