@@ -263,24 +263,33 @@ Return ONLY valid JSON. No markdown.`;
     res.json({ success: true, data });
   } catch (err) {
     console.error('analyze-linkedin error:', err.message);
-    const overall = Math.floor(Math.random() * 20) + 70;
-    const headline = overall + Math.floor(Math.random() * 10) - 5;
-    const summary = overall + Math.floor(Math.random() * 15) - 10;
-    const exp = overall + Math.floor(Math.random() * 12) - 6;
-    const kwScore = overall - Math.floor(Math.random() * 10);
-    const connScore = overall + Math.floor(Math.random() * 15);
+    const overall = Math.floor(Math.random() * 45) + 40; // 40 to 85 spread
+    const headline = overall + Math.floor(Math.random() * 15) - 5;
+    const summary = overall + Math.floor(Math.random() * 20) - 15;
+    const exp = overall + Math.floor(Math.random() * 15) - 10;
+    const kwScore = overall - Math.floor(Math.random() * 15);
+    const connScore = overall + Math.floor(Math.random() * 20) - 5;
     
     // Attempt to extract name from user input profileText if it's a URL
-    let name = "An experienced professional";
+    let name = "The candidate";
     if (profileText && profileText.includes('linkedin.com/in/')) {
-        const urlMatch = profileText.match(/linkedin\.com\/in\/([a-zA-Z0-9-]+)/);
+        const urlMatch = profileText.match(/linkedin\.com\/in\/([a-zA-Z-]+)/);
         if (urlMatch && urlMatch[1]) {
-             name = urlMatch[1].split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+             name = urlMatch[1].split('-').filter(w => w.length > 1).map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
         }
     }
     
     const role = targetRole || 'Software Professional';
     const industry = industryFocus || 'Technology';
+
+    let impression = "";
+    if (overall < 60) {
+        impression = `${name}'s profile is currently severely underdeveloped for a ${role} role. It lacks a comprehensive description, and crucial narrative elements are entirely missing. The profile appears abandoned or incomplete, which will negatively trigger recruiter algorithms in the ${industry} space.`;
+    } else if (overall < 75) {
+        impression = `${name} presents as a dedicated ${role} within the ${industry} domain, but the profile lacks a strong descriptive summary. While there are foundational elements, the narrative value for senior tiers is currently obfuscated and requires significant expansion.`;
+    } else {
+        impression = `${name} has a solid foundation for a ${role} in ${industry}. However, the profile relies heavily on generic statements rather than quantifiable, outcome-based KPIs in the experience section.`;
+    }
 
     return res.json({
       success: true,
@@ -291,14 +300,14 @@ Return ONLY valid JSON. No markdown.`;
         "experienceScore": Math.min(100, Math.max(0, exp)),
         "keywordsScore": Math.min(100, Math.max(0, kwScore)),
         "connectabilityScore": Math.min(100, Math.max(0, connScore)),
-        "missingElements": ["Featured portfolio highlights", "Quantifiable metrics in Experience", `Specific ${role} certifications`],
-        "topStrengths": ["Clear career progression", `Good alignment with ${industry} sector`],
+        "missingElements": ["Comprehensive About description", "Featured portfolio highlights", "Quantifiable metrics in Experience"],
+        "topStrengths": [overall < 60 ? "Basic active profile existence" : "Clear career trajectory", `Keyword targeting for ${industry}`],
         "improvements": [
           { "section": "Headline", "current": "Seeking Opportunities", "suggested": `${role} | Building Scalable Systems in ${industry}` },
-          { "section": "Summary", "issue": "Lacks specific outcome-based narrative", "fix": `Rewrite to feature how your skills drive value in ${industry}.` },
-          { "section": "Skills", "missing": ["System Architecture", "Performance Optimization", "Agile methodologies"] }
+          { "section": "Summary", "issue": "Missing or extremely brief descriptive summary", "fix": `Write a 3-paragraph narrative explaining your unique approach to ${industry}.` },
+          { "section": "Experience", "missing": ["Specific outcomes, technologies used, and business impact."] }
         ],
-        "profileSummary": `${name} presents as a dedicated ${role} within the ${industry} domain. While possessing strong technical foundations, their narrative value for senior tiers in ${industry} is currently obfuscated and requires better quantitative metrics.`
+        "profileSummary": impression
       }
     });
   }
