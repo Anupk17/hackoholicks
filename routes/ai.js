@@ -1,23 +1,35 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
-const { GoogleGenAI } = require('@google/genai');
 const upload = multer({ storage: multer.memoryStorage() });
 
-// Initialize Gemini with API key from .env
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-const MODEL = 'gemini-2.0-flash';
+// OpenRouter uses the OpenAI format under the hood
+const MODEL = 'google/gemini-2.0-flash-001';
 
 // Simple in-memory cache to prevent duplicate requests while testing
 const analysisCache = new Map();
 
-// ─── Helper: call Gemini with a text prompt ──────────────────────────────
+// ─── Helper: call OpenRouter with a text prompt ──────────────────────────────
 async function geminiText(prompt) {
-  const response = await ai.models.generateContent({
-    model: MODEL,
-    contents: prompt,
+  const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${process.env.OPENROUTER_API_KEY}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      "model": MODEL,
+      "messages": [
+        {"role": "user", "content": prompt}
+      ]
+    })
   });
-  return response.text;
+  
+  const data = await response.json();
+  if (!response.ok) {
+     throw new Error(data.error?.message || "OpenRouter API Error");
+  }
+  return data.choices[0].message.content;
 }
 
 // ═══════════════════════════════════════════════════════════════
