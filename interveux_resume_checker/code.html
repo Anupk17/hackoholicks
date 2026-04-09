@@ -202,20 +202,19 @@
 <span class="text-[10px] uppercase tracking-tighter text-outline font-bold">ATS Score</span>
 </div>
 </div>
-<div class="flex flex-col items-center gap-4 py-16 text-center">
+<div id="empty-state" class="flex flex-col items-center gap-4 py-16 text-center transition-opacity duration-300">
 <span class="material-symbols-outlined text-outline float-idle" style="font-size:64px">description</span>
 <h3 class="font-headline font-bold text-xl text-on-surface-variant">Upload Your Resume</h3>
 <p class="text-sm text-outline max-w-xs">Drag & drop your PDF or DOCX above, then click Analyse. Our AI will provide deep ATS scoring and recommendations.</p>
 </div>
-<div class="flex-1 space-y-4 text-center md:text-left">
+<div id="results-state" class="flex-1 space-y-4 text-center md:text-left transition-opacity duration-300 hidden">
 <div>
-<h3 class="text-xl font-headline font-bold text-white mb-1">Strong Matching Candidate</h3>
-<p class="text-sm text-on-surface-variant">Your profile exhibits a 94% alignment with the core technical requirements for the Architect position.</p>
+<h3 id="result-summary-title" class="text-xl font-headline font-bold text-white mb-1">Strong Matching Candidate</h3>
+<p id="result-summary-desc" class="text-sm text-on-surface-variant">Your profile exhibits a 94% alignment with the core technical requirements for the Architect position.</p>
 </div>
-<div class="flex flex-wrap gap-2 justify-center md:justify-start">
+<div id="result-keywords" class="flex flex-wrap gap-2 justify-center md:justify-start">
 <span class="px-3 py-1 bg-primary/10 text-primary text-[10px] font-bold uppercase rounded-full ghost-border">Strategic Depth</span>
 <span class="px-3 py-1 bg-tertiary/10 text-tertiary text-[10px] font-bold uppercase rounded-full ghost-border">Action Oriented</span>
-<span class="px-3 py-1 bg-white/5 text-outline text-[10px] font-bold uppercase rounded-full ghost-border">Concise</span>
 </div>
 </div>
 </div>
@@ -398,9 +397,19 @@
       scoreFill.setAttribute('stroke-dashoffset', offset.toFixed(1));
     }
 
+    // Toggle states
+    const emptyState = document.getElementById('empty-state');
+    const resultsState = document.getElementById('results-state');
+    if (emptyState) emptyState.classList.add('hidden');
+    if (resultsState) {
+      resultsState.classList.remove('hidden');
+      // Adding a small delay for animation
+      setTimeout(() => resultsState.classList.add('opacity-100'), 10);
+    }
+
     // Summary
-    const summaryEl = document.querySelector('h3.text-xl.font-headline');
-    const summaryDesc = summaryEl ? summaryEl.nextElementSibling : null;
+    const summaryEl = document.getElementById('result-summary-title');
+    const summaryDesc = document.getElementById('result-summary-desc');
     if (summaryEl) summaryEl.textContent = data.atsScore >= 70 ? 'Strong Matching Candidate' : data.atsScore >= 50 ? 'Average Match' : 'Needs Improvement';
     if (summaryDesc) summaryDesc.textContent = data.summary || 'Analysis complete.';
 
@@ -450,10 +459,10 @@
     }
 
     // Strong keyword tags
-    const tagsContainer = document.querySelector('.flex.flex-wrap.gap-2');
+    const tagsContainer = document.getElementById('result-keywords');
     if (tagsContainer && data.strongKeywords) {
-      tagsContainer.innerHTML = data.strongKeywords.map(k =>
-        `<span class="px-3 py-1 bg-primary/10 text-primary text-[10px] font-bold uppercase rounded-full ghost-border">${k}</span>`
+      tagsContainer.innerHTML = data.strongKeywords.map((k, i) =>
+        `<span class="px-3 py-1 ${i % 2 === 0 ? 'bg-primary/10 text-primary' : 'bg-tertiary/10 text-tertiary'} text-[10px] font-bold uppercase rounded-full ghost-border">${k}</span>`
       ).join('');
     }
 
