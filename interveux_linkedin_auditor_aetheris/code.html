@@ -142,7 +142,16 @@
 <div class="space-y-6 pt-6 border-t border-outline/10">
 <label class="block text-[10px] font-extrabold text-primary-light/60 uppercase tracking-[0.2em]">Targeting Alignment</label>
 <input class="w-full bg-surface-variant/50 border border-outline/30 rounded-xl h-14 px-5 focus:border-primary focus:ring-0 text-on-surface font-light placeholder:text-on-surface-variant/40" placeholder="Target Job Title (e.g. Senior Product Designer)" type="text"/>
-<input class="w-full bg-surface-variant/50 border border-outline/30 rounded-xl h-14 px-5 focus:border-primary focus:ring-0 text-on-surface font-light placeholder:text-on-surface-variant/40" placeholder="Industry Focus (e.g. Fintech, Healthcare)" type="text"/>
+<div class="relative group">
+<select class="w-full bg-surface-variant/50 border border-outline/30 rounded-xl h-14 px-5 focus:border-primary focus:ring-0 text-on-surface font-light appearance-none cursor-pointer hover:border-outline/50 transition-all" id="industryFocusSelect">
+<option value="" disabled selected hidden>Industry Focus</option>
+<option value="Tech & Software">Tech & Software</option>
+<option value="Finance & FinTech">Finance & FinTech</option>
+<option value="Healthcare & Life Sciences">Healthcare & Life Sciences</option>
+<option value="Creative & Design">Creative & Design</option>
+<option value="Other">Other</option>
+</select>
+<span class="material-symbols-outlined text-on-surface-variant absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none" data-icon="expand_more">expand_more</span>
 </div>
 </div>
 </div>
@@ -335,7 +344,7 @@
     // Collect profile text from URL input or raw text tab textarea
     const urlInput = document.querySelector('input[placeholder*="linkedin.com"]');
     const targetRole = document.querySelector('input[placeholder*="Target Job Title"]')?.value?.trim() || 'Tech Professional';
-    const industryFocus = document.querySelector('input[placeholder*="Industry Focus"]')?.value?.trim() || '';
+    const industryFocus = document.getElementById('industryFocusSelect')?.value || '';
 
     // Try to get raw text from a textarea if it exists, otherwise use URL as context
     let profileText = '';
