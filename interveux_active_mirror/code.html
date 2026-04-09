@@ -312,14 +312,14 @@
 </div>
 </div>
 <div class="flex gap-4">
-<button class="flex-1 py-4 rounded-xl bg-primary text-on-primary font-headline font-bold text-sm uppercase tracking-widest flex items-center justify-center gap-3 shadow-xl hover:bg-primary-container transition-all active:scale-95">
-<span class="material-symbols-outlined font-fill-1">fiber_manual_record</span>
-                    Start Recording
+<button id="startRecordingBtn" onclick="toggleRecording()" class="flex-1 py-4 rounded-xl bg-primary text-on-primary font-headline font-bold text-sm uppercase tracking-widest flex items-center justify-center gap-3 shadow-xl hover:bg-primary-container transition-all active:scale-95">
+<span class="material-symbols-outlined font-fill-1" id="recordIcon">fiber_manual_record</span>
+                    <span id="recordText">Start Recording</span>
                 </button>
-<a href="../interveux_detailed_session_audit/code.html" class="flex-1 py-4 rounded-xl bg-surface-container-high border border-error/50 text-error font-headline font-bold text-sm uppercase tracking-widest flex items-center justify-center gap-3 shadow-xl hover:bg-error/10 transition-all active:scale-95">
+<button id="stopAnalyzeBtn" onclick="stopAndAnalyze()" class="flex-1 py-4 rounded-xl bg-surface-container-high border border-error/50 text-error font-headline font-bold text-sm uppercase tracking-widest flex items-center justify-center gap-3 shadow-xl hover:bg-error/10 transition-all active:scale-95" disabled>
 <span class="material-symbols-outlined font-fill-1">stop</span>
-                    Stop &amp; Analyze Session
-                </a>
+                    <span id="analyzeText">Stop &amp; Analyze Session</span>
+                </button>
 </div>
 <div class="surface-container-high rounded-2xl flex-grow overflow-hidden border border-white/5 shadow-2xl flex flex-col">
 <div class="px-6 py-4 border-b border-white/5 flex items-center justify-between bg-surface-container-low/20">
@@ -328,26 +328,12 @@
 <h3 class="text-[10px] font-headline text-on-surface-variant uppercase tracking-widest font-bold">Activity Log &amp; Transcript</h3>
 </div>
 <div class="flex gap-2">
-<button class="px-3 py-1.5 rounded-lg bg-white/5 text-[9px] font-bold uppercase tracking-widest text-indigo-200 hover:bg-white/10">Export</button>
+<button class="px-3 py-1.5 rounded-lg bg-white/5 text-[9px] font-bold uppercase tracking-widest text-indigo-200 hover:bg-white/10" onclick="document.getElementById('transcriptContainer').innerHTML=''">Clear</button>
 </div>
 </div>
-<div class="p-6 overflow-y-auto custom-scrollbar flex-grow space-y-4">
-<div class="flex gap-4 items-start opacity-40">
-<span class="text-[10px] font-mono text-indigo-400/50 bg-white/5 px-2 py-0.5 rounded shrink-0">00:12</span>
-<p class="text-xs text-indigo-100/70 leading-relaxed">Sure, in my previous role at the design agency, I encountered a situation where our engineering team and creative leads were at odds regarding a specific interaction model...</p>
-</div>
+<div class="p-6 overflow-y-auto custom-scrollbar flex-grow space-y-4" id="transcriptContainer">
 <div class="flex gap-4 items-start opacity-60">
-<span class="text-[10px] font-mono text-indigo-400/50 bg-white/5 px-2 py-0.5 rounded shrink-0">00:45</span>
-<p class="text-xs text-indigo-100/70 leading-relaxed">The main point of contention was the feasibility of a complex animation system. I decided to facilitate a technical audit to separate the subjective design preferences...</p>
-</div>
-<div class="flex gap-4 items-start bg-primary/5 p-4 rounded-xl border border-primary/20">
-<span class="text-[10px] font-mono text-primary font-bold bg-primary/10 px-2 py-0.5 rounded shrink-0">02:38</span>
-<div class="space-y-2">
-<p class="text-sm text-white font-medium leading-relaxed">Ultimately, we reached a middle ground that preserved the design vision while meeting the performance budget...</p>
-<div class="flex gap-2">
-<span class="text-[8px] font-bold text-primary uppercase tracking-widest bg-primary/10 px-2 py-0.5 rounded-full">Aura Insight</span>
-</div>
-</div>
+<p class="text-xs text-indigo-100/70 leading-relaxed italic">Your spoken transcript will appear here...</p>
 </div>
 </div>
 </div>
@@ -649,9 +635,139 @@ function toggleCamera() {
   }
 }
 
+// Web Speech API Integration
+let recognition;
+let isRecording = false;
+let finalTranscript = '';
+
+if ('webkitSpeechRecognition' in window) {
+  recognition = new webkitSpeechRecognition();
+  recognition.continuous = true;
+  recognition.interimResults = true;
+  
+  recognition.onstart = function() {
+    isRecording = true;
+    finalTranscript = '';
+    document.getElementById('recordText').textContent = 'Stop Recording';
+    document.getElementById('recordIcon').style.color = '#ff97a3'; // Error color
+    document.getElementById('stopAnalyzeBtn').disabled = false;
+    document.getElementById('stopAnalyzeBtn').classList.remove('opacity-50', 'cursor-not-allowed');
+    document.getElementById('transcriptContainer').innerHTML = '<p class="text-xs text-indigo-100/90 leading-relaxed italic" id="interimText">Listening...</p>';
+    
+    // Automatically turn on camera for effect
+    const img = document.getElementById('cameraImg');
+    if (img.style.opacity === '0') toggleCamera();
+  };
+  
+  recognition.onresult = function(event) {
+    window.interimTranscript = '';
+    for (let i = event.resultIndex; i < event.results.length; ++i) {
+      if (event.results[i].isFinal) {
+        finalTranscript += event.results[i][0].transcript + ' ';
+      } else {
+        window.interimTranscript += event.results[i][0].transcript;
+      }
+    }
+    
+    const container = document.getElementById('transcriptContainer');
+    container.innerHTML = `
+      <div class="flex gap-4 items-start bg-primary/5 p-4 rounded-xl border border-primary/20">
+        <span class="text-[10px] font-mono text-primary font-bold bg-primary/10 px-2 py-0.5 rounded shrink-0">LIVE</span>
+        <div class="space-y-2">
+          <p class="text-sm text-white font-medium leading-relaxed">${finalTranscript} <span class="opacity-60 italic">${window.interimTranscript}</span></p>
+        </div>
+      </div>
+    `;
+    container.scrollTop = container.scrollHeight;
+  };
+  
+  recognition.onerror = function(event) {
+    console.error('Speech recognition error', event.error);
+    stopRecordingUI();
+  };
+  
+  recognition.onend = function() {
+    stopRecordingUI();
+  };
+} else {
+  alert('Web Speech API is not supported in this browser. Please use Google Chrome for this feature.');
+}
+
+function toggleRecording() {
+  if (!recognition) return;
+  if (isRecording) {
+    recognition.stop();
+  } else {
+    recognition.start();
+  }
+}
+
+function stopRecordingUI() {
+  isRecording = false;
+  document.getElementById('recordText').textContent = 'Start Recording';
+  document.getElementById('recordIcon').style.color = ''; 
+}
+
+async function stopAndAnalyze() {
+  if (isRecording && recognition) {
+    recognition.stop();
+  }
+  
+  if (window.interimTranscript) {
+    finalTranscript += ' ' + window.interimTranscript;
+    window.interimTranscript = '';
+  }
+  
+  if (!finalTranscript || finalTranscript.trim().length === 0) {
+    alert("Please say something before analyzing.");
+    return;
+  }
+  
+  const analyzeBtn = document.getElementById('stopAnalyzeBtn');
+  analyzeBtn.disabled = true;
+  document.getElementById('analyzeText').textContent = 'Analyzing...';
+  analyzeBtn.classList.add('opacity-50', 'cursor-not-allowed');
+  
+  const currentQuestion = document.getElementById('questionText').textContent;
+  
+  try {
+    const res = await fetch('http://localhost:3000/api/process-interview', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ transcript: finalTranscript, question: currentQuestion })
+    });
+    const resultData = await res.json();
+    
+    if (resultData.success) {
+      // Save data locally and redirect
+      localStorage.setItem('lastAnalysisData', JSON.stringify({
+        ai: resultData.data,
+        rawTranscript: finalTranscript,
+        question: currentQuestion
+      }));
+      window.location.href = '../interveux_detailed_session_audit/code.html';
+    } else {
+      alert("Analysis failed: " + resultData.error);
+      document.getElementById('analyzeText').textContent = 'Stop & Analyze Session';
+      analyzeBtn.disabled = false;
+      analyzeBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+    }
+  } catch (error) {
+    console.error(error);
+    alert("Failed to connect to backend api.");
+    document.getElementById('analyzeText').textContent = 'Stop & Analyze Session';
+    analyzeBtn.disabled = false;
+    analyzeBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+  }
+}
+
 // Init on load
 document.addEventListener('DOMContentLoaded', () => {
   renderQuestion();
+  
+  document.getElementById('stopAnalyzeBtn').disabled = true;
+  document.getElementById('stopAnalyzeBtn').classList.add('opacity-50', 'cursor-not-allowed');
+  
   // Keyboard navigation
   document.addEventListener('keydown', e => {
     if (e.key === 'ArrowRight') nextQuestion();

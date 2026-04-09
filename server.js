@@ -51,7 +51,7 @@ app.get('/api/health', (req, res) => {
 });
 
 // ─── Fallback Route (serve landing page) ─────────────────────────────────────
-app.get('/*splat', (req, res) => {
+app.use((req, res) => {
   res.sendFile(path.join(__dirname, 'interveux_landing_page', 'code.html'));
 });
 
