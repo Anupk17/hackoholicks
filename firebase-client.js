@@ -2,14 +2,14 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebas
 import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
+// ── Correct project: obsidian-coach-002 ──────────────────────────────────────
 const firebaseConfig = {
-  projectId: "geometry-dash-dc17e",
-  appId: "1:637743799176:web:6ee411f78c8a9b08c5f83d",
-  storageBucket: "geometry-dash-dc17e.firebasestorage.app",
-  apiKey: "AIzaSyBpAaI2el84xWrKytb5qz-IKdz7DQYbaDc",
-  authDomain: "geometry-dash-dc17e.firebaseapp.com",
-  messagingSenderId: "637743799176",
-  measurementId: "G-YGQB29VXRD"
+  projectId:         "obsidian-coach-002",
+  appId:             "1:987172310335:web:049d1831bd65a4b666d78a",
+  storageBucket:     "obsidian-coach-002.firebasestorage.app",
+  apiKey:            "AIzaSyCnjVObw7aw56PYDT_mMZ1AXIdghH3R2GA",
+  authDomain:        "obsidian-coach-002.firebaseapp.com",
+  messagingSenderId: "987172310335"
 };
 
 // Initialize Firebase
@@ -18,4 +18,9 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const googleProvider = new GoogleAuthProvider();
 
-export { auth, db, googleProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, doc, setDoc, getDoc };
+export {
+  auth, db, googleProvider,
+  signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword,
+  onAuthStateChanged, signOut,
+  doc, setDoc, getDoc
+};
