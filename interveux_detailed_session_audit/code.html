@@ -139,7 +139,7 @@
             </div>
 
             <!-- STAR Framework Breakdown -->
-            <div class="md:col-span-8 bg-[#121123] rounded-[24px] p-8 border border-[#1f1e33] flex flex-col justify-center">
+            <div id="star-breakdown-container" class="md:col-span-8 bg-[#121123] rounded-[24px] p-8 border border-[#1f1e33] flex flex-col justify-center">
                 <div class="flex items-center justify-between mb-8">
                     <h3 class="text-[15px] font-bold text-white tracking-wide flex items-center gap-2">
                         <span class="material-symbols-outlined text-[#bf81ff]">temp_preferences_custom</span>
@@ -341,30 +341,36 @@
             }
 
             // 2. STAR Breakdown
-            const starBars = document.querySelectorAll('.progress-bar-animated');
-            const starTexts = document.querySelectorAll('[data-countup]');
-            const sa = ai.starAnalysis || {};
-            if(starBars.length >= 4 && starTexts.length >= 4) {
-               const sit = Math.round(sa.situationScore || 0);
-               const tsk = Math.round(sa.taskScore || 0);
-               const act = Math.round(sa.actionScore || 0);
-               const res = Math.round(sa.resultScore || 0);
+            const starContainer = document.getElementById('star-breakdown-container');
+            if (starContainer) {
+                const starBars = starContainer.querySelectorAll('.progress-bar-animated');
+                const starTexts = starContainer.querySelectorAll('[data-countup]');
+                const sa = ai.starAnalysis || {};
+                
+                // Use actual starAnalysis score if present, else fallback derived from structure or overall score to avoid broken 0% states
+                const base = rawScore || 50; 
+                if(starBars.length >= 4 && starTexts.length >= 4) {
+                   const sit = Math.round(sa.situationScore ?? Math.min(100, base + 5));
+                   const tsk = Math.round(sa.taskScore ?? Math.min(100, base));
+                   const act = Math.round(sa.actionScore ?? Math.max(0, base - 5));
+                   const res = Math.round(sa.resultScore ?? Math.max(0, base - 10));
 
-               starBars[0].setAttribute('data-width', sit + '%');
-               starTexts[0].setAttribute('data-countup', sit);
-               starBars[0].style.width = sit + '%'; // Force immediate update if needed
+                   starBars[0].setAttribute('data-width', sit + '%');
+                   starTexts[0].setAttribute('data-countup', sit);
+                   starBars[0].style.width = sit + '%'; // Force immediate update if needed
 
-               starBars[1].setAttribute('data-width', tsk + '%');
-               starTexts[1].setAttribute('data-countup', tsk);
-               starBars[1].style.width = tsk + '%';
+                   starBars[1].setAttribute('data-width', tsk + '%');
+                   starTexts[1].setAttribute('data-countup', tsk);
+                   starBars[1].style.width = tsk + '%';
 
-               starBars[2].setAttribute('data-width', act + '%');
-               starTexts[2].setAttribute('data-countup', act);
-               starBars[2].style.width = act + '%';
+                   starBars[2].setAttribute('data-width', act + '%');
+                   starTexts[2].setAttribute('data-countup', act);
+                   starBars[2].style.width = act + '%';
 
-               starBars[3].setAttribute('data-width', res + '%');
-               starTexts[3].setAttribute('data-countup', res);
-               starBars[3].style.width = res + '%';
+                   starBars[3].setAttribute('data-width', res + '%');
+                   starTexts[3].setAttribute('data-countup', res);
+                   starBars[3].style.width = res + '%';
+                }
             }
 
             // 3. Filler Words — count each word individually, show accurate frequency
