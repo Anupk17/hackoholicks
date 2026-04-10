@@ -203,13 +203,15 @@
       </p>
 
       <div class="flex flex-wrap gap-4 reveal" style="transition-delay:0.3s">
-        <a href="../interveux_active_mirror/code.html" class="btn-primary">
+        <a href="../interveux_active_mirror/code.html" class="btn-primary" id="cta-launch">
           <span class="material-symbols-outlined" style="position:relative;z-index:1">rocket_launch</span>
           <span>Launch Active Mirror</span>
+          <span style="position:relative;z-index:1;background:rgba(255,255,255,0.15);border-radius:6px;padding:2px 7px;font-size:11px;font-weight:900;letter-spacing:0.05em;margin-left:4px;">A</span>
         </a>
-        <a href="../interveux_performance_hub/code.html" class="btn-secondary">
+        <a href="../interveux_performance_hub/code.html" class="btn-secondary" id="cta-dashboard">
           <span class="material-symbols-outlined">analytics</span>
           View Dashboard
+          <span style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:6px;padding:2px 7px;font-size:11px;font-weight:900;letter-spacing:0.05em;margin-left:4px;">D</span>
         </a>
       </div>
 
@@ -796,6 +798,105 @@ import('../firebase-client.js').then(({ auth, onAuthStateChanged }) => {
   onAuthStateChanged(auth, (user) => {
     if (user) window.location.href = '../interveux_performance_hub/code.html';
   });
+});
+</script>
+
+<!-- KEYBOARD SHORTCUT HINT BAR -->
+<div id="kbd-hint-bar" style="position:fixed;bottom:0;left:0;right:0;z-index:900;display:flex;align-items:center;justify-content:center;gap:24px;padding:10px 24px;background:rgba(8,8,24,0.95);backdrop-filter:blur(16px);border-top:1px solid rgba(255,255,255,0.06);font-size:12px;color:#72719c;font-family:'Manrope',sans-serif;flex-wrap:wrap;">
+  <span style="display:flex;align-items:center;gap:6px;"><span style="background:#1c1c3d;border:1px solid #44446c;border-radius:6px;padding:2px 8px;font-weight:900;color:#bf81ff;font-size:12px;">A</span> Active Mirror</span>
+  <span style="display:flex;align-items:center;gap:6px;"><span style="background:#1c1c3d;border:1px solid #44446c;border-radius:6px;padding:2px 8px;font-weight:900;color:#bf81ff;font-size:12px;">D</span> Dashboard</span>
+  <span style="display:flex;align-items:center;gap:6px;"><span style="background:#1c1c3d;border:1px solid #44446c;border-radius:6px;padding:2px 8px;font-weight:900;color:#bf81ff;font-size:12px;">R</span> Resume</span>
+  <span style="display:flex;align-items:center;gap:6px;"><span style="background:#1c1c3d;border:1px solid #44446c;border-radius:6px;padding:2px 8px;font-weight:900;color:#bf81ff;font-size:12px;">S</span> Sign In</span>
+  <span style="display:flex;align-items:center;gap:6px;"><span style="background:#1c1c3d;border:1px solid #44446c;border-radius:6px;padding:2px 8px;font-weight:900;color:#bf81ff;font-size:12px;">N</span> Notification</span>
+  <span style="display:flex;align-items:center;gap:6px;cursor:pointer;color:#bf81ff;" onclick="openKbdPalette()"><span style="background:#1c1c3d;border:1px solid rgba(191,129,255,0.4);border-radius:6px;padding:2px 8px;font-weight:900;color:#bf81ff;font-size:12px;">?</span> All Shortcuts</span>
+  <button onclick="document.getElementById('kbd-hint-bar').style.display='none'" style="margin-left:8px;background:none;border:none;color:#44446c;cursor:pointer;font-size:16px;line-height:1;padding:0;">✕</button>
+</div>
+
+<!-- KEYBOARD SHORTCUT PALETTE -->
+<div id="kbd-palette" style="display:none;position:fixed;inset:0;z-index:99998;background:rgba(0,0,0,0.8);backdrop-filter:blur(16px);align-items:center;justify-content:center;">
+  <div style="background:linear-gradient(135deg,#0e0e23,#161632);border:1px solid rgba(191,129,255,0.2);border-radius:24px;padding:32px;width:100%;max-width:500px;margin:16px;box-shadow:0 40px 80px rgba(0,0,0,0.8),0 0 60px rgba(156,66,244,0.1);">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;">
+      <div>
+        <h2 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:20px;font-weight:900;color:white;margin-bottom:4px;">⌨️ Keyboard Shortcuts</h2>
+        <p style="font-size:12px;color:#72719c;">Navigate InterveuX at the speed of thought</p>
+      </div>
+      <button onclick="closeKbdPalette()" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:6px 14px;color:#a8a7d5;cursor:pointer;font-size:13px;font-family:'Manrope',sans-serif;font-weight:700;">ESC</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <div class="kbd-row" onclick="window.location='../interveux_active_mirror/code.html'" style="background:rgba(156,66,244,0.08);border:1px solid rgba(191,129,255,0.15);border-radius:12px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:background 0.2s;">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <span style="font-size:20px;">🎙️</span>
+          <div><p style="color:white;font-weight:700;font-size:14px;margin-bottom:2px;">Launch Active Mirror</p><p style="color:#72719c;font-size:12px;">Start a live AI coaching session</p></div>
+        </div>
+        <span style="background:#1c1c3d;border:1px solid rgba(191,129,255,0.3);border-radius:8px;padding:4px 12px;font-weight:900;color:#bf81ff;font-size:13px;">A</span>
+      </div>
+      <div class="kbd-row" onclick="window.location='../interveux_performance_hub/code.html'" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:background 0.2s;">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <span style="font-size:20px;">📊</span>
+          <div><p style="color:white;font-weight:700;font-size:14px;margin-bottom:2px;">Performance Dashboard</p><p style="color:#72719c;font-size:12px;">View session history and analytics</p></div>
+        </div>
+        <span style="background:#1c1c3d;border:1px solid rgba(255,255,255,0.15);border-radius:8px;padding:4px 12px;font-weight:900;color:#a8a7d5;font-size:13px;">D</span>
+      </div>
+      <div class="kbd-row" onclick="window.location='../interveux_resume_checker/code.html'" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:background 0.2s;">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <span style="font-size:20px;">📄</span>
+          <div><p style="color:white;font-weight:700;font-size:14px;margin-bottom:2px;">Resume Checker</p><p style="color:#72719c;font-size:12px;">Analyze your CV against job roles</p></div>
+        </div>
+        <span style="background:#1c1c3d;border:1px solid rgba(255,255,255,0.15);border-radius:8px;padding:4px 12px;font-weight:900;color:#a8a7d5;font-size:13px;">R</span>
+      </div>
+      <div class="kbd-row" onclick="closeKbdPalette();document.querySelectorAll('.auth-trigger')[0].click()" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:background 0.2s;">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <span style="font-size:20px;">🔐</span>
+          <div><p style="color:white;font-weight:700;font-size:14px;margin-bottom:2px;">Sign In</p><p style="color:#72719c;font-size:12px;">Open the authentication modal</p></div>
+        </div>
+        <span style="background:#1c1c3d;border:1px solid rgba(255,255,255,0.15);border-radius:8px;padding:4px 12px;font-weight:900;color:#a8a7d5;font-size:13px;">S</span>
+      </div>
+      <div class="kbd-row" onclick="showNotif('🎯 New session data available!');closeKbdPalette()" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:background 0.2s;">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <span style="font-size:20px;">🔔</span>
+          <div><p style="color:white;font-weight:700;font-size:14px;margin-bottom:2px;">Show Notification</p><p style="color:#72719c;font-size:12px;">Trigger a live toast popup</p></div>
+        </div>
+        <span style="background:#1c1c3d;border:1px solid rgba(255,255,255,0.15);border-radius:8px;padding:4px 12px;font-weight:900;color:#a8a7d5;font-size:13px;">N</span>
+      </div>
+    </div>
+    <p style="margin-top:20px;text-align:center;font-size:11px;color:#44446c;">Press <strong style="color:#72719c;">?</strong> or <strong style="color:#72719c;">Ctrl+K</strong> any time to open this palette</p>
+  </div>
+</div>
+
+<style>
+.kbd-row:hover { background: rgba(191,129,255,0.08) !important; border-color: rgba(191,129,255,0.2) !important; }
+</style>
+
+<script>
+function openKbdPalette() {
+  const p = document.getElementById('kbd-palette');
+  p.style.display = 'flex';
+}
+function closeKbdPalette() {
+  document.getElementById('kbd-palette').style.display = 'none';
+}
+document.getElementById('kbd-palette').addEventListener('click', function(e) {
+  if (e.target === this) closeKbdPalette();
+});
+
+document.addEventListener('keydown', (e) => {
+  const tag = document.activeElement.tagName.toLowerCase();
+  if (tag === 'input' || tag === 'textarea') return;
+  const modal = document.getElementById('auth-modal-overlay');
+  const isModalOpen = modal && modal.style.display === 'flex';
+  const palOpen = document.getElementById('kbd-palette').style.display === 'flex';
+
+  if (e.key === 'Escape') { closeKbdPalette(); if (modal) modal.style.display = 'none'; return; }
+  if (e.key === '?' || (e.ctrlKey && e.key === 'k')) { e.preventDefault(); openKbdPalette(); return; }
+  if (palOpen || isModalOpen) return;
+
+  switch (e.key.toLowerCase()) {
+    case 'a': window.location.href = '../interveux_active_mirror/code.html'; break;
+    case 'd': window.location.href = '../interveux_performance_hub/code.html'; break;
+    case 'r': window.location.href = '../interveux_resume_checker/code.html'; break;
+    case 's': document.querySelectorAll('.auth-trigger')[0].click(); break;
+    case 'n': showNotif('🎯 New session data available!'); break;
+  }
 });
 </script>
 </body></html>
