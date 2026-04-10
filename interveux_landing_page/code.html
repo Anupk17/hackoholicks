@@ -797,6 +797,11 @@ window.handleAuthSubmit = async function() {
 });
 
 document.getElementById('google-signin-btn').addEventListener('click', async () => {
+  if (window.location.protocol === 'file:') {
+    alert("CRITICAL ERROR: Firebase Google Login does not work when you double-click the HTML file (file:// protocol).\n\nYou MUST run the local server! Please open your terminal, type 'npm start', and open http://localhost:3000 in your browser.");
+    return;
+  }
+
   const btn = document.getElementById('google-signin-btn');
   const errEl = document.getElementById('auth-error');
   errEl.style.display = 'none';
@@ -815,6 +820,7 @@ document.getElementById('google-signin-btn').addEventListener('click', async () 
     }, { merge: true });
     window.location.href = '../interveux_performance_hub/code.html';
   } catch (err) {
+    console.error("Auth Error: ", err);
     errEl.textContent = err.code === 'auth/popup-blocked' ? 'Popup blocked. Please allow popups for this site.' : 'Google Sign-In failed: ' + err.message;
     errEl.style.display = 'block';
     
